@@ -83,7 +83,7 @@ defaultContentLanguage = "zh-cn"           # Default language to use
 
   # 指定 git 仓库地址，可以生成指向最近更新的 git commit 的链接，需要将 enableGitInfo 设置成 true.
   [params.gitInfo]
-    gitRepo = ""
+    gitRepo = "https://github.com/wingsxdu/blog"
     showCommitMessage = true
   [params.social]                                         # 社交链接
     a-email = "mailto:beihai@wingsxdu.com"
