@@ -12,7 +12,7 @@
     
     
     <item>
-      <title>关于博主</title>
+      <title>欢迎来到北海的博客</title>
       <link>https://www.wingsxdu.com/about/</link>
       <pubDate>Thu, 06 Sep 2018 13:22:47 +0000</pubDate>
       
@@ -21,73 +21,69 @@
         <description>
 
 &lt;p style=&#34;text-align: center;&#34;&gt;
-  &lt;strong&gt;欢迎来到北海的博客&lt;/strong&gt;
+  &lt;strong&gt;关于博主&lt;/strong&gt;
 &lt;/p&gt;
 
-&lt;p&gt;博主目前就读于西安电子科技大学，2017级本科生&lt;/p&gt;
+&lt;p&gt;Gopher，电子产品爱好者，Software Developer&lt;/p&gt;
 
-&lt;p&gt;自学编程，本科专业与 IT 关联不大，目前研究方向为微服务与分布式&lt;/p&gt;
+&lt;p&gt;西电2017级本科生，非 IT 专业，家境贫寒，一身本事全凭自学&lt;/p&gt;
 
-&lt;p&gt;私人邮箱：beihai@wingsxdu.com&lt;/p&gt;
+&lt;p&gt;目前研究方向为微服务与分布式&lt;/p&gt;
 
 &lt;p&gt;技术栈：&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;     Golang 后端开发&lt;/li&gt;
-&lt;li&gt;     Android 原生 APP 开发&lt;/li&gt;
-&lt;li&gt;     Ant Design、微信小程序 、PR剪辑等&lt;/li&gt;
-&lt;li&gt;     区块链、深度学习有短期接触&lt;/li&gt;
-&lt;li&gt;     996工作经验丰富 🙂&lt;/li&gt;
+&lt;li&gt;Golang back-end &amp;amp; database：gin、echo、gorm&lt;/li&gt;
+&lt;li&gt;区块链相关开发&lt;/li&gt;
+&lt;li&gt;Ant Design、Android APP、微信小程序等&lt;/li&gt;
+&lt;li&gt;爬虫、机器学习、算法略有接触&lt;/li&gt;
+&lt;li&gt;996经验丰富 🙂&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;华为海军，热爱数码；&lt;br /&gt;
-喜欢徒步与音乐，云游戏玩家；&lt;/p&gt;
+&lt;p&gt;喜欢穷游与模拟经营类游戏，热爱音乐、电影与艺术表演；&lt;/p&gt;
 
-&lt;h4 id=&#34;做了什么&#34;&gt;做了什么？&lt;/h4&gt;
+&lt;h4 id=&#34;个人总结&#34;&gt;个人总结&lt;/h4&gt;
 
 &lt;h5 id=&#34;golang&#34;&gt;Golang&lt;/h5&gt;
 
 &lt;ul&gt;
-&lt;li&gt;Web 框架 Echo：&lt;a href=&#34;https://echo.labstack.com/&#34; target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34; style=&#34;transition-property: all;&#34;&gt;&lt;a href=&#34;https://echo.labstack.com/&#34;&gt;https://echo.labstack.com/&lt;/a&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;orm 引擎 xorm：&lt;a href=&#34;http://www.xorm.io/&#34; target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34; style=&#34;transition-property: all;&#34;&gt;&lt;a href=&#34;http://www.xorm.io/&#34;&gt;http://www.xorm.io/&lt;/a&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;数据可视化 go-echarts：&lt;a href=&#34;https://go-echarts.chenjiandongx.com/&#34; target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34; style=&#34;transition-property: all;&#34;&gt;&lt;a href=&#34;https://go-echarts.chenjiandongx.com/&#34;&gt;https://go-echarts.chenjiandongx.com/&lt;/a&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;进程间通信 gprc：&lt;a href=&#34;https://grpc.io/&#34; target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34; style=&#34;transition-property: all;&#34;&gt;&lt;a href=&#34;https://grpc.io/&#34;&gt;https://grpc.io/&lt;/a&gt;&lt;/a&gt; 
-          protobuf：&lt;a href=&#34;https://github.com/protocolbuffers/protobuf&#34; target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;  style=&#34;transition-property: all;&#34;&gt;&lt;a href=&#34;https://github.com/protocolbuffers/protobuf&#34;&gt;https://github.com/protocolbuffers/protobuf&lt;/a&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Echo 工程临摹：&lt;a href=&#34;https://github.com/aixinaxc/apidocserver&#34; target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34; style=&#34;transition-property: all;&#34;&gt;&lt;a href=&#34;https://github.com/aixinaxc/apidocserver&#34;&gt;https://github.com/aixinaxc/apidocserver&lt;/a&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;二维码库：&lt;a href=&#34;https://github.com/skip2/go-qrcode&#34; target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;&lt;a href=&#34;https://github.com/skip2/go-qrcode&#34;&gt;https://github.com/skip2/go-qrcode&lt;/a&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Web：gin、echo&lt;/li&gt;
+&lt;li&gt;orm ：gorm、xorm&lt;/li&gt;
+&lt;li&gt;rpc：gprc、 protobuf&lt;/li&gt;
+&lt;li&gt;其他工具包&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h5 id=&#34;书籍&#34;&gt;书籍&lt;/h5&gt;
 
 &lt;ul&gt;
-&lt;li&gt;Go 语言初学：&lt;a href=&#34;https://www.kancloud.cn/liupengjie/go/570004&#34; target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34; style=&#34;transition-property: all;&#34;&gt;&lt;a href=&#34;https://www.kancloud.cn/liupengjie/go/570004&#34;&gt;https://www.kancloud.cn/liupengjie/go/570004&lt;/a&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Go 语言进阶：&lt;a href=&#34;https://chai2010.cn/advanced-go-programming-book/&#34; target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34; style=&#34;transition-property: all;&#34;&gt;&lt;a href=&#34;https://chai2010.cn/advanced-go-programming-book/&#34;&gt;https://chai2010.cn/advanced-go-programming-book/&lt;/a&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Go 语言初学：：&lt;a href=&#34;https://tour.go-zh.org/welcome/1&#34;&gt;A tour of go&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Go 语言入门：&lt;a href=&#34;https://books.studygolang.com/gopl-zh/&#34;&gt;The Go Programming Language&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Go 语言进阶：&lt;a href=&#34;https://chai2010.cn/advanced-go-programming-book&#34;&gt;Go 语言高级编程&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;《三体》&lt;/li&gt;
-&lt;li&gt;《文化苦旅》&lt;/li&gt;
+&lt;li&gt;《文化苦旅》、《活着》、《平凡的世界》&lt;/li&gt;
 &lt;li&gt;《下一个倒下的会不会是华为》&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h5 id=&#34;设备&#34;&gt;设备&lt;/h5&gt;
 
 &lt;ul&gt;
-&lt;li&gt;笔记本：惠普 Spectre X360 2019款&lt;/li&gt;
+&lt;li&gt;笔记本：HP Spectre X360 2019（想入个英特尔NUC）&lt;/li&gt;
+&lt;li&gt;游戏机：Xbox One X&lt;/li&gt;
 &lt;li&gt;键盘：massdrop CTRL&lt;/li&gt;
 &lt;li&gt;移动硬盘：华为备咖存储&lt;/li&gt;
-&lt;li&gt;耳机：森海塞尔 IE80S&lt;/li&gt;
-&lt;li&gt;屏幕：LG的21:9&lt;/li&gt;
+&lt;li&gt;耳机：森海塞尔 IE80S、赛睿 X100&lt;/li&gt;
+&lt;li&gt;屏幕：LG 29UM59A 21:9（打算换掉了）&lt;/li&gt;
 &lt;/ul&gt;
-
-&lt;h4 id=&#34;更新于2019年5月17日&#34;&gt;更新于2019年5月17日&lt;/h4&gt;
 </description>
       
     </item>
     
     <item>
-      <title>Posts</title>
-      <link>https://www.wingsxdu.com/post/</link>
+      <title>Migrates</title>
+      <link>https://www.wingsxdu.com/migrate/</link>
       <pubDate>Mon, 09 Sep 2019 03:45:17 +0000</pubDate>
       
-      <guid>https://www.wingsxdu.com/post/</guid>
+      <guid>https://www.wingsxdu.com/migrate/</guid>
       
         <description></description>
       
