@@ -1,4 +1,4 @@
-baseURL = "http://www.wingsxdu.com/"
+baseURL = "https://www.wingsxdu.com/"
 title = "beihai"
 enableRobotsTXT = true
 enableEmoji = true
