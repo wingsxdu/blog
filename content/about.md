@@ -1,5 +1,5 @@
 ---
-title: 关于博主
+title: 欢迎来到北海的博客
 author: beihai
 type: page
 date: 2018-09-06T13:22:47+00:00
@@ -7,7 +7,7 @@ weight: 50
 ---
 
 <p style="text-align: center;">
-  <strong>欢迎来到北海的博客</strong>
+  <strong>关于博主</strong>
 </p>
 
 博主目前就读于西安电子科技大学，2017级本科生
