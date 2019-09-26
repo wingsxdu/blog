@@ -47,9 +47,14 @@ defaultContentLanguage = "zh-cn"           # Default language to use
 #  url = "/tags/"
 [[menu.main]]
   name = "分类标签"
-  weight = 50
+  weight = 40
   identifier = "categories"
   url = "/categories/"
+  [[menu.main]]
+  name = "旧站迁移"
+  weight = 50
+  identifier = "migrate"
+  url = "/migrate/"
 
 
 [params]
