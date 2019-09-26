@@ -1,4 +1,4 @@
-baseURL = "https://www.wingsxdu.com/"
+baseURL = "http://www.wingsxdu.com/"
 title = "beihai"
 enableRobotsTXT = true
 enableEmoji = true
@@ -16,8 +16,6 @@ enableGitInfo = true
 defaultContentLanguage = "zh-cn"           # Default language to use
 [Languages.zh-cn]
  languageCode = "zh-cn"
-    
-    
 
 [author]                  # essential                     # 必需
   name = "beihai"
