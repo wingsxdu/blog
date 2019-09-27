@@ -1,4 +1,5 @@
 baseURL = "https://www.wingsxdu.com/"
+staticDir = "static"
 title = "beihai"
 enableRobotsTXT = true
 enableEmoji = true
