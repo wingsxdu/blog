@@ -80,7 +80,7 @@ defaultContentLanguage = "zh-cn"           # Default language to use
   contentCopyright = '<a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a>'
   tencent_analytics = ""    # Tencent Analytics
   baidu_push = true        # baidu push                  # 百度
-  baidu_analytics = "https://hm.baidu.com/hm.js?d9caa672b116c39e151b0da7c758ad88"      # Baidu Analytics
+  baidu_analytics = "d9caa672b116c39e151b0da7c758ad88"      # Baidu Analytics
 
   forkMeOnGithub = "https://github.com/wingsxdu"
 
