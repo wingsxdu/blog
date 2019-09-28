@@ -66,7 +66,7 @@ defaultContentLanguage = "zh-cn"           # Default language to use
 
   # site info (optional)                                  # 站点信息（可选，不需要的可以直接注释掉）
   logoTitle = "北海"        # default: the title value    # 默认值: 上面设置的title值
-  keywords = ["Golang", "Go", "back-end"]
+  keywords = ["Golang", "Go", "back-end", "后端", "分布式"]
   description = "追求 源于热爱"
 
   # The date format to use; for a list of valid formats, see https://gohugo.io/functions/format/
@@ -83,7 +83,7 @@ defaultContentLanguage = "zh-cn"           # Default language to use
   baidu_push = true        # baidu push                  # 百度
   baidu_analytics = "d9caa672b116c39e151b0da7c758ad88"      # Baidu Analytics
 
-  forkMeOnGithub = "https://github.com/wingsxdu"
+  # forkMeOnGithub = "https://github.com/wingsxdu"
 
   # Valine.
   # You can get your appid and appkey from https://leancloud.cn
