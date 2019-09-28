@@ -13,11 +13,11 @@ weight: 100
 
 
 
-Gopher，电子产品爱好者，Software Developer
+Gopher，电子产品爱好者，Software Developer，
 
-西电2017级本科生，非 IT 专业，家境贫寒，一身本事全凭自学
+西电2017级本科生，非 IT 专业，目前研究方向为微服务与分布式
 
-目前研究方向为微服务与分布式
+不喜欢国内大学的授课内容与教学方式，家境贫寒，一身本事全凭自学
 
 技术栈：
 
@@ -27,8 +27,8 @@ Gopher，电子产品爱好者，Software Developer
 - 爬虫、机器学习、算法略有接触
 - 996经验丰富 🙂
 
- 
-喜欢穷游与模拟经营类游戏，热爱音乐、电影与艺术表演；
+
+喜欢穷游与经营类游戏，热爱音乐、电影与艺术表演；
 
  
 
@@ -40,6 +40,7 @@ Gopher，电子产品爱好者，Software Developer
 - orm ：gorm、xorm
 - rpc：gprc、 protobuf
 - 其他工具包
+- 底层、并发、编译器
 
 ##### 书籍
 
@@ -52,9 +53,16 @@ Gopher，电子产品爱好者，Software Developer
 
 ##### 设备
 
-- 笔记本：HP Spectre X360 2019（想入个英特尔NUC）
+- 笔记本：HP Spectre X360 2019（打算入个英特尔NUC）
 - 游戏机：Xbox One X
 - 键盘：massdrop CTRL
 - 移动硬盘：华为备咖存储
 - 耳机：森海塞尔 IE80S、赛睿 X100
 - 屏幕：LG 29UM59A 21:9（打算换掉了）
+
+##### 工具
+
+- IDE：主 Goland + 辅  VS Code
+- Markdown 编辑器：Typora
+- 娱乐：网易云音乐UWP
+- HTTP 代理：[自己写了一个简单的http代理返回静态文件](https://github.com/wingsxdu/blogServer)
