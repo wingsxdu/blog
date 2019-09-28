@@ -6,10 +6,19 @@
     <description>Recent content in Golang on beihai</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 09 Sep 2019 03:45:17 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 27 Sep 2019 21:42:49 +0800</lastBuildDate>
     
 	<atom:link href="https://www.wingsxdu.com/categories/golang/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>GC 垃圾回收机制(改)</title>
+      <link>https://www.wingsxdu.com/post/2019-09-29-gc%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/</link>
+      <pubDate>Fri, 27 Sep 2019 21:42:49 +0800</pubDate>
+      
+      <guid>https://www.wingsxdu.com/post/2019-09-29-gc%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/</guid>
+      <description>首先我们了解下什么是垃圾回收 内存管理是开发应用中的一大难题。传统的系统级编程语言（主要指C/C++）中，程序开发者必须对内存小心的进行管理操</description>
+    </item>
     
     <item>
       <title>GO 1.13版本改进</title>
@@ -180,15 +189,6 @@
       
       <guid>https://www.wingsxdu.com/p723/</guid>
       <description>二叉搜索树概念 二叉排序树，又叫二叉查找树，是一种快速高效的排序方式。它可以是一棵空树（没有值）；或者是具有以下性质的二叉树： 1. 若它的左子树不</description>
-    </item>
-    
-    <item>
-      <title>Go echo 使用</title>
-      <link>https://www.wingsxdu.com/p684/</link>
-      <pubDate>Mon, 10 Dec 2018 12:30:45 +0000</pubDate>
-      
-      <guid>https://www.wingsxdu.com/p684/</guid>
-      <description>1.安装 虽然echo框架托管在github，但是一些必要的运行组件package需要到官网去下载，然而官网又在墙外。。。首先确定cmd能否p</description>
     </item>
     
   </channel>
