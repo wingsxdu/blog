@@ -6,10 +6,19 @@
     <description>Recent content in 技术向 on beihai</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 27 Sep 2019 21:42:49 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 29 Sep 2019 13:40:37 +0800</lastBuildDate>
     
 	<atom:link href="https://www.wingsxdu.com/categories/%E6%8A%80%E6%9C%AF%E5%90%91/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>并发编程与 Goroutine 调度</title>
+      <link>https://www.wingsxdu.com/post/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B8%8E-goroutine-%E8%B0%83%E5%BA%A6/</link>
+      <pubDate>Sun, 29 Sep 2019 13:40:37 +0800</pubDate>
+      
+      <guid>https://www.wingsxdu.com/post/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B8%8E-goroutine-%E8%B0%83%E5%BA%A6/</guid>
+      <description>并发与并行 并行是指两个或者多个事件在同一时刻发生；并发是指两个或多个事件在同一时间间隔发生。 并行是在不同实体上的多个事件，在多台处理器上同时</description>
+    </item>
     
     <item>
       <title>GC 垃圾回收机制(改)</title>
@@ -180,15 +189,6 @@
       
       <guid>https://www.wingsxdu.com/p1106/</guid>
       <description>搭建后端服务时要适配小程序接口，狗日的微信要求请求链接必须为 https://域名，折腾了半天决定用 Nginx 反向 http 代理，又交了300保护费:)。其他</description>
-    </item>
-    
-    <item>
-      <title>Go 下载包 golang.org/x/</title>
-      <link>https://www.wingsxdu.com/p1095/</link>
-      <pubDate>Mon, 13 May 2019 17:22:20 +0000</pubDate>
-      
-      <guid>https://www.wingsxdu.com/p1095/</guid>
-      <description>由于伟大的长城防火墙的存在，我们在使用到 golang.org/x/ 下的包是万万不可能正常下载成功的。但是问题不大，我们可以面向 github 编程，我们可以使用 git 指令把代码clo</description>
     </item>
     
   </channel>

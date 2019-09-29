@@ -1,6 +1,6 @@
 ---
-author: "beihai"
 title: ""
+author: "beihai"
 description: ""
 tags: [
     "技术向",
@@ -29,3 +29,4 @@ draft: true
 
 ##### 模板
 
+![gc](https://www.wingsxdu.com/image/gc.jpg)

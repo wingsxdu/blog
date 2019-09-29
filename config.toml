@@ -79,7 +79,7 @@ defaultContentLanguage = "zh-cn"           # Default language to use
   toc = true                                                                            # 是否开启目录
   photoswipe = true         # see https://github.com/dimsemenov/PhotoSwipe            # 是否启用PhotoSwipe（图片可点击）
   contentCopyright = '<a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a>'
-  tencent_analytics = ""    # Tencent Analytics
+  # tencent_analytics = ""    # Tencent Analytics
   baidu_push = true        # baidu push                  # 百度
   baidu_analytics = "d9caa672b116c39e151b0da7c758ad88"      # Baidu Analytics
 
@@ -98,7 +98,7 @@ defaultContentLanguage = "zh-cn"           # Default language to use
     placeholder = ''
 
   [params.search.google]    # google custom search, see https://cse.google.com
-    enable = true
+    enable = false
     id = "017584266070941033843:b2bcs9ip4y9"
     title = "Search"
 
