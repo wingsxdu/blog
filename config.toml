@@ -80,8 +80,8 @@ defaultContentLanguage = "zh-cn"           # Default language to use
   photoswipe = true         # see https://github.com/dimsemenov/PhotoSwipe            # 是否启用PhotoSwipe（图片可点击）
   contentCopyright = '<a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a>'
   # tencent_analytics = ""    # Tencent Analytics
-  # baidu_push = true        # baidu push                  # 百度
-  # baidu_analytics = "d9caa672b116c39e151b0da7c758ad88"      # Baidu Analytics
+  baidu_push = true        # baidu push                  # 百度
+  baidu_analytics = "d9caa672b116c39e151b0da7c758ad88"      # Baidu Analytics
 
   # forkMeOnGithub = "https://github.com/wingsxdu"
 
@@ -89,7 +89,7 @@ defaultContentLanguage = "zh-cn"           # Default language to use
   # You can get your appid and appkey from https://leancloud.cn
   # more info please open https://valine.js.org
   [params.valine]
-    enable = true
+    enable = false
     appId = 'xOfRpu7vOLeiw37zSFcRJcM1-gzGzoHsz'
     appKey = 'VbWuMaUMcNBPpzjeaXX0KIJS'
     notify = false  # If you are using valine-admin(https://github.com/DesertsP/Valine-Admin) to notify users, do NOT enable this.
