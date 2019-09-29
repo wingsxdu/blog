@@ -8,9 +8,9 @@ theme = "jane"
 hasCJKLanguage = true     # has chinese/japanese/korean ? # 自动检测是否包含 中文\日文\韩文
 paginate = 4              # Number of articles displayed on the homepage  # 首页每页显示的文章数
 rssLimit = 20             # Limit Entry Count to Rss file # 限制 Rss 文章输出数量
-disqusShortname = ""      # disqus_shortname
+disqusShortname = "beihai"      # disqus_shortname
 googleAnalytics = "UA-148836314-1"      # UA-XXXXXXXX-X
-copyright = ""            # default: author.name ↓        # 默认为下面配置的author.name ↓
+# copyright = ""            # default: author.name ↓        # 默认为下面配置的author.name ↓
 enableGitInfo = true
 
 # language support # en / zh-cn / other... translations present in i18n/
@@ -72,7 +72,7 @@ defaultContentLanguage = "zh-cn"           # Default language to use
   # The date format to use; for a list of valid formats, see https://gohugo.io/functions/format/
   dateFormatToUse = "2006-01-02"
   moreMeta = true
-  showAuthorInfo = true
+  showAuthorInfo = false
 
   # 一些全局开关，你也可以在每一篇内容的 front matter 中针对单篇内容关闭或开启某些功能，在 archetypes/default.md 查看更多信息。
   # Some global options, you can also close or open something in front matter for a single post, see more information from `archetypes/default.md`.
@@ -98,12 +98,12 @@ defaultContentLanguage = "zh-cn"           # Default language to use
     placeholder = ''
 
   [params.search.google]    # google custom search, see https://cse.google.com
-    enable = false
+    enable = true
     id = "017584266070941033843:b2bcs9ip4y9"
     title = "Search"
 
    [params.publicCDN]# 启用公共CDN，需自行定义
-    enable = true
+    enable = false
     jquery = '<script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>'
     slideout = '<script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>'
     gitmentJS = '<script src="https://cdn.jsdelivr.net/npm/gitment@0.0.3/dist/gitment.browser.min.js" crossorigin="anonymous"></script>'
