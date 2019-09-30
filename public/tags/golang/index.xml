@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>golang on beihai</title>
+    <link>https://www.wingsxdu.com/tags/golang/</link>
+    <description>Recent content in golang on beihai</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 29 Sep 2019 17:20:37 +0800</lastBuildDate>
+    
+	<atom:link href="https://www.wingsxdu.com/tags/golang/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>并发编程与 Goroutine 调度</title>
+      <link>https://www.wingsxdu.com/post/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B8%8E-goroutine-%E8%B0%83%E5%BA%A6/</link>
+      <pubDate>Sun, 29 Sep 2019 17:20:37 +0800</pubDate>
+      
+      <guid>https://www.wingsxdu.com/post/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B8%8E-goroutine-%E8%B0%83%E5%BA%A6/</guid>
+      <description>并发与并行 并行是指两个或者多个事件在同一时刻发生；并发是指两个或多个事件在同一时间间隔发生。 并行是在不同实体上的多个事件，在多台处理器上同时</description>
+    </item>
+    
+    <item>
+      <title>GC 垃圾回收机制(改)</title>
+      <link>https://www.wingsxdu.com/post/2019-09-29-gc%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/</link>
+      <pubDate>Fri, 27 Sep 2019 21:42:49 +0800</pubDate>
+      
+      <guid>https://www.wingsxdu.com/post/2019-09-29-gc%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/</guid>
+      <description>首先我们了解下什么是垃圾回收 内存管理是开发应用中的一大难题。传统的系统级编程语言（主要指C/C++）中，程序开发者必须对内存小心的进行管理操</description>
+    </item>
+    
+  </channel>
+</rss>

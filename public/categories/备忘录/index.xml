@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>备忘录 on beihai</title>
+    <link>https://www.wingsxdu.com/categories/%E5%A4%87%E5%BF%98%E5%BD%95/</link>
+    <description>Recent content in 备忘录 on beihai</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Fri, 09 Aug 2019 09:45:19 +0000</lastBuildDate>
+    
+	<atom:link href="https://www.wingsxdu.com/categories/%E5%A4%87%E5%BF%98%E5%BD%95/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Golang strconv包使用</title>
+      <link>https://www.wingsxdu.com/p1370/</link>
+      <pubDate>Fri, 09 Aug 2019 09:45:19 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p1370/</guid>
+      <description>// atob.go ------------------------------------------------------------ // ParseBool 将字符串转换为布尔值 // 它接受真值：1, t, T, TRUE, true, True // 它接受假值：0, f, F, FALSE, false, False. // 其它任何值都返回一个错误 func ParseBool(str string) (value bool, err error) func main() { fmt.Println(strconv.ParseBool(&#34;1&#34;)) // true fmt.Println(strconv.ParseBool(&#34;t&#34;))</description>
+    </item>
+    
+    <item>
+      <title>破解IDEA注册码，设置 license server 一直有效不过期</title>
+      <link>https://www.wingsxdu.com/p318/</link>
+      <pubDate>Sun, 25 Nov 2018 06:49:54 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p318/</guid>
+      <description>转发文章备份原文链接</description>
+    </item>
+    
+    <item>
+      <title>免费获取Xshell&#43;搭建SS</title>
+      <link>https://www.wingsxdu.com/p142/</link>
+      <pubDate>Sat, 08 Sep 2018 02:33:45 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p142/</guid>
+      <description>&lt;h4 id=&#34;1-打开网址-https-www-netsarang-com-download-down-form-html&#34;&gt;1.打开网址&lt;a href=&#34;https://www.netsarang.com/download/down_form.html&#34;&gt;https://www.netsarang.com/download/down_form.html&lt;/a&gt;&lt;/h4&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

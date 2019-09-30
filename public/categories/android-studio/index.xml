@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Android studio on beihai</title>
+    <link>https://www.wingsxdu.com/categories/android-studio/</link>
+    <description>Recent content in Android studio on beihai</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Wed, 21 Nov 2018 12:08:55 +0000</lastBuildDate>
+    
+	<atom:link href="https://www.wingsxdu.com/categories/android-studio/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>HttpURLConnection执行网络请求&#43;json数据解析并输出到RecyclerView</title>
+      <link>https://www.wingsxdu.com/p300/</link>
+      <pubDate>Wed, 21 Nov 2018 12:08:55 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p300/</guid>
+      <description>利用 HttpURLConnection 从后端拽取数据展示在app上 1.获取数据 代码如下： //开启线程来发起网络请求获取数据 private void sendRequestWithHttpURLConnection(){ new Thread(new Runnable() { @Override public void run() { HttpURLConnection connection = null; BufferedReader reader = null; try { URL url =</description>
+    </item>
+    
+    <item>
+      <title>QQ登陆实现&#43;本地存储</title>
+      <link>https://www.wingsxdu.com/p294/</link>
+      <pubDate>Wed, 21 Nov 2018 03:11:21 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p294/</guid>
+      <description>&lt;h4 id=&#34;1-准备工作&#34;&gt; 1.准备工作&lt;/h4&gt;
+
+&lt;p&gt;前往腾讯开放平台申请APPID；下载 &lt;span style=&#34;display: inline !important; float: none; background-color: #ffffff; color: #5d6161; font-family: &#39;Microsoft YaHei&#39;,arial; font-size: 100%; font-style: normal; font-variant: normal; font-weight: 400; letter-spacing: normal; line-height: 24px; orphans: 2; overflow-wrap: break-word; text-align: left; text-decoration: none; text-indent: 0px; text-transform: none; -webkit-text-stroke-width: 0px; white-space: normal; word-spacing: 0px;&#34;&gt;QQ互联&lt;/span&gt;SDK 并导入工程的libs文件夹，&lt;a href=&#34;http://wiki.connect.qq.com/&#34; target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;QQ互联网址&lt;/a&gt;；在AndroidManifest配置登陆所需权限：&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Activity 生命周期</title>
+      <link>https://www.wingsxdu.com/p286/</link>
+      <pubDate>Sat, 17 Nov 2018 03:16:46 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p286/</guid>
+      <description>&lt;p&gt;Activity是由Activity栈进管理，当来到一个新的Activity后，此Activity将被加入到Activity栈顶，之前的Activity位于此Activity底部。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Android 9 有关网络请求的行为变更</title>
+      <link>https://www.wingsxdu.com/p277/</link>
+      <pubDate>Sun, 11 Nov 2018 15:04:56 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p277/</guid>
+      <description>&lt;p&gt;Android 9（API 级别 28）向 Android 系统引入了多项变更。 当应用在 Android 9 平台上运行时，以下行为变更将影响所有应用，无论这些应用以哪个 API 级别为目标。 所有开发者都应查看这些变更，并修改其应用以正确支持这些变更（如果适用）。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>使用正式签名进行usb调试</title>
+      <link>https://www.wingsxdu.com/p266/</link>
+      <pubDate>Sun, 30 Sep 2018 10:45:13 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p266/</guid>
+      <description>&lt;p&gt;转载博主文章&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>关闭/返回当前页面/页面跳转</title>
+      <link>https://www.wingsxdu.com/p255/</link>
+      <pubDate>Sat, 29 Sep 2018 15:16:01 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p255/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>QQ登陆的实现</title>
+      <link>https://www.wingsxdu.com/p240/</link>
+      <pubDate>Mon, 24 Sep 2018 09:36:48 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p240/</guid>
+      <description>&lt;h4 id=&#34;1-准备工作&#34;&gt;1.准备工作&lt;/h4&gt;</description>
+    </item>
+    
+    <item>
+      <title>透明状态栏的实现</title>
+      <link>https://www.wingsxdu.com/p237/</link>
+      <pubDate>Mon, 24 Sep 2018 08:46:26 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p237/</guid>
+      <description>&lt;p&gt;在你想要实现透明状态栏的 Oncreate 中写入以下代码&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>更改控件样式/图标</title>
+      <link>https://www.wingsxdu.com/p233/</link>
+      <pubDate>Mon, 24 Sep 2018 04:18:16 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p233/</guid>
+      <description>&lt;p&gt;右击 drawable ,选择 new/Image Asset ,进入以下界面&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>侧滑菜单栏——DrawerLayout</title>
+      <link>https://www.wingsxdu.com/p231/</link>
+      <pubDate>Mon, 24 Sep 2018 04:03:48 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p231/</guid>
+      <description>&lt;p&gt;使用侧滑菜单栏——SlideMenu 后发现无法为控件编写逻辑， 随即更改实现方式——DrawerLayout&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>android:gravity 属性</title>
+      <link>https://www.wingsxdu.com/p223/</link>
+      <pubDate>Mon, 24 Sep 2018 03:30:00 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p223/</guid>
+      <description>&lt;h4 id=&#34;1-android-gravity-属性图例&#34;&gt;1.android:gravity 属性图例&lt;/h4&gt;</description>
+    </item>
+    
+    <item>
+      <title>实现侧滑菜单栏</title>
+      <link>https://www.wingsxdu.com/p218/</link>
+      <pubDate>Wed, 19 Sep 2018 14:23:17 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p218/</guid>
+      <description>&lt;h4 id=&#34;1-新建layout-main-xml-layout-menu-xml-slidemenu-java-三个页面&#34;&gt;1.新建layout_main.xml 、layout_menu.xml、SlideMenu.java 三个页面&lt;/h4&gt;</description>
+    </item>
+    
+    <item>
+      <title>design界面无法显示控件</title>
+      <link>https://www.wingsxdu.com/p214/</link>
+      <pubDate>Wed, 19 Sep 2018 08:42:42 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p214/</guid>
+      <description>&lt;p&gt;找到 /res/values/styles.xml文件，修改里面的&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>更改应用图标</title>
+      <link>https://www.wingsxdu.com/p207/</link>
+      <pubDate>Tue, 18 Sep 2018 13:35:00 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p207/</guid>
+      <description>&lt;h4 id=&#34;1-先随便打开一个java类文件&#34;&gt;1.先随便打开一个java类文件&lt;/h4&gt;</description>
+    </item>
+    
+    <item>
+      <title>EOCD signature not found in the last 0 bytes of the file.解决思路</title>
+      <link>https://www.wingsxdu.com/p181/</link>
+      <pubDate>Mon, 17 Sep 2018 13:59:03 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p181/</guid>
+      <description>&lt;p&gt;Gradle编译时报错：EOCD signature not found in the last 0 bytes of the file.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>android:gravity 属性说明</title>
+      <link>https://www.wingsxdu.com/p169/</link>
+      <pubDate>Sat, 15 Sep 2018 04:16:38 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p169/</guid>
+      <description>&lt;p&gt;&lt;strong&gt;&lt;span style=&#34;text-align: left; text-transform: none; line-height: 24px; text-indent: 0px; letter-spacing: normal; font-family: arial,&#39;courier new&#39;,courier,&#39;宋体&#39;,monospace; font-size: 14px; font-style: normal; font-variant: normal; text-decoration: none; word-spacing: 0px; display: inline !important; white-space: pre-wrap; word-break: break-all; word-wrap: break-word; orphans: 2; float: none; -webkit-text-stroke-width: 0px; background-color: #f1fedd;&#34;&gt;android:gravity意思是这个控件自己的“重力”，在通俗点就是控件上面的东西的位置（图片，文本等）&lt;/span&gt;&lt;/strong&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>一些奇奇怪怪的东西（不定时更新）</title>
+      <link>https://www.wingsxdu.com/p163/</link>
+      <pubDate>Wed, 12 Sep 2018 12:33:50 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p163/</guid>
+      <description>&lt;h4 id=&#34;1-错误提示无法找到资源文件&#34;&gt;1.错误提示无法找到资源文件&lt;/h4&gt;</description>
+    </item>
+    
+    <item>
+      <title>引用外部数据库（sqlite)</title>
+      <link>https://www.wingsxdu.com/p134/</link>
+      <pubDate>Fri, 07 Sep 2018 14:23:42 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p134/</guid>
+      <description>&lt;h4 id=&#34;1-将-db文件放入-res-raw文件夹下-没有raw文件夹则新建-new-floder-raw-resources-floder&#34;&gt;1.将.db文件放入/res/raw文件夹下,没有raw文件夹则新建（New/Floder/Raw Resources Floder)&lt;/h4&gt;</description>
+    </item>
+    
+    <item>
+      <title>添加Splash启动页并显示图片</title>
+      <link>https://www.wingsxdu.com/p75/</link>
+      <pubDate>Thu, 06 Sep 2018 12:54:44 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p75/</guid>
+      <description>&lt;h4 id=&#34;1-添加splashactivity页面&#34;&gt;1.添加SplashActivity页面&lt;/h4&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

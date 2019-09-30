@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Migrates on beihai</title>
+    <link>https://www.wingsxdu.com/migrate/</link>
+    <description>Recent content in Migrates on beihai</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 09 Sep 2019 03:45:17 +0000</lastBuildDate>
+    
+	<atom:link href="https://www.wingsxdu.com/migrate/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>GO 1.13版本改进</title>
+      <link>https://www.wingsxdu.com/p1391/</link>
+      <pubDate>Mon, 09 Sep 2019 03:45:17 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p1391/</guid>
+      <description>Go1.13 版本在 Go1.12 发布六个月后推出。它的大部分变化都在工具链(toolchain)，运行时(runtime)和库的实现。从 Go1.13 开始，在Go1.11开始</description>
+    </item>
+    
+    <item>
+      <title>beego 是怎样的存在？</title>
+      <link>https://www.wingsxdu.com/p1386/</link>
+      <pubDate>Sun, 08 Sep 2019 15:59:52 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p1386/</guid>
+      <description>beego 是一个 RESTFul 的 Go 应用框架，可以用来快速开发 API 、Web、后端服务等各种应用，主程是国人，开发历史悠久。 beego 可以说是小白学习 golang 的“不二门选”，无论是</description>
+    </item>
+    
+    <item>
+      <title>UTF-8 编码与 mysql中的 utf8、utf8mb4</title>
+      <link>https://www.wingsxdu.com/p1373/</link>
+      <pubDate>Mon, 19 Aug 2019 15:10:43 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p1373/</guid>
+      <description>UTF-8编码 UTF-8 是一种变长字节编码方式。对于某一个字符的UTF-8编码，如果只有一个字节则其最高二进制位为0；如果是多字节，其第一个字节从最</description>
+    </item>
+    
+    <item>
+      <title>Golang strconv包使用</title>
+      <link>https://www.wingsxdu.com/p1370/</link>
+      <pubDate>Fri, 09 Aug 2019 09:45:19 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p1370/</guid>
+      <description>// atob.go ------------------------------------------------------------ // ParseBool 将字符串转换为布尔值 // 它接受真值：1, t, T, TRUE, true, True // 它接受假值：0, f, F, FALSE, false, False. // 其它任何值都返回一个错误 func ParseBool(str string) (value bool, err error) func main() { fmt.Println(strconv.ParseBool(&#34;1&#34;)) // true fmt.Println(strconv.ParseBool(&#34;t&#34;))</description>
+    </item>
+    
+    <item>
+      <title>Go 变量覆盖问题</title>
+      <link>https://www.wingsxdu.com/p1368/</link>
+      <pubDate>Fri, 09 Aug 2019 03:12:54 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p1368/</guid>
+      <description>如下代码 package main func main() { x := 1 println(x) // 1 { println(x) // 1 x := 2 println(x) // 2 // 新的 x 变量的作用域只在代码块内部 } println(x) // 1 } 代码引用变量时总会最优先查找当前代码块中（不包</description>
+    </item>
+    
+    <item>
+      <title>因为我们有梦想</title>
+      <link>https://www.wingsxdu.com/p1366/</link>
+      <pubDate>Fri, 09 Aug 2019 02:08:22 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p1366/</guid>
+      <description>越认真的人，越容易陷入迷茫。生命的意义是什么？努力的意义在哪里？ 答案有千百种。 2018年，1523万中国新生儿开启了他们的生命旅程，993万</description>
+    </item>
+    
+    <item>
+      <title>Go ECHO JWT 变量类型</title>
+      <link>https://www.wingsxdu.com/p1364/</link>
+      <pubDate>Tue, 06 Aug 2019 10:09:33 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p1364/</guid>
+      <description>最近在写自己的开源案例时，需要在 token 里面存入用户的 uid，变量类型为 uint64,然而解析token 中的值时却报错变量不符，类型为 float。</description>
+    </item>
+    
+    <item>
+      <title>Go 全局变量作用域</title>
+      <link>https://www.wingsxdu.com/p1357/</link>
+      <pubDate>Tue, 23 Jul 2019 10:55:16 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p1357/</guid>
+      <description>问题所在 全局变量的作用域是整个包，局部变量的作用域是该变量所在的花括号内。最近使用 gorm 时遇到了使用全局变量赋值作用域的问题。 var db *gorm.DB // 全局变量用</description>
+    </item>
+    
+    <item>
+      <title>Go mod 模块化管理</title>
+      <link>https://www.wingsxdu.com/p1351/</link>
+      <pubDate>Tue, 23 Jul 2019 08:21:35 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p1351/</guid>
+      <description>前言 在Go语言的发展史中，2018年注定是一个重要的时间点，因为在8月正式发布了Go1.11。Go1.11语言部分虽然没有变化，但是带来了3</description>
+    </item>
+    
+    <item>
+      <title>Linux Mysql 数据库相关操作</title>
+      <link>https://www.wingsxdu.com/p1258/</link>
+      <pubDate>Thu, 30 May 2019 12:27:40 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p1258/</guid>
+      <description>登录并创建数据库： mysql -u username-p &amp;lt;spancreate database databasename;&amp;lt;/span use databasename; 修改表字段属性 alter table user MODIFY uid VARCHAR(10); 查看表结构 desc user; 查看建表语句 show create table user; 退出Mysql quit; 导出整个数据库 mysqldump -u 用户名 -p 数据</description>
+    </item>
+    
+    <item>
+      <title>Ubunutu ECS服务器安装界面图形</title>
+      <link>https://www.wingsxdu.com/p1256/</link>
+      <pubDate>Wed, 29 May 2019 03:52:24 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p1256/</guid>
+      <description>安装流程 linux 服务器都是没有界面图形的——当然也不需要界面图形，会消耗多余的资源。但是为了方便演示和开发调试，也会有界面图形的开发需求。 安装流程</description>
+    </item>
+    
+    <item>
+      <title>Ubuntu FISCO BCOS Web3 应用开发环境搭建</title>
+      <link>https://www.wingsxdu.com/p1250/</link>
+      <pubDate>Wed, 29 May 2019 03:08:31 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p1250/</guid>
+      <description>Java 应用的开发环境太繁琐了， 记一下搭建流程。（简化版） 环境搭建 安装JDK FISCO BCOS 要求 JDK 为Oracle 版本，下载链接：https://www.ora</description>
+    </item>
+    
+    <item>
+      <title>Go Java 跨语言通信</title>
+      <link>https://www.wingsxdu.com/p1244/</link>
+      <pubDate>Mon, 27 May 2019 06:53:09 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p1244/</guid>
+      <description>前言 这两篇文章Java Grpc 工程中使用 Go GRPC使用 介绍了 golang、java 中 grpc 的使用，但仅仅是同语言的进程间通信，grpc 在性能上并没有优</description>
+    </item>
+    
+    <item>
+      <title>Java Grpc 工程中使用</title>
+      <link>https://www.wingsxdu.com/p1227/</link>
+      <pubDate>Thu, 23 May 2019 07:06:40 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p1227/</guid>
+      <description>续上篇介绍 Java GRPC proto 编译 现在我们拿到了编译的 Java 文件，其中 User.java 为 rpc 通信，文件名同 .proto 文件名称；CreateAccountGrpc.java 为定义的服务</description>
+    </item>
+    
+    <item>
+      <title>Java GRPC proto 编译</title>
+      <link>https://www.wingsxdu.com/p1216/</link>
+      <pubDate>Thu, 23 May 2019 06:04:45 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p1216/</guid>
+      <description>相较于Go，Java 中的使用步骤就繁琐了很多，我也是折腾了很久才搞清楚。、 环境 ubuntu 16.04 IDE：Intellig IDEA Java 编译：Gradle proto 编译 使用 Gradle</description>
+    </item>
+    
+    <item>
+      <title>Go GRPC使用</title>
+      <link>https://www.wingsxdu.com/p1204/</link>
+      <pubDate>Wed, 22 May 2019 11:59:06 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p1204/</guid>
+      <description>1.1RPC简介 RPC，全称 Remote Procedure Call——远程过程调用，主要用于分布式系统中程序间的通信，基于 TCP 或 UDP 传输协议实现。RPC 属于 IPC（进程间</description>
+    </item>
+    
+    <item>
+      <title>密码保护：前台接口定义</title>
+      <link>https://www.wingsxdu.com/p1188/</link>
+      <pubDate>Tue, 21 May 2019 10:01:49 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p1188/</guid>
+      <description>前言说明 url路径：https://star.wingsxdu.com 如路由为：/login，完整的 uri 为：https://star.wing</description>
+    </item>
+    
+    <item>
+      <title>Go 后端获取微信登录用户信息</title>
+      <link>https://www.wingsxdu.com/p1185/</link>
+      <pubDate>Tue, 21 May 2019 08:59:55 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p1185/</guid>
+      <description>若想获取微信登录用户的私密信息，如 openid、unionid 等，流程为：用户确认登录后获取临时 code，有效期为5分钟；将 code 发送至后端，后</description>
+    </item>
+    
+    <item>
+      <title>Go Echo 中间件</title>
+      <link>https://www.wingsxdu.com/p1183/</link>
+      <pubDate>Mon, 20 May 2019 07:41:36 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p1183/</guid>
+      <description>1.1简介 中间价是指在 Request 与 Response 之间对数据进行处理，Echo 中间件的存在极大提高了开发效率，可定制化、可自制中间件，十分实用。 1.2使用 Static 静态文</description>
+    </item>
+    
+    <item>
+      <title>Go ORM引擎之 xorm</title>
+      <link>https://www.wingsxdu.com/p1129/</link>
+      <pubDate>Sun, 19 May 2019 06:37:51 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p1129/</guid>
+      <description>1.1 orm 引擎简介 ORM 即Object-Relationl Mapping，它的作用是在关系型数据库和对象之间作一个映射，这样，我们在具体的操作数据库的</description>
+    </item>
+    
+  </channel>
+</rss>

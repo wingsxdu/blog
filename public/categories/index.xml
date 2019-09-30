@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on beihai</title>
+    <link>https://www.wingsxdu.com/categories/</link>
+    <description>Recent content in Categories on beihai</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 29 Sep 2019 17:20:37 +0800</lastBuildDate>
+    
+	<atom:link href="https://www.wingsxdu.com/categories/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Golang</title>
+      <link>https://www.wingsxdu.com/categories/golang/</link>
+      <pubDate>Sun, 29 Sep 2019 17:20:37 +0800</pubDate>
+      
+      <guid>https://www.wingsxdu.com/categories/golang/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>底层</title>
+      <link>https://www.wingsxdu.com/categories/%E5%BA%95%E5%B1%82/</link>
+      <pubDate>Sun, 29 Sep 2019 17:20:37 +0800</pubDate>
+      
+      <guid>https://www.wingsxdu.com/categories/%E5%BA%95%E5%B1%82/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>技术向</title>
+      <link>https://www.wingsxdu.com/categories/%E6%8A%80%E6%9C%AF%E5%90%91/</link>
+      <pubDate>Sun, 29 Sep 2019 17:20:37 +0800</pubDate>
+      
+      <guid>https://www.wingsxdu.com/categories/%E6%8A%80%E6%9C%AF%E5%90%91/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>译文</title>
+      <link>https://www.wingsxdu.com/categories/%E8%AF%91%E6%96%87/</link>
+      <pubDate>Mon, 09 Sep 2019 03:45:17 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/categories/%E8%AF%91%E6%96%87/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>mysql</title>
+      <link>https://www.wingsxdu.com/categories/mysql/</link>
+      <pubDate>Mon, 19 Aug 2019 15:10:43 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/categories/mysql/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>科普</title>
+      <link>https://www.wingsxdu.com/categories/%E7%A7%91%E6%99%AE/</link>
+      <pubDate>Mon, 19 Aug 2019 15:10:43 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/categories/%E7%A7%91%E6%99%AE/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>备忘录</title>
+      <link>https://www.wingsxdu.com/categories/%E5%A4%87%E5%BF%98%E5%BD%95/</link>
+      <pubDate>Fri, 09 Aug 2019 09:45:19 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/categories/%E5%A4%87%E5%BF%98%E5%BD%95/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>生活</title>
+      <link>https://www.wingsxdu.com/categories/%E7%94%9F%E6%B4%BB/</link>
+      <pubDate>Fri, 09 Aug 2019 02:08:22 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/categories/%E7%94%9F%E6%B4%BB/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>随便写写</title>
+      <link>https://www.wingsxdu.com/categories/%E9%9A%8F%E4%BE%BF%E5%86%99%E5%86%99/</link>
+      <pubDate>Fri, 09 Aug 2019 02:08:22 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/categories/%E9%9A%8F%E4%BE%BF%E5%86%99%E5%86%99/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>linux</title>
+      <link>https://www.wingsxdu.com/categories/linux/</link>
+      <pubDate>Thu, 30 May 2019 12:27:40 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/categories/linux/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Java</title>
+      <link>https://www.wingsxdu.com/categories/java/</link>
+      <pubDate>Wed, 29 May 2019 03:08:31 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/categories/java/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>得到</title>
+      <link>https://www.wingsxdu.com/categories/%E5%BE%97%E5%88%B0/</link>
+      <pubDate>Wed, 13 Feb 2019 13:23:32 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/categories/%E5%BE%97%E5%88%B0/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>《下一个倒下的会不会是华为》</title>
+      <link>https://www.wingsxdu.com/categories/%E4%B8%8B%E4%B8%80%E4%B8%AA%E5%80%92%E4%B8%8B%E7%9A%84%E4%BC%9A%E4%B8%8D%E4%BC%9A%E6%98%AF%E5%8D%8E%E4%B8%BA/</link>
+      <pubDate>Mon, 31 Dec 2018 16:20:07 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/categories/%E4%B8%8B%E4%B8%80%E4%B8%AA%E5%80%92%E4%B8%8B%E7%9A%84%E4%BC%9A%E4%B8%8D%E4%BC%9A%E6%98%AF%E5%8D%8E%E4%B8%BA/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Android studio</title>
+      <link>https://www.wingsxdu.com/categories/android-studio/</link>
+      <pubDate>Wed, 21 Nov 2018 12:08:55 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/categories/android-studio/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>数码</title>
+      <link>https://www.wingsxdu.com/categories/%E6%95%B0%E7%A0%81/</link>
+      <pubDate>Mon, 17 Sep 2018 14:29:38 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/categories/%E6%95%B0%E7%A0%81/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ionic</title>
+      <link>https://www.wingsxdu.com/categories/ionic/</link>
+      <pubDate>Fri, 07 Sep 2018 14:30:21 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/categories/ionic/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>
