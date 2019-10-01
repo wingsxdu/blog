@@ -46,11 +46,6 @@ defaultContentLanguage = "zh-cn"           # Default language to use
   weight = 30
   identifier = "post"
   url = "/post/"
-#[[menu.main]]
-#  name = "分类标签"
-#  weight = 40
-#  identifier = "tags"
-#  url = "/tags/"
 [[menu.main]]
   name = "分类标签"
   weight = 40
@@ -87,8 +82,6 @@ defaultContentLanguage = "zh-cn"           # Default language to use
   baidu_analytics = "d9caa672b116c39e151b0da7c758ad88"      # Baidu Analytics
 
   # forkMeOnGithub = "https://github.com/wingsxdu"
-  customJS = ['custom.js']
-  customCSS = ['custom.css']
   # Valine.
   # You can get your appid and appkey from https://leancloud.cn
   # more info please open https://valine.js.org
