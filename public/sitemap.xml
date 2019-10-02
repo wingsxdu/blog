@@ -72,14 +72,14 @@
   </url>
   
   <url>
-    <loc>https://www.wingsxdu.com/tags/%E6%8A%80%E6%9C%AF%E5%90%91/</loc>
+    <loc>https://www.wingsxdu.com/categories/%E6%8A%80%E6%9C%AF%E5%90%91/</loc>
     <lastmod>2019-09-29T17:20:37+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://www.wingsxdu.com/categories/%E6%8A%80%E6%9C%AF%E5%90%91/</loc>
+    <loc>https://www.wingsxdu.com/tags/%E6%8A%80%E6%9C%AF%E5%90%91/</loc>
     <lastmod>2019-09-29T17:20:37+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
@@ -268,13 +268,6 @@
   </url>
   
   <url>
-    <loc>https://www.wingsxdu.com/p1188/</loc>
-    <lastmod>2019-05-21T10:01:49+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
     <loc>https://www.wingsxdu.com/p1185/</loc>
     <lastmod>2019-05-21T08:59:55+00:00</lastmod>
     <changefreq>weekly</changefreq>
@@ -438,13 +431,6 @@
   <url>
     <loc>https://www.wingsxdu.com/p335/</loc>
     <lastmod>2018-12-09T15:32:24+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.wingsxdu.com/p318/</loc>
-    <lastmod>2018-11-25T06:49:54+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>

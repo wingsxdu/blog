@@ -156,15 +156,6 @@
     </item>
     
     <item>
-      <title>密码保护：前台接口定义</title>
-      <link>https://www.wingsxdu.com/p1188/</link>
-      <pubDate>Tue, 21 May 2019 10:01:49 +0000</pubDate>
-      
-      <guid>https://www.wingsxdu.com/p1188/</guid>
-      <description>前言说明 url路径：https://star.wingsxdu.com 如路由为：/login，完整的 uri 为：https://star.wing</description>
-    </item>
-    
-    <item>
       <title>Go 后端获取微信登录用户信息</title>
       <link>https://www.wingsxdu.com/p1185/</link>
       <pubDate>Tue, 21 May 2019 08:59:55 +0000</pubDate>
@@ -189,6 +180,15 @@
       
       <guid>https://www.wingsxdu.com/p1129/</guid>
       <description>1.1 orm 引擎简介 ORM 即Object-Relationl Mapping，它的作用是在关系型数据库和对象之间作一个映射，这样，我们在具体的操作数据库的</description>
+    </item>
+    
+    <item>
+      <title>Go Echo JWT</title>
+      <link>https://www.wingsxdu.com/p1119/</link>
+      <pubDate>Sun, 19 May 2019 05:58:55 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p1119/</guid>
+      <description>1.1 简介 JWT 全称 JSON Web Token ，是一个开放标准(RFC 7519)，它定义了一种紧凑的、自包含的方式，用于作为 JSON 对象在各方之间安全地传输信息。该信息是数字</description>
     </item>
     
   </channel>
