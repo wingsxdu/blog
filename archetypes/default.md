@@ -26,3 +26,10 @@ lastmod:
 date: {{ .Date }}
 draft: false
 ---
+
+
+{{< figure src="/image/gc.jpg" title="2019 年 6 月，词汇量测试" >}}
+<!--more-->
+
+
+## Title {#Title}
