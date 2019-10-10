@@ -1,7 +1,7 @@
 ---
 title: "内存空洞"
 author: "beihai"
-description: "Should we pay attention to the memory layout in struct"
+description: "Should we pay attention to the memory layout in struct?"
 tags: [
     "技术向",
     "golang",
@@ -17,7 +17,6 @@ categories: [
 lastmod: 
 date: 2019-10-10T10:35:26+08:00
 draft: false
-typora-root-url: ..\..\static
 ---
 
 计算机在加载和保存数据时，如果内存地址合理地对齐的将会更有效率。例如2字节大小的int16类型的变量地址应该是偶数，一个4字节大小的rune类型变量的地址应该是4的倍数，一个8字节大小的float64、uint64或64-bit指针类型变量的地址应该是8字节对齐的。但是对于再大的地址对齐倍数则是不需要的，即使是complex128等较大的数据类型最多也只是8字节对齐。
@@ -71,11 +70,11 @@ var x struct {
 
 下面显示了对x和它的三个字段调用unsafe包相关函数的计算结果：
 
-{{< figure src="/image/holes_in_struct.png" style="center">}}
+<div align="center">{{< figure src="/image/holes_in_struct.png" style="center">}}</div>
 
 32位系统：
 
-```
+```go
 Sizeof(x)   = 16  Alignof(x)   = 4
 Sizeof(x.a) = 1   Alignof(x.a) = 1 Offsetof(x.a) = 0
 Sizeof(x.b) = 2   Alignof(x.b) = 2 Offsetof(x.b) = 2
@@ -84,7 +83,7 @@ Sizeof(x.c) = 12  Alignof(x.c) = 4 Offsetof(x.c) = 4
 
 64位系统：
 
-```
+```go
 Sizeof(x)   = 32  Alignof(x)   = 8
 Sizeof(x.a) = 1   Alignof(x.a) = 1 Offsetof(x.a) = 0
 Sizeof(x.b) = 2   Alignof(x.b) = 2 Offsetof(x.b) = 2
@@ -112,3 +111,5 @@ struct{ bool; int16; float64 } // 2 words 3words
           C uint8
     }
 ```
+
+但这仍然处于理论阶段并未实现。
