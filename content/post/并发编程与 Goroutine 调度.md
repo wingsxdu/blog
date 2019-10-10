@@ -61,11 +61,11 @@ Go的调度器内部有四个重要的结构：M，P，S，Sched，如上图所�
 - M：Machine，OS线程抽象，代表着真正执行计算的资源，在绑定有效的P后，进入 schedule 循环；而 schedule 循环的机制大致是从 Global 队列、P 的 Local 队列以及 wait 队列中获取 G，切换到 G 的执行栈上并执行G 的函数，调用 goexit 做清理工作并回到 M，如此反复。M 并不保留 G 状态，这是 G 可以跨 M 调度的基础，M 的数量是不定的，由 Go Runtime调整，为了防止创建过多 OS 线程导致系统调度不过来，目前默认最大限制为10000个。
 - Sched：代表调度器，它维护有存储M和G的队列以及调度器的一些状态信息等。
 
-![goroutine1](https://www.wingsxdu.com/image/goroutine1.jpg)
+<div align="center">![goroutine1](https://www.wingsxdu.com/image/goroutine1.jpg)</div>
 
 ###### G-P-M 模型调度
 
-![goroutine-scheduler-model](https://www.wingsxdu.com/image/goroutine-scheduler-model.png)
+<div align="center">![goroutine-scheduler-model](https://www.wingsxdu.com/image/goroutine-scheduler-model.png)</div>
 
 Go 调度器工作时会维护两种用来保存 G 的任务队列：一种是一个 Global 任务队列，一种是每个 P 维护的 Local 任务队列。
 
@@ -77,7 +77,7 @@ Go 调度器工作时会维护两种用来保存 G 的任务队列：一种是�
 
 除此之外还有 ` work-stealing `调度算法：当 M 执行完了当前 P 的 Local 队列里的所有 G 后，P 也不会就这么在那躺尸啥都不干，它会先尝试从 Global 队列寻找 G 来执行，如果 Global队列为空，它会随机挑选另外一个 P，从它的队列里中拿走一半的 G 到自己的队列中执行。
 
-![](https://www.wingsxdu.com/image/goroutine3.jpg)
+<div align="center">![](https://www.wingsxdu.com/image/goroutine3.jpg)</div>
 
 #### 为什么要有 P(Processor) ？
 
