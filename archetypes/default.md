@@ -27,9 +27,8 @@ date: {{ .Date }}
 draft: false
 ---
 
-
-{{< figure src="/image/gc.jpg" title="2019 年 6 月，词汇量测试" >}}
-<!--more-->
+<div align="center">{{< figure src="/image/holes_in_struct.png" title="center">}}</div>
 
 
 ## Title {#Title}
+
