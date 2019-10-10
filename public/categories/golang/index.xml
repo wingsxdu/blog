@@ -6,10 +6,19 @@
     <description>Recent content in Golang on beihai</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 29 Sep 2019 17:20:37 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 10 Oct 2019 10:35:26 +0800</lastBuildDate>
     
 	<atom:link href="https://www.wingsxdu.com/categories/golang/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>内存空洞</title>
+      <link>https://www.wingsxdu.com/post/memoryholes/</link>
+      <pubDate>Thu, 10 Oct 2019 10:35:26 +0800</pubDate>
+      
+      <guid>https://www.wingsxdu.com/post/memoryholes/</guid>
+      <description>&lt;p&gt;计算机在加载和保存数据时，如果内存地址合理地对齐的将会更有效率。例如2字节大小的int16类型的变量地址应该是偶数，一个4字节大小的rune类型变量的地址应该是4的倍数，一个8字节大小的float64、uint64或64-bit指针类型变量的地址应该是8字节对齐的。但是对于再大的地址对齐倍数则是不需要的，即使是complex128等较大的数据类型最多也只是8字节对齐。&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>并发编程与 Goroutine 调度</title>
@@ -180,15 +189,6 @@
       
       <guid>https://www.wingsxdu.com/p1084/</guid>
       <description>PBKDF2加密算法 {.title-article} 1.1 简介 PBKDF2(Password-Based Key Derivation Function)是一个用来导出密钥的函数，常用于生成加密的密码。原理是通过 password 和 salt 进行 hash，然后将结果</description>
-    </item>
-    
-    <item>
-      <title>go 二叉搜索树实现快速数组匹配</title>
-      <link>https://www.wingsxdu.com/p723/</link>
-      <pubDate>Tue, 11 Dec 2018 10:16:22 +0000</pubDate>
-      
-      <guid>https://www.wingsxdu.com/p723/</guid>
-      <description>二叉搜索树概念 二叉排序树，又叫二叉查找树，是一种快速高效的排序方式。它可以是一棵空树（没有值）；或者是具有以下性质的二叉树： 1. 若它的左子树不</description>
     </item>
     
   </channel>

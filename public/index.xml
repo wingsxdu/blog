@@ -6,7 +6,7 @@
     <description>Recent content on beihai</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 02 Oct 2019 18:32:12 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 10 Oct 2019 10:35:26 +0800</lastBuildDate>
     
         <atom:link href="https://www.wingsxdu.com/index.xml" rel="self" type="application/rss+xml" />
     
@@ -58,7 +58,7 @@
 
 &lt;ul&gt;
 &lt;li&gt;Go 语言初学：：&lt;a href=&#34;https://tour.go-zh.org/welcome/1&#34;&gt;A tour of go&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Go 语言入门：&lt;a href=&#34;https://books.studygolang.com/gopl-zh/&#34;&gt;The Go Programming Language&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Go 语言入门：&lt;a href=&#34;https://books.studygolang.com/gopl-zh/&#34;&gt;The Go Programming Language&lt;/a&gt; ,&lt;a href=&#34;https://books.studygolang.com/The-Golang-Standard-Library-by-Example/&#34;&gt;Go语言标准库&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;Go 语言进阶：&lt;a href=&#34;https://chai2010.cn/advanced-go-programming-book&#34;&gt;Go 语言高级编程&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;《三体》&lt;/li&gt;
 &lt;li&gt;《文化苦旅》、《活着》、《平凡的世界》&lt;/li&gt;
@@ -92,7 +92,7 @@
     <item>
       <title>Posts</title>
       <link>https://www.wingsxdu.com/post/</link>
-      <pubDate>Wed, 02 Oct 2019 18:32:12 +0800</pubDate>
+      <pubDate>Thu, 10 Oct 2019 10:35:26 +0800</pubDate>
       
       <guid>https://www.wingsxdu.com/post/</guid>
       

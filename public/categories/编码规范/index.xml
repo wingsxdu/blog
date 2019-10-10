@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>编码规范 on beihai</title>
+    <link>https://www.wingsxdu.com/categories/%E7%BC%96%E7%A0%81%E8%A7%84%E8%8C%83/</link>
+    <description>Recent content in 编码规范 on beihai</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 10 Oct 2019 10:35:26 +0800</lastBuildDate>
+    
+	<atom:link href="https://www.wingsxdu.com/categories/%E7%BC%96%E7%A0%81%E8%A7%84%E8%8C%83/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>内存空洞</title>
+      <link>https://www.wingsxdu.com/post/memoryholes/</link>
+      <pubDate>Thu, 10 Oct 2019 10:35:26 +0800</pubDate>
+      
+      <guid>https://www.wingsxdu.com/post/memoryholes/</guid>
+      <description>&lt;p&gt;计算机在加载和保存数据时，如果内存地址合理地对齐的将会更有效率。例如2字节大小的int16类型的变量地址应该是偶数，一个4字节大小的rune类型变量的地址应该是4的倍数，一个8字节大小的float64、uint64或64-bit指针类型变量的地址应该是8字节对齐的。但是对于再大的地址对齐倍数则是不需要的，即使是complex128等较大的数据类型最多也只是8字节对齐。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

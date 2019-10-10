@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>并发编程与 Goroutine 调度 - beihai</title>
+  <title>内存空洞 - beihai</title>
   
 
 <meta name="renderer" content="webkit" />
@@ -22,7 +22,7 @@
 
 <meta name="mobile-web-app-capable" content="yes">
 
-<meta name="author" content="beihai" /><meta name="description" content="DO NOT COMMUNICATE BY SHARING MEMORY; INSTEAD, SHARE MEMORY BY COMMUNICATING." />
+<meta name="author" content="beihai" /><meta name="description" content="Should we pay attention to the memory layout in struct?" />
 
   <meta name="keywords" content="Golang, Go, back-end, 后端, 分布式" />
 
@@ -34,7 +34,7 @@
 <meta name="generator" content="Hugo 0.58.3" />
 
 
-<link rel="canonical" href="https://www.wingsxdu.com/post/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B8%8E-goroutine-%E8%B0%83%E5%BA%A6/" />
+<link rel="canonical" href="https://www.wingsxdu.com/post/memoryholes/" />
 
 
 
@@ -56,26 +56,26 @@
 
 
 
-<meta property="og:title" content="并发编程与 Goroutine 调度" />
-<meta property="og:description" content="DO NOT COMMUNICATE BY SHARING MEMORY; INSTEAD, SHARE MEMORY BY COMMUNICATING." />
+<meta property="og:title" content="内存空洞" />
+<meta property="og:description" content="Should we pay attention to the memory layout in struct?" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://www.wingsxdu.com/post/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B8%8E-goroutine-%E8%B0%83%E5%BA%A6/" />
-<meta property="article:published_time" content="2019-09-29T17:20:37+08:00" />
-<meta property="article:modified_time" content="2019-09-29T17:20:37+08:00" />
-<meta itemprop="name" content="并发编程与 Goroutine 调度">
-<meta itemprop="description" content="DO NOT COMMUNICATE BY SHARING MEMORY; INSTEAD, SHARE MEMORY BY COMMUNICATING.">
+<meta property="og:url" content="https://www.wingsxdu.com/post/memoryholes/" />
+<meta property="article:published_time" content="2019-10-10T10:35:26+08:00" />
+<meta property="article:modified_time" content="2019-10-10T14:41:11+08:00" />
+<meta itemprop="name" content="内存空洞">
+<meta itemprop="description" content="Should we pay attention to the memory layout in struct?">
 
 
-<meta itemprop="datePublished" content="2019-09-29T17:20:37&#43;08:00" />
-<meta itemprop="dateModified" content="2019-09-29T17:20:37&#43;08:00" />
-<meta itemprop="wordCount" content="2193">
+<meta itemprop="datePublished" content="2019-10-10T10:35:26&#43;08:00" />
+<meta itemprop="dateModified" content="2019-10-10T14:41:11&#43;08:00" />
+<meta itemprop="wordCount" content="1143">
 
 
 
-<meta itemprop="keywords" content="技术向,golang,底层," />
+<meta itemprop="keywords" content="技术向,golang,底层,编码规范," />
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="并发编程与 Goroutine 调度"/>
-<meta name="twitter:description" content="DO NOT COMMUNICATE BY SHARING MEMORY; INSTEAD, SHARE MEMORY BY COMMUNICATING."/>
+<meta name="twitter:title" content="内存空洞"/>
+<meta name="twitter:description" content="Should we pay attention to the memory layout in struct?"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -362,20 +362,21 @@ if (!doNotTrack) {
           <article class="post bg-white">
     
     <header class="post-header">
-      <h1 class="post-title">并发编程与 Goroutine 调度</h1>
+      <h1 class="post-title">内存空洞</h1>
       
       <div class="post-meta">
-        <time datetime="2019-09-29" class="post-time">
-          2019-09-29
+        <time datetime="2019-10-10" class="post-time">
+          2019-10-10
         </time>
         <div class="post-category">
             <a href="https://www.wingsxdu.com/categories/%E6%8A%80%E6%9C%AF%E5%90%91/"> 技术向 </a>
             <a href="https://www.wingsxdu.com/categories/golang/"> golang </a>
             <a href="https://www.wingsxdu.com/categories/%E5%BA%95%E5%B1%82/"> 底层 </a>
+            <a href="https://www.wingsxdu.com/categories/%E7%BC%96%E7%A0%81%E8%A7%84%E8%8C%83/"> 编码规范 </a>
             
           </div>
-        <span class="more-meta"> 约 2193 字 </span>
-          <span class="more-meta"> 预计阅读 5 分钟 </span>
+        <span class="more-meta"> 约 1143 字 </span>
+          <span class="more-meta"> 预计阅读 3 分钟 </span>
 
         
         
@@ -398,23 +399,16 @@ if (!doNotTrack) {
 <ul>
 <li>
 <ul>
-<li>
+<li><a href="#内存空洞的产生">内存空洞的产生</a></li>
+<li><a href="#unsafe 包分析内存">unsafe 包分析内存</a>
 <ul>
 <li>
 <ul>
-<li><a href="#并发与并行">并发与并行</a></li>
-<li><a href="#协程-线程-进程的区别">协程，线程，进程的区别。</a></li>
-<li><a href="#goroutine-调度">Goroutine 调度</a>
-<ul>
-<li>
-<ul>
-<li><a href="#goroutine">Goroutine</a></li>
-<li><a href="#g-p-m-模型调度">G-P-M 模型调度</a></li>
+<li><a href="##Go 中类型大小">Go 中类型大小</a></li>
+<li><a href="##unsafe.Sizeof, Alignof 和 Offsetof">unsafe.Sizeof, Alignof 和 Offsetof</a></li>
 </ul></li>
 </ul></li>
-<li><a href="#为什么要有-p-processor">为什么要有 P(Processor) ？</a></li>
-</ul></li>
-</ul></li>
+<li><a href="#内存分析">内存分析</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -423,86 +417,192 @@ if (!doNotTrack) {
 
     
     <div class="post-content">
-      
+      <p>计算机在加载和保存数据时，如果内存地址合理地对齐的将会更有效率。例如2字节大小的int16类型的变量地址应该是偶数，一个4字节大小的rune类型变量的地址应该是4的倍数，一个8字节大小的float64、uint64或64-bit指针类型变量的地址应该是8字节对齐的。但是对于再大的地址对齐倍数则是不需要的，即使是complex128等较大的数据类型最多也只是8字节对齐。</p>
 
-<h4 id="并发与并行">并发与并行</h4>
+<h2 id="内存空洞的产生">内存空洞的产生</h2>
 
-<p>并行是指两个或者多个事件在同一时刻发生；并发是指两个或多个事件在同一时间间隔发生。</p>
+<p>由于地址对齐这个因素，一个聚合类型（结构体或数组）的大小至少是所有字段或元素大小的总和，或者更大，因为可能存在内存空洞。内存空洞是编译器自动添加的没有被使用的内存空间，用于保证后面每个字段或元素的地址相对于结构或数组的开始地址能够合理地对齐（内存空洞可能会存在一些随机数据，可能会对用unsafe包直接操作内存的处理产生影响）。</p>
 
-<p>并行是在不同实体上的多个事件，在多台处理器上同时处理多个任务。并发是在同一实体上的多个事件,在一台处理器上“同时”处理多个任务。</p>
+<h2 id="unsafe 包分析内存">unsafe 包分析内存</h2>
 
-<p>并发偏重于多个任务交替执行，而多个任务之间有可能还是串行的。而并行是真正意义上的“同时执行”。</p>
+<h4 id="#Go 中类型大小">Go 中类型大小</h4>
 
-<p>并发编程是指在一台处理器上“同时”处理多个任务。并发是在同一实体上的多个事件。多个事件在同一时间间隔发生。并发编程的目标是充分的利用处理器的每一个核，以达到最高的处理性能。</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>大小</th>
+</tr>
+</thead>
 
-<h4 id="协程-线程-进程的区别">协程，线程，进程的区别。</h4>
+<tbody>
+<tr>
+<td><code>bool</code></td>
+<td>1个字节</td>
+</tr>
 
-<ul>
-<li>进程</li>
-</ul>
+<tr>
+<td><code>intN, uintN, floatN, complexN</code></td>
+<td>N/8个字节(例如float64是8个字节)</td>
+</tr>
 
-<p>进程是具有一定独立功能的程序关于某个数据集合上的一次运行活动，进程是系统进行资源分配和调度的一个独立单位。每个进程都有自己的独立内存空间，不同进程通过进程间通信来通信。由于进程比较重量，占据独立的内存，所以上下文进程间的切换开销（栈、寄存器、虚拟内存、文件句柄等）比较大，但相对比较稳定安全。</p>
+<tr>
+<td><code>int, uint, uintptr</code></td>
+<td>1个机器字</td>
+</tr>
 
-<ul>
-<li>线程</li>
-</ul>
+<tr>
+<td><code>*T</code></td>
+<td>1个机器字</td>
+</tr>
 
-<p>线程是进程的一个实体，是 CPU 调度和分派的基本单位，它是比进程更小的能独立运行的基本单位。线程自己基本上不拥有系统资源，只拥有一点在运行中必不可少的资源（如程序计数器，一组寄存器和栈），但是它可与同属一个进程的其他的线程共享进程所拥有的全部资源。线程间主要通过共享内存通信，上下文切换很快，资源开销较少，但相比进程不够稳定容易丢失数据。</p>
+<tr>
+<td><code>string</code></td>
+<td>2个机器字(data,len)</td>
+</tr>
 
-<ul>
-<li>协程</li>
-</ul>
+<tr>
+<td><code>[]T</code></td>
+<td>3个机器字(data,len,cap)</td>
+</tr>
 
-<p>协程是一种用户态的轻量级线程，协程的调度完全由用户控制。协程拥有自己的寄存器上下文和栈。协程调度切换时，将寄存器上下文和栈保存到其他地方，在切回来的时候，恢复先前保存的寄存器上下文和栈，因为是直接操作栈则基本没有内核切换的开销，可以不加锁的访问全局变量，所以上下文的切换非常快。</p>
+<tr>
+<td><code>map</code></td>
+<td>1个机器字</td>
+</tr>
 
-<h4 id="goroutine-调度">Goroutine 调度</h4>
+<tr>
+<td><code>func</code></td>
+<td>1个机器字</td>
+</tr>
 
-<blockquote>
-<p>DO NOT COMMUNICATE BY SHARING MEMORY; INSTEAD, SHARE MEMORY BY COMMUNICATING.
-“不要通过共享内存来通信，而应通过通信来共享内存。”</p>
-</blockquote>
+<tr>
+<td><code>chan</code></td>
+<td>1个机器字</td>
+</tr>
 
-<h6 id="goroutine">Goroutine</h6>
+<tr>
+<td><code>interface</code></td>
+<td>2个机器字(type,value)</td>
+</tr>
+</tbody>
+</table>
 
-<p>Goroutine，Go语言基于并发（并行）编程给出的解决方案。通常 goroutine 会被当做 coroutine（协程）的 golang 实现，从比较粗浅的层面来看，这种认知也算是合理。但实际上，goroutine并非传统意义上的协程，现在主流的线程模型分三种：内核级线程模型、用户级线程模型和两级线程模型（也称混合型线程模型），传统的协程库属于<strong>用户级线程模型</strong>，而 goroutine 和它的<code>Go Scheduler</code>在底层实现上其实是属于<strong>两级线程模型</strong>，因此，有时候为了方便理解可以简单把goroutine类比成协程，但一定要有个清晰的认知——goroutine并不等同于协程。</p>
+<h4 id="#unsafe.Sizeof, Alignof 和 Offsetof">unsafe.Sizeof, Alignof 和 Offsetof</h4>
 
-<p>goroutine使用方式非常的简单，只需使用 <code>go</code> 关键字即可启动一个协程，并且它是处于异步方式运行，你不需要等它运行完成以后在执行以后的代码。</p>
+<p><code>unsafe.Sizeof</code> 函数返回操作数在内存中的字节大小，参数可以是任意类型的表达式，但是它并不会对表达式进行求值。一个 Sizeof 函数调用是一个对应 uintptr 类型的常量表达式，因此返回的结果可以用作数组类型的长度大小，或者用作计算其他的常量。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-Go" data-lang="Go"><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-Go" data-lang="Go"><span class="kn">import</span> <span class="s">&#34;unsafe&#34;</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">unsafe</span><span class="p">.</span><span class="nf">Sizeof</span><span class="p">(</span><span class="nb">float64</span><span class="p">(</span><span class="mi">0</span><span class="p">)))</span> <span class="o">//</span> <span class="s">&#34;8&#34;</span></code></pre></td></tr></table>
+</div>
+</div>
+<p><code>unsafe.Alignof</code> 函数返回对应参数的类型需要对齐的倍数. 和 Sizeof 类似, Alignof 也是返回一个常量表达式, 对应一个常量. 通常情况下布尔和数字类型需要对齐到它们本身的大小(最多8个字节), 其它的类型对齐到机器字大小.</p>
 
-<p><code>go func() // 通过go关键字启动一个协程来运行函数</code></p>
+<p><code>unsafe.Offsetof</code> 函数的参数必须是一个字段 <code>x.f</code>, 然后返回 <code>f</code> 字段相对于 <code>x</code> 起始地址的偏移量, 包括可能的空洞.</p>
 
-<p>Go的调度器内部有四个重要的结构：M，P，S，Sched，如上图所示（Sched 未给出）。</p>
+<h2 id="内存分析">内存分析</h2>
 
-<ul>
-<li>G：表示 Goroutine，每个 Goroutine 对应一个G结构体，G 存储 Goroutine 的运行堆栈、状态以及任务函数，可重用。G并非执行体，每个 G 需要绑定到 P 才能被调度执行。</li>
-<li>P： Processor，表示逻辑处理器。 对G来说，P 相当于 CPU 核，G 只有绑定到 P （在 P 的 local  队列中）才能被调度。对 M 来说，P 提供了相关的执行环境（Context），如内存分配状态（mcache），任务队列（G）等， P的数量决定了系统内最大可并行的 G 的数量（前提：物理CPU核数 &gt;= P 的数量），P 的数量由用户设置的 GOMAXPROCS 决定，但是不论 GOMAXPROCS 设置为多大，P的数量最大为256。</li>
-<li>M：Machine，OS线程抽象，代表着真正执行计算的资源，在绑定有效的P后，进入 schedule 循环；而 schedule 循环的机制大致是从 Global 队列、P 的 Local 队列以及 wait 队列中获取 G，切换到 G 的执行栈上并执行G 的函数，调用 goexit 做清理工作并回到 M，如此反复。M 并不保留 G 状态，这是 G 可以跨 M 调度的基础，M 的数量是不定的，由 Go Runtime调整，为了防止创建过多 OS 线程导致系统调度不过来，目前默认最大限制为10000个。</li>
-<li>Sched：代表调度器，它维护有存储M和G的队列以及调度器的一些状态信息等。</li>
-</ul>
+<p>图 13.1 显示了一个结构体变量 x 以及其在32位和64位机器上的典型的内存. 灰色区域是空洞.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-Go" data-lang="Go"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-Go" data-lang="Go"><span class="kd">var</span> <span class="nx">x</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">a</span> <span class="kt">bool</span>
+    <span class="nx">b</span> <span class="kt">int16</span>
+    <span class="nx">c</span> <span class="p">[]</span><span class="kt">int</span>
+<span class="p">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>下面显示了对x和它的三个字段调用unsafe包相关函数的计算结果：</p>
 
-<div align="center">![goroutine1](https://www.wingsxdu.com/image/goroutine1.jpg)</div>
-
-<h6 id="g-p-m-模型调度">G-P-M 模型调度</h6>
-
-<div align="center">![goroutine-scheduler-model](https://www.wingsxdu.com/image/goroutine-scheduler-model.png)</div>
-
-<p>Go 调度器工作时会维护两种用来保存 G 的任务队列：一种是一个 Global 任务队列，一种是每个 P 维护的 Local 任务队列。</p>
-
-<p>当通过<code>go</code>关键字创建一个新的 goroutine 的时候，它会优先被放入P 的本地队列。为了运行goroutine，M 需要持有（绑定）一个 P，接着M会启动一个 OS线程，循环从P的本地队列里取出一个 goroutine 并执行。</p>
-
-<p><img src="https://www.wingsxdu.com/image/goroutine2.jpg" alt="" /></p>
-
-<p>从上图中可以看到，有2个物理线程M，每一个M都拥有一个处理器P，每一个也都有一个正在运行的goroutine。P的数量可以通过GOMAXPROCS()来设置，它其实也就代表了真正的并发度，即有多少个goroutine可以同时运行。</p>
-
-<p>除此之外还有 <code>work-stealing</code>调度算法：当 M 执行完了当前 P 的 Local 队列里的所有 G 后，P 也不会就这么在那躺尸啥都不干，它会先尝试从 Global 队列寻找 G 来执行，如果 Global队列为空，它会随机挑选另外一个 P，从它的队列里中拿走一半的 G 到自己的队列中执行。</p>
-
-<div align="center">![](https://www.wingsxdu.com/image/goroutine3.jpg)</div>
-
-<h4 id="为什么要有-p-processor">为什么要有 P(Processor) ？</h4>
-
-<p>你可能会想，为什么一定需要一个上下文，我们能不能直接除去上下文，让 <code>Goroutine</code> 的 <code>runqueues</code> 挂到M上呢？答案是不行，需要上下文的目的，是让我们可以直接放开其他线程，当遇到内核线程阻塞的时候。</p>
-
-<p>一个很简单的例子就是系统调用 <code>sysall</code>，一个线程肯定不能同时执行代码和系统调用被阻塞，这个时候，此线程M需要放弃当前的上下文环境 P，以便可以让其他的 <code>Goroutine</code> 被调度执行。</p>
-
+<p><div align="center">
+<link rel="stylesheet" href="/css/hugo-easy-gallery.css" />
+<div class="box">
+<figure  itemprop="associatedMedia"
+  itemscope itemtype="http://schema.org/ImageObject" >
+    <div class="img">
+      <img itemprop="thumbnail" src="/image/holes_in_struct.png" />
+    </div>
+    <a href="/image/holes_in_struct.png" itemprop="contentUrl"></a>
+  </figure>
+</div>
+</div>
+32位系统：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nf">Sizeof</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span>   <span class="p">=</span> <span class="mi">16</span>  <span class="nf">Alignof</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span>   <span class="p">=</span> <span class="mi">4</span>
+<span class="nf">Sizeof</span><span class="p">(</span><span class="nx">x</span><span class="p">.</span><span class="nx">a</span><span class="p">)</span> <span class="p">=</span> <span class="mi">1</span>   <span class="nf">Alignof</span><span class="p">(</span><span class="nx">x</span><span class="p">.</span><span class="nx">a</span><span class="p">)</span> <span class="p">=</span> <span class="mi">1</span> <span class="nf">Offsetof</span><span class="p">(</span><span class="nx">x</span><span class="p">.</span><span class="nx">a</span><span class="p">)</span> <span class="p">=</span> <span class="mi">0</span>
+<span class="nf">Sizeof</span><span class="p">(</span><span class="nx">x</span><span class="p">.</span><span class="nx">b</span><span class="p">)</span> <span class="p">=</span> <span class="mi">2</span>   <span class="nf">Alignof</span><span class="p">(</span><span class="nx">x</span><span class="p">.</span><span class="nx">b</span><span class="p">)</span> <span class="p">=</span> <span class="mi">2</span> <span class="nf">Offsetof</span><span class="p">(</span><span class="nx">x</span><span class="p">.</span><span class="nx">b</span><span class="p">)</span> <span class="p">=</span> <span class="mi">2</span>
+<span class="nf">Sizeof</span><span class="p">(</span><span class="nx">x</span><span class="p">.</span><span class="nx">c</span><span class="p">)</span> <span class="p">=</span> <span class="mi">12</span>  <span class="nf">Alignof</span><span class="p">(</span><span class="nx">x</span><span class="p">.</span><span class="nx">c</span><span class="p">)</span> <span class="p">=</span> <span class="mi">4</span> <span class="nf">Offsetof</span><span class="p">(</span><span class="nx">x</span><span class="p">.</span><span class="nx">c</span><span class="p">)</span> <span class="p">=</span> <span class="mi">4</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>64位系统：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nf">Sizeof</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span>   <span class="p">=</span> <span class="mi">32</span>  <span class="nf">Alignof</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span>   <span class="p">=</span> <span class="mi">8</span>
+<span class="nf">Sizeof</span><span class="p">(</span><span class="nx">x</span><span class="p">.</span><span class="nx">a</span><span class="p">)</span> <span class="p">=</span> <span class="mi">1</span>   <span class="nf">Alignof</span><span class="p">(</span><span class="nx">x</span><span class="p">.</span><span class="nx">a</span><span class="p">)</span> <span class="p">=</span> <span class="mi">1</span> <span class="nf">Offsetof</span><span class="p">(</span><span class="nx">x</span><span class="p">.</span><span class="nx">a</span><span class="p">)</span> <span class="p">=</span> <span class="mi">0</span>
+<span class="nf">Sizeof</span><span class="p">(</span><span class="nx">x</span><span class="p">.</span><span class="nx">b</span><span class="p">)</span> <span class="p">=</span> <span class="mi">2</span>   <span class="nf">Alignof</span><span class="p">(</span><span class="nx">x</span><span class="p">.</span><span class="nx">b</span><span class="p">)</span> <span class="p">=</span> <span class="mi">2</span> <span class="nf">Offsetof</span><span class="p">(</span><span class="nx">x</span><span class="p">.</span><span class="nx">b</span><span class="p">)</span> <span class="p">=</span> <span class="mi">2</span>
+<span class="nf">Sizeof</span><span class="p">(</span><span class="nx">x</span><span class="p">.</span><span class="nx">c</span><span class="p">)</span> <span class="p">=</span> <span class="mi">24</span>  <span class="nf">Alignof</span><span class="p">(</span><span class="nx">x</span><span class="p">.</span><span class="nx">c</span><span class="p">)</span> <span class="p">=</span> <span class="mi">8</span> <span class="nf">Offsetof</span><span class="p">(</span><span class="nx">x</span><span class="p">.</span><span class="nx">c</span><span class="p">)</span> <span class="p">=</span> <span class="mi">8</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>Go语言的规范并没有要求一个字段的声明顺序和内存中的顺序是一致的，所以理论上一个编译器可以随意地重新排列每个字段的内存位置。下面的三个结构体虽然有着相同的字段，但是第一种写法比另外的两个需要多50%的内存。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-Go" data-lang="Go"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-Go" data-lang="Go">                               <span class="c1">// 64-bit  32-bit
+</span><span class="c1"></span><span class="kd">struct</span><span class="p">{</span> <span class="kt">bool</span><span class="p">;</span> <span class="kt">float64</span><span class="p">;</span> <span class="kt">int16</span> <span class="p">}</span> <span class="c1">// 3 words 4words
+</span><span class="c1"></span><span class="kd">struct</span><span class="p">{</span> <span class="kt">float64</span><span class="p">;</span> <span class="kt">int16</span><span class="p">;</span> <span class="kt">bool</span> <span class="p">}</span> <span class="c1">// 2 words 3words
+</span><span class="c1"></span><span class="kd">struct</span><span class="p">{</span> <span class="kt">bool</span><span class="p">;</span> <span class="kt">int16</span><span class="p">;</span> <span class="kt">float64</span> <span class="p">}</span> <span class="o">//</span> <span class="mi">2</span> <span class="nx">words</span> <span class="mi">3</span><span class="nx">words</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>在 <a href="https://github.com/golang/go/issues/10014">Issue10014</a> 中 Golang 开发者表示，目前无法更改现有结构来对字段进行排序。但或许可以引入一种表示法对内存进行排序，如下示例：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go">    <span class="kd">type</span> <span class="nx">S</span> <span class="kd">struct</span> <span class="p">{</span>
+          <span class="nx">_</span> <span class="kd">struct</span><span class="p">{}</span> <span class="s">`order:&#34;A,C,B&#34;`</span>
+          <span class="nx">A</span> <span class="kt">uint8</span>
+          <span class="nx">B</span> <span class="kt">int16</span>
+          <span class="nx">C</span> <span class="kt">uint8</span>
+    <span class="p">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>但这仍然处于理论阶段并未实现。</p>
     </div>
 
     
@@ -515,7 +615,14 @@ if (!doNotTrack) {
   <p class="copyright-item">
     <span class="item-title">上次更新</span>
     <span class="item-content">
-      2019-09-29
+      2019-10-10
+      
+        <a href="https://github.com/wingsxdu/blog/commit/76ac80beed29a394aec738d2696ebf39185d1363" title="图片居中">
+          (76ac80b)
+        </a>
+        
+          <br>图片居中
+        
       
     </span>
   </p>
@@ -535,28 +642,16 @@ if (!doNotTrack) {
           <a href="https://www.wingsxdu.com/tags/%E6%8A%80%E6%9C%AF%E5%90%91/">技术向</a>
           <a href="https://www.wingsxdu.com/tags/golang/">golang</a>
           <a href="https://www.wingsxdu.com/tags/%E5%BA%95%E5%B1%82/">底层</a>
+          <a href="https://www.wingsxdu.com/tags/%E7%BC%96%E7%A0%81%E8%A7%84%E8%8C%83/">编码规范</a>
           
         </div>
 
       
       <nav class="post-nav">
         
-          <a class="prev" href="/post/%E5%A4%A7%E4%BA%8C%E8%BF%99%E4%B8%80%E5%B9%B4/">
-            
-            <i class="iconfont">
-              <svg  class="icon" viewBox="0 0 1024 1024" version="1.1"
-  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-  width="18" height="18">
-  <path d="M691.908486 949.511495l75.369571-89.491197c10.963703-12.998035 10.285251-32.864502-1.499144-44.378743L479.499795 515.267417 757.434875 204.940602c11.338233-12.190647 11.035334-32.285311-0.638543-44.850487l-80.46666-86.564541c-11.680017-12.583596-30.356378-12.893658-41.662889-0.716314L257.233596 494.235404c-11.332093 12.183484-11.041474 32.266891 0.657986 44.844348l80.46666 86.564541c1.772366 1.910513 3.706415 3.533476 5.750981 4.877077l306.620399 321.703933C662.505829 963.726242 680.945807 962.528973 691.908486 949.511495z"></path>
-</svg>
-
-            </i>
-            <span class="prev-text nav-default">大一这一年</span>
-            <span class="prev-text nav-mobile">上一篇</span>
-          </a>
         
-          <a class="next" href="/post/2019-09-29-gc%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/">
-            <span class="next-text nav-default">GC 垃圾回收机制(改)</span>
+          <a class="next" href="/post/%E5%A4%A7%E4%BA%8C%E8%BF%99%E4%B8%80%E5%B9%B4/">
+            <span class="next-text nav-default">大一这一年</span>
             <span class="prev-text nav-mobile">下一篇</span>
             
             <i class="iconfont">
@@ -594,7 +689,7 @@ if (!doNotTrack) {
   <div id="disqus_thread"></div>
   <script type="text/javascript">
     var disqus_config = function () {
-      this.page.url = "https://www.wingsxdu.com/post/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B8%8E-goroutine-%E8%B0%83%E5%BA%A6/";
+      this.page.url = "https://www.wingsxdu.com/post/memoryholes/";
     };
     function load_disqus() {
       

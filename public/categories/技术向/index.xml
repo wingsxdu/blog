@@ -6,10 +6,19 @@
     <description>Recent content in 技术向 on beihai</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 29 Sep 2019 17:20:37 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 10 Oct 2019 10:35:26 +0800</lastBuildDate>
     
 	<atom:link href="https://www.wingsxdu.com/categories/%E6%8A%80%E6%9C%AF%E5%90%91/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>内存空洞</title>
+      <link>https://www.wingsxdu.com/post/memoryholes/</link>
+      <pubDate>Thu, 10 Oct 2019 10:35:26 +0800</pubDate>
+      
+      <guid>https://www.wingsxdu.com/post/memoryholes/</guid>
+      <description>&lt;p&gt;计算机在加载和保存数据时，如果内存地址合理地对齐的将会更有效率。例如2字节大小的int16类型的变量地址应该是偶数，一个4字节大小的rune类型变量的地址应该是4的倍数，一个8字节大小的float64、uint64或64-bit指针类型变量的地址应该是8字节对齐的。但是对于再大的地址对齐倍数则是不需要的，即使是complex128等较大的数据类型最多也只是8字节对齐。&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>并发编程与 Goroutine 调度</title>
@@ -180,15 +189,6 @@
       
       <guid>https://www.wingsxdu.com/p1119/</guid>
       <description>1.1 简介 JWT 全称 JSON Web Token ，是一个开放标准(RFC 7519)，它定义了一种紧凑的、自包含的方式，用于作为 JSON 对象在各方之间安全地传输信息。该信息是数字</description>
-    </item>
-    
-    <item>
-      <title>Go Echo&#43;Nginx 搭建 https://域名服务</title>
-      <link>https://www.wingsxdu.com/p1106/</link>
-      <pubDate>Sat, 18 May 2019 13:55:03 +0000</pubDate>
-      
-      <guid>https://www.wingsxdu.com/p1106/</guid>
-      <description>搭建后端服务时要适配小程序接口，狗日的微信要求请求链接必须为 https://域名，折腾了半天决定用 Nginx 反向 http 代理，又交了300保护费:)。其他</description>
     </item>
     
   </channel>
