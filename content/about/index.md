@@ -45,7 +45,7 @@ Gopher，电子产品爱好者，Software Developer，
 ##### 书籍
 
 - Go 语言初学：：[A tour of go](https://tour.go-zh.org/welcome/1)
-- Go 语言入门：[The Go Programming Language](https://books.studygolang.com/gopl-zh/)
+- Go 语言入门：[The Go Programming Language](https://books.studygolang.com/gopl-zh/) ,[Go语言标准库](https://books.studygolang.com/The-Golang-Standard-Library-by-Example/)
 - Go 语言进阶：[Go 语言高级编程](https://chai2010.cn/advanced-go-programming-book)
 - 《三体》
 - 《文化苦旅》、《活着》、《平凡的世界》
