@@ -68,7 +68,7 @@
 
 <meta itemprop="datePublished" content="2019-09-29T17:20:37&#43;08:00" />
 <meta itemprop="dateModified" content="2019-09-29T17:20:37&#43;08:00" />
-<meta itemprop="wordCount" content="2193">
+<meta itemprop="wordCount" content="2185">
 
 
 
@@ -374,7 +374,7 @@ if (!doNotTrack) {
             <a href="https://www.wingsxdu.com/categories/%E5%BA%95%E5%B1%82/"> 底层 </a>
             
           </div>
-        <span class="more-meta"> 约 2193 字 </span>
+        <span class="more-meta"> 约 2185 字 </span>
           <span class="more-meta"> 预计阅读 5 分钟 </span>
 
         
@@ -479,23 +479,22 @@ if (!doNotTrack) {
 <li>Sched：代表调度器，它维护有存储M和G的队列以及调度器的一些状态信息等。</li>
 </ul>
 
-<div align="center">![goroutine1](https://www.wingsxdu.com/image/goroutine1.jpg)</div>
+<div align="center">[goroutine1](https://www.wingsxdu.com/image/goroutine1.jpg)</div>
 
 <h6 id="g-p-m-模型调度">G-P-M 模型调度</h6>
 
 <div align="center">![goroutine-scheduler-model](https://www.wingsxdu.com/image/goroutine-scheduler-model.png)</div>
+Go 调度器工作时会维护两种用来保存 G 的任务队列：一种是一个 Global 任务队列，一种是每个 P 维护的 Local 任务队列。
 
-<p>Go 调度器工作时会维护两种用来保存 G 的任务队列：一种是一个 Global 任务队列，一种是每个 P 维护的 Local 任务队列。</p>
+当通过` go `关键字创建一个新的 goroutine 的时候，它会优先被放入P 的本地队列。为了运行goroutine，M 需要持有（绑定）一个 P，接着M会启动一个 OS线程，循环从P的本地队列里取出一个 goroutine 并执行。
 
-<p>当通过<code>go</code>关键字创建一个新的 goroutine 的时候，它会优先被放入P 的本地队列。为了运行goroutine，M 需要持有（绑定）一个 P，接着M会启动一个 OS线程，循环从P的本地队列里取出一个 goroutine 并执行。</p>
+![](https://www.wingsxdu.com/image/goroutine2.jpg)
 
-<p><img src="https://www.wingsxdu.com/image/goroutine2.jpg" alt="" /></p>
+从上图中可以看到，有2个物理线程M，每一个M都拥有一个处理器P，每一个也都有一个正在运行的goroutine。P的数量可以通过GOMAXPROCS()来设置，它其实也就代表了真正的并发度，即有多少个goroutine可以同时运行。
 
-<p>从上图中可以看到，有2个物理线程M，每一个M都拥有一个处理器P，每一个也都有一个正在运行的goroutine。P的数量可以通过GOMAXPROCS()来设置，它其实也就代表了真正的并发度，即有多少个goroutine可以同时运行。</p>
+除此之外还有 ` work-stealing `调度算法：当 M 执行完了当前 P 的 Local 队列里的所有 G 后，P 也不会就这么在那躺尸啥都不干，它会先尝试从 Global 队列寻找 G 来执行，如果 Global队列为空，它会随机挑选另外一个 P，从它的队列里中拿走一半的 G 到自己的队列中执行。
 
-<p>除此之外还有 <code>work-stealing</code>调度算法：当 M 执行完了当前 P 的 Local 队列里的所有 G 后，P 也不会就这么在那躺尸啥都不干，它会先尝试从 Global 队列寻找 G 来执行，如果 Global队列为空，它会随机挑选另外一个 P，从它的队列里中拿走一半的 G 到自己的队列中执行。</p>
-
-<div align="center">![](https://www.wingsxdu.com/image/goroutine3.jpg)</div>
+<div align="center">[](https://www.wingsxdu.com/image/goroutine3.jpg)</div>
 
 <h4 id="为什么要有-p-processor">为什么要有 P(Processor) ？</h4>
 
