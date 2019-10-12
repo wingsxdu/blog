@@ -483,8 +483,20 @@ if (!doNotTrack) {
 
 <p>golang 中的 gc 基本上是标记清除的过程：</p>
 
-<p><div align="center"><img src="https://www.wingsxdu.com/gc.jpg" alt="gc" /></div>
-gc 的过程一共分为四个阶段：</p>
+<div align="center">
+<link rel="stylesheet" href="/css/hugo-easy-gallery.css" />
+<div class="box">
+<figure  itemprop="associatedMedia"
+  itemscope itemtype="http://schema.org/ImageObject" >
+    <div class="img">
+      <img itemprop="thumbnail" src="/image/gc.jpg" />
+    </div>
+    <a href="/image/gc.jpg" itemprop="contentUrl"></a>
+  </figure>
+</div>
+</div>
+
+<p>gc 的过程一共分为四个阶段：</p>
 
 <ol>
 <li>栈扫描（开始时 STW）</li>

@@ -70,7 +70,7 @@ var x struct {
 
 下面显示了对x和它的三个字段调用unsafe包相关函数的计算结果：
 
-<div align="center">{{< figure src="/image/holes_in_struct.png" style="center">}}</div>
+<div align="center">{{< figure src="/image/holes_in_struct.png">}}</div>
 32位系统：
 
 ```go
