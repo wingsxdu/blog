@@ -10,97 +10,146 @@
   
   <url>
     <loc>https://www.wingsxdu.com/</loc>
-    <lastmod>2019-10-10T14:41:11+08:00</lastmod>
+    <lastmod>2019-10-13T14:37:13+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://www.wingsxdu.com/categories/</loc>
-    <lastmod>2019-10-10T14:41:11+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.wingsxdu.com/categories/golang/</loc>
-    <lastmod>2019-10-10T14:41:11+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.wingsxdu.com/tags/golang/</loc>
-    <lastmod>2019-10-10T14:41:11+08:00</lastmod>
+    <lastmod>2019-10-13T14:37:13+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://www.wingsxdu.com/post/</loc>
-    <lastmod>2019-10-10T14:41:11+08:00</lastmod>
+    <lastmod>2019-10-13T14:37:13+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://www.wingsxdu.com/tags/</loc>
-    <lastmod>2019-10-10T14:41:11+08:00</lastmod>
+    <lastmod>2019-10-13T14:37:13+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://www.wingsxdu.com/post/memoryholes/</loc>
-    <lastmod>2019-10-10T14:41:11+08:00</lastmod>
+    <loc>https://www.wingsxdu.com/tags/terminal/</loc>
+    <lastmod>2019-10-13T14:37:13+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.wingsxdu.com/categories/terminal/</loc>
+    <lastmod>2019-10-13T14:37:13+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.wingsxdu.com/categories/windows/</loc>
+    <lastmod>2019-10-13T14:37:13+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.wingsxdu.com/tags/windows/</loc>
+    <lastmod>2019-10-13T14:37:13+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.wingsxdu.com/post/2019-10-13-windows-terminal-preview-background/</loc>
+    <lastmod>2019-10-13T14:37:13+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.wingsxdu.com/categories/%E9%9A%8F%E4%BE%BF%E5%86%99%E5%86%99/</loc>
+    <lastmod>2019-10-13T14:37:13+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.wingsxdu.com/tags/%E9%9A%8F%E4%BE%BF%E5%86%99%E5%86%99/</loc>
+    <lastmod>2019-10-13T14:37:13+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.wingsxdu.com/categories/golang/</loc>
+    <lastmod>2019-10-13T14:37:13+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.wingsxdu.com/tags/golang/</loc>
+    <lastmod>2019-10-13T14:37:13+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.wingsxdu.com/post/2019-10-10-memoryholes/</loc>
+    <lastmod>2019-10-13T14:37:13+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://www.wingsxdu.com/tags/%E5%BA%95%E5%B1%82/</loc>
-    <lastmod>2019-10-10T14:41:11+08:00</lastmod>
+    <lastmod>2019-10-13T14:37:13+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://www.wingsxdu.com/categories/%E5%BA%95%E5%B1%82/</loc>
-    <lastmod>2019-10-10T14:41:11+08:00</lastmod>
+    <lastmod>2019-10-13T14:37:13+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://www.wingsxdu.com/categories/%E6%8A%80%E6%9C%AF%E5%90%91/</loc>
-    <lastmod>2019-10-10T14:41:11+08:00</lastmod>
+    <lastmod>2019-10-13T14:37:13+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://www.wingsxdu.com/tags/%E6%8A%80%E6%9C%AF%E5%90%91/</loc>
-    <lastmod>2019-10-10T14:41:11+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.wingsxdu.com/tags/%E7%BC%96%E7%A0%81%E8%A7%84%E8%8C%83/</loc>
-    <lastmod>2019-10-10T14:41:11+08:00</lastmod>
+    <lastmod>2019-10-13T14:37:13+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://www.wingsxdu.com/categories/%E7%BC%96%E7%A0%81%E8%A7%84%E8%8C%83/</loc>
-    <lastmod>2019-10-10T14:41:11+08:00</lastmod>
+    <lastmod>2019-10-13T14:37:13+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://www.wingsxdu.com/post/%E5%A4%A7%E4%BA%8C%E8%BF%99%E4%B8%80%E5%B9%B4/</loc>
+    <loc>https://www.wingsxdu.com/tags/%E7%BC%96%E7%A0%81%E8%A7%84%E8%8C%83/</loc>
+    <lastmod>2019-10-13T14:37:13+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.wingsxdu.com/post/2019-10-02-%E5%A4%A7%E4%BA%8C%E8%BF%99%E4%B8%80%E5%B9%B4/</loc>
     <lastmod>2019-10-02T18:32:12+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
@@ -114,21 +163,7 @@
   </url>
   
   <url>
-    <loc>https://www.wingsxdu.com/categories/%E9%9A%8F%E4%BE%BF%E5%86%99%E5%86%99/</loc>
-    <lastmod>2019-10-02T18:32:12+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.wingsxdu.com/tags/%E9%9A%8F%E4%BE%BF%E5%86%99%E5%86%99/</loc>
-    <lastmod>2019-10-02T18:32:12+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.wingsxdu.com/post/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B8%8E-goroutine-%E8%B0%83%E5%BA%A6/</loc>
+    <loc>https://www.wingsxdu.com/post/2019-09-29-%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B8%8E-goroutine-%E8%B0%83%E5%BA%A6/</loc>
     <lastmod>2019-09-29T17:20:37+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>

@@ -13,19 +13,19 @@
     
     <item>
       <title>内存空洞</title>
-      <link>https://www.wingsxdu.com/post/memoryholes/</link>
+      <link>https://www.wingsxdu.com/post/2019-10-10-memoryholes/</link>
       <pubDate>Thu, 10 Oct 2019 10:35:26 +0800</pubDate>
       
-      <guid>https://www.wingsxdu.com/post/memoryholes/</guid>
+      <guid>https://www.wingsxdu.com/post/2019-10-10-memoryholes/</guid>
       <description>&lt;p&gt;计算机在加载和保存数据时，如果内存地址合理地对齐的将会更有效率。例如2字节大小的int16类型的变量地址应该是偶数，一个4字节大小的rune类型变量的地址应该是4的倍数，一个8字节大小的float64、uint64或64-bit指针类型变量的地址应该是8字节对齐的。但是对于再大的地址对齐倍数则是不需要的，即使是complex128等较大的数据类型最多也只是8字节对齐。&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>并发编程与 Goroutine 调度</title>
-      <link>https://www.wingsxdu.com/post/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B8%8E-goroutine-%E8%B0%83%E5%BA%A6/</link>
+      <link>https://www.wingsxdu.com/post/2019-09-29-%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B8%8E-goroutine-%E8%B0%83%E5%BA%A6/</link>
       <pubDate>Sun, 29 Sep 2019 17:20:37 +0800</pubDate>
       
-      <guid>https://www.wingsxdu.com/post/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B8%8E-goroutine-%E8%B0%83%E5%BA%A6/</guid>
+      <guid>https://www.wingsxdu.com/post/2019-09-29-%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B8%8E-goroutine-%E8%B0%83%E5%BA%A6/</guid>
       <description>并发与并行 并行是指两个或者多个事件在同一时刻发生；并发是指两个或多个事件在同一时间间隔发生。 并行是在不同实体上的多个事件，在多台处理器上同时</description>
     </item>
     

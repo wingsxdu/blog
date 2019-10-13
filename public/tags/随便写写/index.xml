@@ -6,17 +6,26 @@
     <description>Recent content in 随便写写 on beihai</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 02 Oct 2019 18:32:12 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 13 Oct 2019 14:26:48 +0800</lastBuildDate>
     
 	<atom:link href="https://www.wingsxdu.com/tags/%E9%9A%8F%E4%BE%BF%E5%86%99%E5%86%99/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>Windows Terminal Preview 背景图片美化</title>
+      <link>https://www.wingsxdu.com/post/2019-10-13-windows-terminal-preview-background/</link>
+      <pubDate>Sun, 13 Oct 2019 14:26:48 +0800</pubDate>
+      
+      <guid>https://www.wingsxdu.com/post/2019-10-13-windows-terminal-preview-background/</guid>
+      <description>Windows Terminal 打开默认图片存储位置 1 cd %LOCALAPPDATA%\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\RoamingState 将要设置的图片放入RoamingState目录 新增配置 打开配置文件并新增配置： 1 2 &amp;#34;backgroundImage&amp;#34; : &amp;#34;ms-appdata:///roaming/test.jpg&amp;#34;, &amp;#34;backgroundImageOpacity&amp;#34; : 0.75 注：设置背景图片</description>
+    </item>
+    
+    <item>
       <title>大一这一年</title>
-      <link>https://www.wingsxdu.com/post/%E5%A4%A7%E4%BA%8C%E8%BF%99%E4%B8%80%E5%B9%B4/</link>
+      <link>https://www.wingsxdu.com/post/2019-10-02-%E5%A4%A7%E4%BA%8C%E8%BF%99%E4%B8%80%E5%B9%B4/</link>
       <pubDate>Wed, 02 Oct 2019 18:32:12 +0800</pubDate>
       
-      <guid>https://www.wingsxdu.com/post/%E5%A4%A7%E4%BA%8C%E8%BF%99%E4%B8%80%E5%B9%B4/</guid>
+      <guid>https://www.wingsxdu.com/post/2019-10-02-%E5%A4%A7%E4%BA%8C%E8%BF%99%E4%B8%80%E5%B9%B4/</guid>
       <description>&lt;p&gt;托一个多月才想起来，不知道写些什么，或许是记忆冲刷得太快了吧。&lt;/p&gt;
 
 &lt;div align=&#34;center&#34;&gt;
