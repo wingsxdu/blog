@@ -18,7 +18,10 @@ draft: false
 ---
 
 <div align="center">{{< figure src="/image/Windows-Terminal.png" title="Windows Terminal">}}</div>
+<!--more-->
+
 ## 打开默认图片存储位置{#打开默认图片存储位置}
+
 ```bash
  cd %LOCALAPPDATA%\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\RoamingState
 ```
