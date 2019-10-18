@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>备忘录 · beihai</title>
+  <title>GC 垃圾回收机制(改) - beihai</title>
   
 
 <meta name="renderer" content="webkit" />
@@ -22,8 +22,8 @@
 
 <meta name="mobile-web-app-capable" content="yes">
 
-<meta name="author" content="beihai" />
-  <meta name="description" content="追求 源于热爱" />
+<meta name="author" content="beihai" /><meta name="description" content="Golang GC 时会发生什么" />
+
   <meta name="keywords" content="Golang, Go, back-end, 后端, 分布式" />
 
 
@@ -34,8 +34,7 @@
 <meta name="generator" content="Hugo 0.58.3" />
 
 
-<link rel="canonical" href="https://www.wingsxdu.com/categories/%E5%A4%87%E5%BF%98%E5%BD%95/" />
-<link href="%7balternate%20%7bRSS%20application/rss&#43;xml%20%20index%20alternate%20%20false%20false%20true%20false%20false%200%7d%20/categories/%E5%A4%87%E5%BF%98%E5%BD%95/index.xml%20https://www.wingsxdu.com/categories/%E5%A4%87%E5%BF%98%E5%BD%95/index.xml%7d" rel="alternate" type="application/rss+xml" title="beihai" />
+<link rel="canonical" href="https://www.wingsxdu.com/post/2019-09-29-golanggc/" />
 
 
 
@@ -57,18 +56,26 @@
 
 
 
-<meta property="og:title" content="备忘录" />
-<meta property="og:description" content="追求 源于热爱" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://www.wingsxdu.com/categories/%E5%A4%87%E5%BF%98%E5%BD%95/" />
+<meta property="og:title" content="GC 垃圾回收机制(改)" />
+<meta property="og:description" content="Golang GC 时会发生什么" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.wingsxdu.com/post/2019-09-29-golanggc/" />
+<meta property="article:published_time" content="2019-09-27T21:42:49+08:00" />
+<meta property="article:modified_time" content="2019-10-18T12:49:40+08:00" />
+<meta itemprop="name" content="GC 垃圾回收机制(改)">
+<meta itemprop="description" content="Golang GC 时会发生什么">
 
-<meta property="og:updated_time" content="2019-10-18T12:50:20+08:00" />
-<meta itemprop="name" content="备忘录">
-<meta itemprop="description" content="追求 源于热爱">
 
+<meta itemprop="datePublished" content="2019-09-27T21:42:49&#43;08:00" />
+<meta itemprop="dateModified" content="2019-10-18T12:49:40&#43;08:00" />
+<meta itemprop="wordCount" content="2128">
+
+
+
+<meta itemprop="keywords" content="技术向,golang,底层," />
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="备忘录"/>
-<meta name="twitter:description" content="追求 源于热爱"/>
+<meta name="twitter:title" content="GC 垃圾回收机制(改)"/>
+<meta name="twitter:description" content="Golang GC 时会发生什么"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -352,77 +359,302 @@ if (!doNotTrack) {
     <main id="main" class="main bg-llight">
       <div class="content-wrapper">
         <div id="content" class="content container">
-          
-
-<section id="archive" class="archive">
-  
+          <article class="post bg-white">
     
-      <div class="archive-title category">
-        <h2 class="archive-name">分类： 备忘录</h2>
+    <header class="post-header">
+      <h1 class="post-title">GC 垃圾回收机制(改)</h1>
+      
+      <div class="post-meta">
+        <time datetime="2019-09-27" class="post-time">
+          2019-09-27
+        </time>
+        <div class="post-category">
+            <a href="https://www.wingsxdu.com/categories/%E6%8A%80%E6%9C%AF%E5%90%91/"> 技术向 </a>
+            <a href="https://www.wingsxdu.com/categories/golang/"> golang </a>
+            <a href="https://www.wingsxdu.com/categories/%E5%BA%95%E5%B1%82/"> 底层 </a>
+            
+          </div>
+        <span class="more-meta"> 约 2128 字 </span>
+          <span class="more-meta"> 预计阅读 5 分钟 </span>
+
+        
+        
+          <span id="busuanzi_container_page_pv">
+            | 阅读 <span id="busuanzi_value_page_pv"></span>
+          </span>
+        
+
+        
+        
       </div>
+    </header>
+
     
-  
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#过去常采用的两种内存管理方法">过去常采用的两种内存管理方法</a>
+<ul>
+<li>
+<ul>
+<li><a href="#内存泄露检测工具">内存泄露检测工具</a></li>
+<li><a href="#智能指针">智能指针</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#新生代语言常用的垃圾回收的方法">新生代语言常用的垃圾回收的方法</a>
+<ul>
+<li>
+<ul>
+<li><a href="#1-引用计数-reference-counting">1.引用计数（reference counting）</a></li>
+<li><a href="#2-标记-清除-mark-and-sweep">2.标记-清除（mark and sweep）</a></li>
+<li><a href="#3-分代搜集-generation">3.分代搜集（generation）</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#golang-gc-时会发生什么">Golang GC 时会发生什么?</a></li>
+<li><a href="#内存优化">内存优化</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
 
-  
-    <div class="archive-post">
-      <time datetime="2019-10-18" class="archive-post-time">
-        2019-10-18
-      </time>
-      <span class="archive-post-title">
-        <a href="/post/2019-10-18-%E4%B8%80%E4%BA%9B%E7%BB%8F%E5%B8%B8%E5%BF%98%E8%AE%B0%E7%9A%84%E5%91%BD%E4%BB%A4/" class="archive-post-link">
-          一些经常忘记的命令
-        </a>
-      </span>
+    
+    <div class="post-content">
+      
+
+<p>首先我们了解下什么是垃圾回收</p>
+
+<p>内存管理是开发应用中的一大难题。传统的系统级编程语言（主要指C/C++）中，程序开发者必须对内存小心的进行管理操作，控制内存的申请及释放。因为稍有不慎，就可能产生内存泄露问题，这种问题不易发现并且难以定位，一直成为困扰程序开发者的噩梦。</p>
+
+<h4 id="过去常采用的两种内存管理方法">过去常采用的两种内存管理方法</h4>
+
+<h6 id="内存泄露检测工具">内存泄露检测工具</h6>
+
+<p>这种工具的原理一般是静态代码扫描，通过扫描程序检测可能出现内存泄露的代码段。然而检测工具难免有疏漏和不足，只能起到辅助作用。</p>
+
+<h6 id="智能指针">智能指针</h6>
+
+<p>这是 c++ 中引入的自动内存管理方法，通过拥有自动内存管理功能的指针对象来引用对象，使程序员不用太关注内存的释放，而达到内存自动释放的目的。这种方法是最广泛的做法，但是对程序开发者有一定的学习成本（并非语言层面的原生支持），而且一旦有忘记使用的场景依然无法避免内存泄露。</p>
+
+<p>为了解决这个问题，后来开发出来的几乎所有新语言（java，python，php 等等）都引入了语言层面的自动内存管理 ——也就是语言的使用者只用关注内存的申请而不必关心内存的释放，内存释放由虚拟机（virtual machine）或运行时（runtime）来自动进行管理。而这种对不再使用的内存资源进行自动回收的行为就被称为垃圾回收。</p>
+
+<h4 id="新生代语言常用的垃圾回收的方法">新生代语言常用的垃圾回收的方法</h4>
+
+<h6 id="1-引用计数-reference-counting">1.引用计数（reference counting）</h6>
+
+<p>这是最简单的一种垃圾回收算法，和之前提到的智能指针异曲同工。对每个对象维护一个引用计数，当引用该对象的对象被销毁或更新时被引用对象的引用计数自动减一，当被引用对象被创建或被赋值给其他对象时引用计数自动加一，当引用计数为0时则立即回收对象。</p>
+
+<p>这种方法的优点是实现简单，并且内存的回收很及时。这种算法在内存比较紧张和实时性比较高的系统中使用的比较广泛，如ios cocoa框架、php、python等。</p>
+
+<p>但是简单引用计数算法也有明显的缺点：</p>
+
+<ul>
+<li><p>频繁更新引用计数降低了性能：一种简单的解决方法就是编译器将相邻的引用计数更新操作合并到一次更新；还有一种方法是针对频繁发生的临时变量引用不进行计数，而是在引用达到0时通过扫描堆栈确认是否还有临时对象引用而决定是否释放。除此之外还有很多其他方法。</p></li>
+
+<li><p>循环引用：当对象间发生循环引用时引用链中的对象都无法得到释放。最明显的解决办法是避免产生循环引用，如 cocoa 引入了 strong 指针和weak 指针两种指针类型。或者系统检测循环引用并主动打破循环链，当然这也增加了垃圾回收的复杂度。</p></li>
+</ul>
+
+<h6 id="2-标记-清除-mark-and-sweep">2.标记-清除（mark and sweep）</h6>
+
+<p>标记-清除（mark and sweep）分为两步，标记从根变量开始迭代遍历所有被引用的对象，对能够通过引用遍历访问到的对象都进行标记为“被引用”；标记完成后进行清除操作，对没有标记过的内存进行回收（回收同时可能伴有碎片整理操作）。这种方法解决了引用计数的不足，但是也有比较明显的问题：每次启动垃圾回收都会暂停当前所有的正常代码执行，回收使系统响应能力大大降低！当然后续也出现了很多 mark&amp;sweep 算法的变种（如三色标记法）优化了这个问题。</p>
+
+<h6 id="3-分代搜集-generation">3.分代搜集（generation）</h6>
+
+<p>java 的 jvm 就使用的分代回收的思路。在面向对象编程语言中，绝大多数对象的生命周期都非常短。分代收集的基本思想是，将堆划分为两个或多个称为代（generation）的空间。新创建的对象存放在称为新生代（young generation）中（一般来说，新生代的大小会比 老年代小很多），随着垃圾回收的重复执行，生命周期较长的对象会被提升（promotion）到老年代中（这里用到了一个分类的思路，这也是科学思考的一个基本思路）。</p>
+
+<p>因此，新生代垃圾回收和老年代垃圾回收两种不同的垃圾回收方式应运而生，分别用于对各自空间中的对象执行垃圾回收。新生代垃圾回收的速度非常快，比老年代快几个数量级，即使新生代垃圾回收的频率更高，执行效率也仍然比老年代垃圾回收强，这是因为大多数对象的生命周期都很短，根本无需提升到老年代。</p>
+
+<h4 id="golang-gc-时会发生什么">Golang GC 时会发生什么?</h4>
+
+<blockquote>
+<p>Golang 1.5后，采取的是<strong>非分代的、非移动的、并发的、三色的</strong>标记清除垃圾回收算法。</p>
+</blockquote>
+
+<p>golang 中的 gc 基本上是标记清除的过程：</p>
+
+<div align="center">
+<link rel="stylesheet" href="/css/hugo-easy-gallery.css" />
+<div class="box">
+<figure  itemprop="associatedMedia"
+  itemscope itemtype="http://schema.org/ImageObject" >
+    <div class="img">
+      <img itemprop="thumbnail" src="/image/gc.jpg" />
     </div>
-  
-    <div class="archive-post">
-      <time datetime="2019-08-09" class="archive-post-time">
-        2019-08-09
-      </time>
-      <span class="archive-post-title">
-        <a href="/p1370/" class="archive-post-link">
-          Golang strconv包使用
-        </a>
-      </span>
+    <a href="/image/gc.jpg" itemprop="contentUrl"></a>
+  </figure>
+</div>
+</div>
+
+<p>gc 的过程一共分为四个阶段：</p>
+
+<ol>
+<li>栈扫描（开始时 STW）</li>
+<li>第一次标记（并发）</li>
+<li>第二次标记（STW）</li>
+<li>清除（并发）</li>
+</ol>
+
+<p>整个进程空间里申请每个对象占据的内存可以视为一个图，初始状态下每个内存对象都是白色标记。</p>
+
+<ol>
+<li>先 STW(Stop-The-World) 做一些准备工作，比如 enable write barrier（写屏障）。然后取消 STW，将扫描任务作为多个并发的 goroutine 立即入队给调度器，进而被 CPU 处理；</li>
+<li>第一轮先扫描 root 对象，包括全局指针和 goroutine 栈上的指针，标记为灰色放入队列</li>
+<li>第二轮将第一步队列中的对象引用的对象置为灰色加入队列，一个对象引用的所有对象都置灰并加入队列后，这个对象才能置为黑色并从队列之中取出。循环往复，最后队列为空时，整个图剩下的白色内存空间即不可到达的对象，即没有被引用的对象；</li>
+<li>第三轮再次 STW，将第二轮过程中新增对象申请的内存进行标记（灰色），这里使用了write barrier（写屏障）去记录</li>
+</ol>
+
+<p>Golang gc 优化的核心就是尽量使得 STW(Stop The World) 的时间越来越短。</p>
+
+<p>详细的Golang的GC介绍可以参看<a href="https://github.com/KeKe-Li/For-learning-Go-Tutorial/blob/master/src/spec/02.0.md">Golang垃圾回收</a>。</p>
+
+<h4 id="内存优化">内存优化</h4>
+
+<p>通常小对象过多会导致 GC 三色法消耗过多的GPU。在编程过程中，尽可能减少对象分配，如使用结构体变量、减少值传递等。</p>
+
     </div>
-  
-    <div class="archive-post">
-      <time datetime="2018-09-08" class="archive-post-time">
-        2018-09-08
-      </time>
-      <span class="archive-post-title">
-        <a href="/p142/" class="archive-post-link">
-          免费获取Xshell&#43;搭建SS
+
+    
+    
+<div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">beihai</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+      2019-10-18
+      
+        <a href="https://github.com/wingsxdu/blog/commit/5f27c2aa4417cf6a22734466afc5d3d125b8f6de" title="文件`">
+          (5f27c2a)
         </a>
-      </span>
-    </div>
+        
+          <br>文件`
+        
+      
+    </span>
+  </p>
   
-</section>
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
 
 
+    
+    
 
+    <footer class="post-footer">
+      <div class="post-tags">
+          <a href="https://www.wingsxdu.com/tags/%E6%8A%80%E6%9C%AF%E5%90%91/">技术向</a>
+          <a href="https://www.wingsxdu.com/tags/golang/">golang</a>
+          <a href="https://www.wingsxdu.com/tags/%E5%BA%95%E5%B1%82/">底层</a>
+          
+        </div>
 
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/2019-09-29-%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E4%B8%8E-goroutine-%E8%B0%83%E5%BA%A6/">
+            
+            <i class="iconfont">
+              <svg  class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="18" height="18">
+  <path d="M691.908486 949.511495l75.369571-89.491197c10.963703-12.998035 10.285251-32.864502-1.499144-44.378743L479.499795 515.267417 757.434875 204.940602c11.338233-12.190647 11.035334-32.285311-0.638543-44.850487l-80.46666-86.564541c-11.680017-12.583596-30.356378-12.893658-41.662889-0.716314L257.233596 494.235404c-11.332093 12.183484-11.041474 32.266891 0.657986 44.844348l80.46666 86.564541c1.772366 1.910513 3.706415 3.533476 5.750981 4.877077l306.620399 321.703933C662.505829 963.726242 680.945807 962.528973 691.908486 949.511495z"></path>
+</svg>
 
+            </i>
+            <span class="prev-text nav-default">并发编程与 Goroutine 调度</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+      </nav>
+    </footer>
+  </article>
 
   
   
+
+  
+  
+
   
 
   
   
 
   
-  
 
   
+
+  <div class="disqus-comment">
+  <div class="disqus-button" id="load_disqus" onclick="load_disqus()">
+    显示 Disqus 评论
+  </div>
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+    var disqus_config = function () {
+      this.page.url = "https://www.wingsxdu.com/post/2019-09-29-golanggc/";
+    };
+    function load_disqus() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'beihai';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+
+      $('#load_disqus').remove();
+    };
+  </script>
+  <noscript>Please enable JavaScript to view the
+    <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+  </noscript>
   
+  </div>
 
-  
-  
+    
 
-
-
-
+  <div id="comments"></div>
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+  <script>
+    if(window.location.hash){
+        var checkExist = setInterval(function() {
+            if ($(window.location.hash).length) {
+              $('html, body').animate({scrollTop: $(window.location.hash).offset().top-90}, 700);
+              clearInterval(checkExist);
+            }
+        }, 10);
+    }
+  </script>
+  <script type="text/javascript">
+    new Valine({
+        el: '#comments' ,
+        appId: 'xOfRpu7vOLeiw37zSFcRJcM1-gzGzoHsz',
+        appKey: 'VbWuMaUMcNBPpzjeaXX0KIJS',
+        notify:  false , 
+        verify:  false , 
+        avatar:'mm', 
+        placeholder: '',
+        visitor:  false 
+    });
+  </script>
 
         </div>
       </div>

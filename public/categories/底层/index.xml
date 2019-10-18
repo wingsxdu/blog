@@ -31,10 +31,10 @@
     
     <item>
       <title>GC 垃圾回收机制(改)</title>
-      <link>https://www.wingsxdu.com/post/2019-09-29-gc%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/</link>
+      <link>https://www.wingsxdu.com/post/2019-09-29-golanggc/</link>
       <pubDate>Fri, 27 Sep 2019 21:42:49 +0800</pubDate>
       
-      <guid>https://www.wingsxdu.com/post/2019-09-29-gc%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/</guid>
+      <guid>https://www.wingsxdu.com/post/2019-09-29-golanggc/</guid>
       <description>首先我们了解下什么是垃圾回收 内存管理是开发应用中的一大难题。传统的系统级编程语言（主要指C/C++）中，程序开发者必须对内存小心的进行管理操</description>
     </item>
     
