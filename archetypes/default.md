@@ -29,6 +29,5 @@ draft: false
 
 <div align="center">{{< figure src="/image/holes_in_struct.png" title="center">}}</div>
 
-
 ## Title {#Title}
 
