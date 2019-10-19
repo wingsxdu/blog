@@ -69,7 +69,7 @@
 
 <meta itemprop="datePublished" content="2019-10-18T12:50:20&#43;08:00" />
 <meta itemprop="dateModified" content="2019-10-18T12:50:20&#43;08:00" />
-<meta itemprop="wordCount" content="421">
+<meta itemprop="wordCount" content="786">
 
 
 
@@ -376,8 +376,8 @@ if (!doNotTrack) {
             <a href="https://www.wingsxdu.com/categories/%E5%A4%87%E5%BF%98%E5%BD%95/"> 备忘录 </a>
             
           </div>
-        <span class="more-meta"> 约 421 字 </span>
-          <span class="more-meta"> 预计阅读 1 分钟 </span>
+        <span class="more-meta"> 约 786 字 </span>
+          <span class="more-meta"> 预计阅读 2 分钟 </span>
 
         
         
@@ -414,6 +414,7 @@ if (!doNotTrack) {
 <ul>
 <li><a href="##获取日期时间字符串">获取日期时间字符串</a></li>
 <li><a href="##设置 WSL 版本">设置 WSL 版本</a></li>
+<li><a href="##解决双系统时间不一致">解决双系统时间不一致</a></li>
 </ul></li>
 </ul></li>
 </ul></li>
@@ -552,6 +553,21 @@ deb-src http://mirrors.aliyun.com/ubuntu/ trusty-backports main restricted unive
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-powershell" data-lang="powershell"><span class="n">wsl</span> <span class="p">-</span><span class="n">-set-version</span> <span class="n">Ubuntu</span><span class="p">-</span><span class="n">18</span><span class="p">.</span><span class="n">04</span> <span class="n">2</span></code></pre></td></tr></table>
+</div>
+</div>
+<h4 id="#解决双系统时间不一致">解决双系统时间不一致</h4>
+
+<p>Windows把计算机硬件时间当作本地时间(local time)，所以在Windows系统中显示的时间跟 BIOS 中显示的时间是一样的。Linux/Unix/Mac把计算机硬件时间当作 UTC， 所以在Linux/Unix/Mac系统启动后在该时间的基础上，加上电脑设置的时区数（ 比如我们在中国，它就加上“8” ），因此，Linux/Unix/Mac系统中显示的时间总是比Windows系统中显示的时间快8个小时。所以，当你在Linux/Unix/Mac系统中，把系统现实的时间设置正确后，其实计算机硬件时间是在这个时间上减去8小时，所以当你切换成Windows系统后，会发现时间慢了8小时。</p>
+
+<p>修改 Windows对硬件时间的对待方式，让 Windows把硬件时间当作UTC：（需要重启）</p>
+
+<p>在 Terminal  管理员权限下输入：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-powershell" data-lang="powershell"><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-powershell" data-lang="powershell"><span class="n">Reg</span> <span class="n">add</span> <span class="n">HKLM</span><span class="p">\</span><span class="n">SYSTEM</span><span class="p">\</span><span class="n">CurrentControlSet</span><span class="p">\</span><span class="n">Control</span><span class="p">\</span><span class="n">TimeZoneInformation</span> <span class="p">/</span><span class="n">v</span> <span class="n">RealTimeIsUniversal</span> <span class="p">/</span><span class="n">t</span> <span class="n">REG_DWORD</span> <span class="p">/</span><span class="n">d</span> <span class="n">1</span></code></pre></td></tr></table>
 </div>
 </div>
     </div>
