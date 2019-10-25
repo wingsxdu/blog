@@ -24,42 +24,30 @@
   &lt;strong&gt;关于博主&lt;/strong&gt;
 &lt;/p&gt;
 
-&lt;p&gt;Gopher，电子产品爱好者，Software Developer，&lt;/p&gt;
+&lt;p&gt;Gopher，电子产品爱好者，Software Developer&lt;/p&gt;
 
-&lt;p&gt;西北某211大学2017级本科生，非 IT 专业，目前研究方向为微服务与分布式&lt;/p&gt;
+&lt;p&gt;不务正业的某西北211在校学生，前区块链、后端、数据库开发，现 docker&amp;amp;k8s&lt;/p&gt;
 
-&lt;p&gt;不喜欢国内大学的授课内容与教学方式，家境贫寒，一身本事全凭自学&lt;/p&gt;
+&lt;p&gt;不喜国内大学的授课内容与教学方式，家境贫寒，一身本事全凭自学&lt;/p&gt;
 
-&lt;p&gt;技术栈：&lt;/p&gt;
+&lt;p&gt;热爱阅读，喜欢音乐、电影与艺术表演&lt;/p&gt;
+
+&lt;h4 id=&#34;个人简历&#34;&gt;个人简历&lt;/h4&gt;
+
+&lt;p&gt;Github 地址： &lt;a href=&#34;https://github.com/wingsxdu&#34;&gt;https://github.com/wingsxdu&lt;/a&gt;&lt;/p&gt;
+
+&lt;h5 id=&#34;技术栈&#34;&gt;技术栈&lt;/h5&gt;
 
 &lt;ul&gt;
-&lt;li&gt;Golang back-end &amp;amp; database：gin、echo、gorm&lt;/li&gt;
-&lt;li&gt;区块链相关开发&lt;/li&gt;
-&lt;li&gt;Ant Design、Android APP、微信小程序等&lt;/li&gt;
-&lt;li&gt;爬虫、机器学习、算法略有接触&lt;/li&gt;
+&lt;li&gt;Golang 后端&amp;amp;数据库：gin、echo、gorm、Grpc 等&lt;/li&gt;
+&lt;li&gt;区块链应用开发&lt;/li&gt;
+&lt;li&gt;原生应用、小程序一类的都能写一写&lt;/li&gt;
 &lt;li&gt;996经验丰富 🙂&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;喜欢穷游与经营类游戏，热爱音乐、电影与艺术表演；&lt;/p&gt;
-
-&lt;h4 id=&#34;个人总结&#34;&gt;个人总结&lt;/h4&gt;
-
-&lt;h5 id=&#34;golang&#34;&gt;Golang&lt;/h5&gt;
+&lt;h5 id=&#34;阅读&#34;&gt;阅读&lt;/h5&gt;
 
 &lt;ul&gt;
-&lt;li&gt;Web：gin、echo&lt;/li&gt;
-&lt;li&gt;orm ：gorm、xorm&lt;/li&gt;
-&lt;li&gt;rpc：gprc、 protobuf&lt;/li&gt;
-&lt;li&gt;其他工具包&lt;/li&gt;
-&lt;li&gt;底层、并发、编译器&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h5 id=&#34;书籍&#34;&gt;书籍&lt;/h5&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Go 语言初学：：&lt;a href=&#34;https://tour.go-zh.org/welcome/1&#34;&gt;A tour of go&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Go 语言入门：&lt;a href=&#34;https://books.studygolang.com/gopl-zh/&#34;&gt;The Go Programming Language&lt;/a&gt; ,&lt;a href=&#34;https://books.studygolang.com/The-Golang-Standard-Library-by-Example/&#34;&gt;Go语言标准库&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Go 语言进阶：&lt;a href=&#34;https://chai2010.cn/advanced-go-programming-book&#34;&gt;Go 语言高级编程&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;《三体》&lt;/li&gt;
 &lt;li&gt;《文化苦旅》、《活着》、《平凡的世界》&lt;/li&gt;
 &lt;li&gt;《下一个倒下的会不会是华为》&lt;/li&gt;
@@ -69,21 +57,12 @@
 &lt;h5 id=&#34;设备&#34;&gt;设备&lt;/h5&gt;
 
 &lt;ul&gt;
-&lt;li&gt;笔记本：HP Spectre X360 2019（打算入个英特尔NUC）&lt;/li&gt;
-&lt;li&gt;游戏机：Xbox One X&lt;/li&gt;
+&lt;li&gt;笔记本：HP Spectre X360 2019&lt;/li&gt;
+&lt;li&gt;游戏主机：Xbox One X&lt;/li&gt;
 &lt;li&gt;键盘：massdrop CTRL&lt;/li&gt;
 &lt;li&gt;移动硬盘：华为备咖存储&lt;/li&gt;
 &lt;li&gt;耳机：森海塞尔 IE80S、赛睿 X100&lt;/li&gt;
 &lt;li&gt;屏幕：LG 29UM59A 21:9（打算换掉了）&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h5 id=&#34;工具&#34;&gt;工具&lt;/h5&gt;
-
-&lt;ul&gt;
-&lt;li&gt;IDE：主 Goland + 辅  VS Code&lt;/li&gt;
-&lt;li&gt;Markdown 编辑器：Typora&lt;/li&gt;
-&lt;li&gt;娱乐：网易云音乐UWP&lt;/li&gt;
-&lt;li&gt;HTTP 代理：&lt;a href=&#34;https://github.com/wingsxdu/blogServer&#34;&gt;自己写了一个简单的http代理返回静态文件&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
       
