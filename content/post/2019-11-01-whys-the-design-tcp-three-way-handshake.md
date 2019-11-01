@@ -25,7 +25,7 @@ draft: false
 
 <!--more-->
 
-##### **注：转载文章，原文链接为：[https://draveness.me](https://draveness.me/whys-the-design-tcp-three-way-handshake) 推荐关注原作者（日常无法访问）**
+##### **注：转载文章，原文链接为：[https://draveness.me](https://draveness.me/whys-the-design-tcp-three-way-handshake) 推荐关注原作者**
 
 TCP 协议是我们几乎每天都会接触到的网络协议，绝大多数网络连接的建立都是基于 TCP 协议的，学过计算机网络或者对 TCP 协议稍有了解的人都知道 —— 使用 TCP 协议建立连接需要经过三次握手（three-way handshake）。
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>为什么 TCP 建立连接需要三次握手 · Why&#39;s THE Design? （转载） - beihai</title>
+  <title>为什么使用通信来共享内存？· Why&#39;s THE Design? - beihai</title>
   
 
 <meta name="renderer" content="webkit" />
@@ -36,7 +36,7 @@
 <meta name="generator" content="Hugo 0.58.3" />
 
 
-<link rel="canonical" href="https://www.wingsxdu.com/post/2019-11-01-whys-the-design-tcp-three-way-handshake/" />
+<link rel="canonical" href="https://www.wingsxdu.com/post/2019-11-01-whys-the-design-communication-shared-memory/" />
 
 
 
@@ -58,29 +58,29 @@
 
 
 
-<meta property="og:title" content="为什么 TCP 建立连接需要三次握手 · Why&#39;s THE Design? （转载）" />
+<meta property="og:title" content="为什么使用通信来共享内存？· Why&#39;s THE Design?" />
 <meta property="og:description" content="
 为什么这么设计（Why’s THE Design）是一系列关于计算机领域中程序设计决策的文章，我们在这个系列的每一篇文章中都会提出一个具体的问题并从不同的角度讨论这种设计的优缺点、对具体实现造成的影响。如果你有想要了解的问题，可以在文章下面留言。
 " />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://www.wingsxdu.com/post/2019-11-01-whys-the-design-tcp-three-way-handshake/" />
-<meta property="article:published_time" content="2019-11-01T12:14:37+08:00" />
-<meta property="article:modified_time" content="2019-11-01T13:24:42+08:00" />
-<meta itemprop="name" content="为什么 TCP 建立连接需要三次握手 · Why&#39;s THE Design? （转载）">
+<meta property="og:url" content="https://www.wingsxdu.com/post/2019-11-01-whys-the-design-communication-shared-memory/" />
+<meta property="article:published_time" content="2019-11-01T14:24:34+08:00" />
+<meta property="article:modified_time" content="2019-11-01T14:24:34+08:00" />
+<meta itemprop="name" content="为什么使用通信来共享内存？· Why&#39;s THE Design?">
 <meta itemprop="description" content="
 为什么这么设计（Why’s THE Design）是一系列关于计算机领域中程序设计决策的文章，我们在这个系列的每一篇文章中都会提出一个具体的问题并从不同的角度讨论这种设计的优缺点、对具体实现造成的影响。如果你有想要了解的问题，可以在文章下面留言。
 ">
 
 
-<meta itemprop="datePublished" content="2019-11-01T12:14:37&#43;08:00" />
-<meta itemprop="dateModified" content="2019-11-01T13:24:42&#43;08:00" />
-<meta itemprop="wordCount" content="3627">
+<meta itemprop="datePublished" content="2019-11-01T14:24:34&#43;08:00" />
+<meta itemprop="dateModified" content="2019-11-01T14:24:34&#43;08:00" />
+<meta itemprop="wordCount" content="2929">
 
 
 
 <meta itemprop="keywords" content="技术向,底层,科普,转载," />
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="为什么 TCP 建立连接需要三次握手 · Why&#39;s THE Design? （转载）"/>
+<meta name="twitter:title" content="为什么使用通信来共享内存？· Why&#39;s THE Design?"/>
 <meta name="twitter:description" content="
 为什么这么设计（Why’s THE Design）是一系列关于计算机领域中程序设计决策的文章，我们在这个系列的每一篇文章中都会提出一个具体的问题并从不同的角度讨论这种设计的优缺点、对具体实现造成的影响。如果你有想要了解的问题，可以在文章下面留言。
 "/>
@@ -370,7 +370,7 @@ if (!doNotTrack) {
           <article class="post bg-white">
     
     <header class="post-header">
-      <h1 class="post-title">为什么 TCP 建立连接需要三次握手 · Why&#39;s THE Design? （转载）</h1>
+      <h1 class="post-title">为什么使用通信来共享内存？· Why&#39;s THE Design?</h1>
       
       <div class="post-meta">
         <time datetime="2019-11-01" class="post-time">
@@ -383,8 +383,8 @@ if (!doNotTrack) {
             <a href="https://www.wingsxdu.com/categories/%E8%BD%AC%E8%BD%BD/"> 转载 </a>
             
           </div>
-        <span class="more-meta"> 约 3627 字 </span>
-          <span class="more-meta"> 预计阅读 8 分钟 </span>
+        <span class="more-meta"> 约 2929 字 </span>
+          <span class="more-meta"> 预计阅读 6 分钟 </span>
 
         
         
@@ -413,28 +413,19 @@ if (!doNotTrack) {
 <ul>
 <li>
 <ul>
-<li><a href="#注-转载文章-原文链接为-https-draveness-me-https-draveness-me-whys-the-design-tcp-three-way-handshake-推荐关注原作者"><strong>注：转载文章，原文链接为：<a href="https://draveness.me/whys-the-design-tcp-three-way-handshake">https://draveness.me</a> 推荐关注原作者</strong></a></li>
+<li><a href="#注-转载文章-原文链接为-https-draveness-me-https-draveness-me-whys-the-design-communication-shared-memory-推荐关注原作者"><strong>注：转载文章，原文链接为：<a href="https://draveness.me/whys-the-design-communication-shared-memory">https://draveness.me</a> 推荐关注原作者</strong></a></li>
 </ul></li>
 </ul></li>
 </ul></li>
 <li><a href="#概述">概述</a></li>
 <li><a href="#设计">设计</a>
 <ul>
-<li><a href="##历史连接">历史连接</a></li>
-<li><a href="##初始序列号">初始序列号</a></li>
-<li><a href="##通信次数">通信次数</a></li>
+<li><a href="##抽象层级">抽象层级</a></li>
+<li><a href="##耦合">耦合</a></li>
+<li><a href="##线程竞争">线程竞争</a></li>
 </ul></li>
 <li><a href="#总结">总结</a></li>
-<li><a href="#Reference">Reference</a>
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li><a href="#转载文章-原文链接为-https-draveness-me-https-draveness-me-whys-the-design-tcp-three-way-handshake-推荐关注原作者"><strong>转载文章，原文链接为：<a href="https://draveness.me/whys-the-design-tcp-three-way-handshake">https://draveness.me</a> 推荐关注原作者</strong></a></li>
-</ul></li>
-</ul></li>
-</ul></li>
+<li><a href="#Reference">Reference</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -447,177 +438,158 @@ if (!doNotTrack) {
 <p>为什么这么设计（Why’s THE Design）是一系列关于计算机领域中程序设计决策的文章，我们在这个系列的每一篇文章中都会提出一个具体的问题并从不同的角度讨论这种设计的优缺点、对具体实现造成的影响。如果你有想要了解的问题，可以在文章下面留言。</p>
 </blockquote>
 
-<h5 id="注-转载文章-原文链接为-https-draveness-me-https-draveness-me-whys-the-design-tcp-three-way-handshake-推荐关注原作者"><strong>注：转载文章，原文链接为：<a href="https://draveness.me/whys-the-design-tcp-three-way-handshake">https://draveness.me</a> 推荐关注原作者</strong></h5>
+<h5 id="注-转载文章-原文链接为-https-draveness-me-https-draveness-me-whys-the-design-communication-shared-memory-推荐关注原作者"><strong>注：转载文章，原文链接为：<a href="https://draveness.me/whys-the-design-communication-shared-memory">https://draveness.me</a> 推荐关注原作者</strong></h5>
 
-<p>TCP 协议是我们几乎每天都会接触到的网络协议，绝大多数网络连接的建立都是基于 TCP 协议的，学过计算机网络或者对 TCP 协议稍有了解的人都知道 —— 使用 TCP 协议建立连接需要经过三次握手（three-way handshake）。</p>
-
-<p>如果让我们简单说说 TCP 建立连接的过程，相信很多准备过面试的人都会非常了解，但是一旦想要深究『为什么 TCP 建立连接需要三次握手？』，作者相信大多数人都没有办法回答这个问题或者会给出错误的答案，这边文章就会讨论究竟为什么我们需要三次握手才能建立 TCP 连接？</p>
-
-<blockquote>
-<p>需要注意的是我们会将重点放到为什么需要 TCP 建立连接需要<strong>『三次握手』</strong>，而*不仅仅*是为什么需要<strong>『三次』</strong>握手。</p>
-</blockquote>
+<p>『不要通过共享内存来通信，我们应该使用通信来共享内存』，这是一句使用 Go 语言编程的人经常能听到的观点，然而我们可能从来都没有仔细地思考过 Go 语言为什么鼓励我们遵循这一设计哲学，我们在这篇文章中就会介绍为什么我们应该更倾向于使用通信的方式交换消息，而不是使用共享内存的方式。</p>
 
 <h2 id="概述">概述</h2>
 
-<p>在具体分析今天的问题之前，我们首先可以了解一下最常见的错误类比，这个对 TCP 连接过程的错误比喻误导了很多人，作者在比较长的一段时间内也认为它能够很好地描述 TCP 建立连接为什么需要三次握手：</p>
+<p>使用通信来共享内存其实不只是 Go 语言推崇的哲学，更为古老的 Erlang 语言其实也遵循了同样的设计，然而这两者在具体实现上其实有一些不同，其中前者使用通信顺序进程（Communication Sequential Process），而后者使用 Actor 模型进行设计；这两种不同的并发模型都是『使用通信来共享内存』的具体实现，它们的主要作用都是在不同的线程或者协程之间交换信息。</p>
 
-<ol>
-<li>你听得到吗？</li>
-<li>我能听到，你听得到？</li>
-<li>我也能听到；</li>
-</ol>
-
-<p>这种用类比来解释问题往往就会面临『十个类比九个错』的尴尬局面，如果别人用类比回答你的为什么，你需要仔细想一想它的类比里究竟哪里有漏洞；类比带来的解释往往只能有片面的相似性，我们永远也无法找到绝对正确的类比，它只在我们想要通俗易懂地展示事物的特性时才能发挥较大的作用，我们在文章的后面会介绍为什么这里的类比有问题，各位读者也可以带着疑问来阅读剩下的内容。</p>
-
-<p>很多人尝试回答或者思考这个问题的时候其实关注点都放在了三次握手中的<strong>三次</strong>上面，这确实很重要，但是如果重新审视这个问题，我们对于『什么是连接』真的清楚？只有知道<strong>连接的定义</strong>，我们才能去尝试回答为什么 TCP 建立连接需要三次握手。</p>
-
-<blockquote>
-<p>The reliability and flow control mechanisms described above require that TCPs initialize and maintain certain status information for each data stream. The combination of this information, including sockets, sequence numbers, and window sizes, is called a connection.</p>
-</blockquote>
-
-<p><a href="https://tools.ietf.org/html/rfc793">RFC 793 - Transmission Control Protocol</a> 文档中非常清楚地定义了 TCP 中的连接是什么，我们简单总结一下：用于保证可靠性和流控制机制的信息，包括 Socket、序列号以及窗口大小叫做连接。</p>
-
-<p><div align="center">
+<div align="center">
 <link rel="stylesheet" href="/css/hugo-easy-gallery.css" />
 <div class="box">
 <figure  itemprop="associatedMedia"
   itemscope itemtype="http://schema.org/ImageObject" >
     <div class="img">
-      <img itemprop="thumbnail" src="/image/what-is-tcp-connection.png" />
+      <img itemprop="thumbnail" src="/image/concurrency-model.png" />
     </div>
-    <a href="/image/what-is-tcp-connection.png" itemprop="contentUrl"></a>
-      <figcaption><h4>what-is-tcp-connection</h4>
+    <a href="/image/concurrency-model.png" itemprop="contentUrl"></a>
+      <figcaption><h4>concurrency-model</h4>
       </figcaption>
   </figure>
 </div>
 </div>
-所以，建立 TCP 连接就是通信的双方需要对上述的三种信息达成共识，连接中的一对 Socket 是由互联网地址标志符和端口组成的，窗口大小主要用来做流控制，最后的序列号是用来追踪通信发起方发送的数据包序号，接收方可以通过序列号向发送方确认某个数据包的成功接收。</p>
 
-<p>到这里，我们将原有的问题转换成了『为什么需要通过三次握手才可以初始化 Sockets、窗口大小和初始序列号？』，那么接下来我们就开始对这个细化的问题进行分析并寻找解释。</p>
+<p>从本质上来看，计算机上线程和协程同步信息其实都是通过『共享内存』来进行的，因为无论是哪种通信模型，线程或者协程最终都会从内存中获取数据，所以更为准确的说法是『为什么我们使用发送消息的方式来同步信息，而不是多个线程或者协程直接共享内存？』</p>
+
+<p>为了理解今天的问题，我们需要了解这两种不同的信息同步机制的优点和缺点，对它们之间的优劣进行比较，这样我们才能充分理解 Go 语言和其他语言以及框架决策时背后的原因。</p>
 
 <h2 id="设计">设计</h2>
 
-<p>这篇文章主要会从以下几个方面介绍为什么我们需要通过三次握手才可以初始化 Sockets、窗口大小、初始序列号并建立 TCP 连接：</p>
+<p>这篇文章主要会从以下的几个方面介绍为什么我们应该选择使用通信的方式在多个线程或者协程之间保证信息的同步：</p>
 
 <ul>
-<li>通过三次握手才能阻止重复历史连接的初始化；</li>
-<li>通过三次握手才能对通信双方的初始序列号进行初始化；</li>
-<li>讨论其他次数握手建立连接的可能性；</li>
+<li>不同的同步机制具有不同的抽象层级；</li>
+<li>通过消息同步信息能够降低不同组件的耦合；</li>
+<li>使用消息来共享内存不会导致线程竞争的问题；</li>
 </ul>
 
-<p>这几个论点中的第一个是 TCP 选择使用三次握手的最主要原因，其他的几个原因相比之下都是次要的原因，我们在这里对它们的讨论只是为了让整个视角更加丰富，通过多方面理解这一有趣的设计决策。</p>
+<p>作者相信虽然这三个角度可能有一些重叠或者不够完善，但是也能够为我们提供足够的信息作出判断和选择，理解 Go 语言如何被这条设计哲学影响并将并发模型设计成现在的这种形式。</p>
 
-<h3 id="#历史连接">历史连接</h3>
+<h3 id="#抽象层级">抽象层级</h3>
 
-<p><a href="https://tools.ietf.org/html/rfc793">RFC 793 - Transmission Control Protocol</a> 其实就指出了 TCP 连接使用三次握手的首要原因 —— 为了阻止历史的重复连接初始化造成的混乱问题，防止使用 TCP 协议通信的双方建立了错误的连接。</p>
+<p>发送消息和共享内存这两种方式其实是用来传递信息的不同方式，但是它们两者有着不同的抽象层级，发送消息是一种相对『高级』的抽象，但是不同语言在实现这一机制时也都会使用操作系统提供的锁机制来实现，共享内存这种最原始和最本质的信息传递方式就是使用锁这种并发机制实现的。</p>
+
+<p>我们可以这么理解：更为高级和抽象的信息传递方式其实也只是对低抽象级别接口的组合和封装，Go 语言中的 <a href="https://draveness.me/golang/concurrency/golang-channel.html">Channel</a> 就提供了 Goroutine 之间用于传递信息的方式，它在内部实现时就广泛用到了共享内存和锁，通过对两者进行的组合提供了更高级的同步机制。</p>
+
+<div align="center">
+
+<div class="box">
+<figure  itemprop="associatedMedia"
+  itemscope itemtype="http://schema.org/ImageObject" >
+    <div class="img">
+      <img itemprop="thumbnail" src="/image/concurrency-model.png" />
+    </div>
+    <a href="/image/concurrency-model.png" itemprop="contentUrl"></a>
+      <figcaption><h4>concurrency-model</h4>
+      </figcaption>
+  </figure>
+</div>
+</div>
+
+<p>既然两种方式都能够帮助我们在不同的线程或者协程之间传递信息，那么我们应该尽量使用抽象层级更高的方法，因为这些方法往往提供了更良好的封装和与领域更相关和契合的设计；只有在高级抽象无法满足我们需求时才应该考虑抽象层级更低的方法，例如：当我们遇到对资源进行更细粒度的控制或者对性能有极高要求的场景。</p>
+
+<h3 id="#耦合">耦合</h3>
+
+<p>使用发送消息的方式替代共享内存也能够帮助我们减少多个模块之间的耦合，假设我们使用共享内存的方式在多个 Goroutine 之间传递信息，每个 Goroutine 都可能是资源的生产者和消费者，它们需要在读取或者写入数据时先获取保护该资源的互斥锁。</p>
+
+<div align="center">
+
+<div class="box">
+<figure  itemprop="associatedMedia"
+  itemscope itemtype="http://schema.org/ImageObject" >
+    <div class="img">
+      <img itemprop="thumbnail" src="/image/shared-memory-with-multiple-threads.png" />
+    </div>
+    <a href="/image/shared-memory-with-multiple-threads.png" itemprop="contentUrl"></a>
+      <figcaption><h4>shared-memory-with-multiple-threads</h4>
+      </figcaption>
+  </figure>
+</div>
+</div>
+
+<p>然而我们使用发送消息的方式却可以将多个线程或者协程解耦，以前需要依赖同一个片内存的多个线程，现在可以成为消息的生产者和消费者，多个线程也不需要自己手动处理资源的获取和释放，其中 Go 语言实现的 CSP 机制通过引入 Channel 来解耦 Goroutine：</p>
+
+<div align="center">
+
+<div class="box">
+<figure  itemprop="associatedMedia"
+  itemscope itemtype="http://schema.org/ImageObject" >
+    <div class="img">
+      <img itemprop="thumbnail" src="/image/15719046090667.jpg" />
+    </div>
+    <a href="/image/15719046090667.jpg" itemprop="contentUrl"></a>
+      <figcaption><h4>15719046090667</h4>
+      </figcaption>
+  </figure>
+</div>
+</div>
+
+<p>另一种使用消息发送的并发控制机制 <a href="https://en.wikipedia.org/wiki/Actor_model">Actor 模型</a> 就省略了 Channel 这一概念，每一个 Actor 都在本地持有一个待处理信息的邮箱，多个 Actor 可以直接通过目标 Actor 的标识符发送信息，所有的信息都会在本地的信箱中等待当前 Actor 的处理。</p>
+
+<p>这种通过发送信息的解耦方式，尤其是 Go 语言实现的 CSP 模型其实与消息队列非常相似，我们引入 Channel 这一中间层让资源的生产者和消费者更加清晰，当我们需要增加新的生产者或者消费者时也只需要直接增加 Channel 的发送方和接收方。</p>
+
+<h3 id="#线程竞争">线程竞争</h3>
+
+<p>在很多环境中，并发编程带来的很多问题都是因为没有正确实现访问共享编程的逻辑，而 Go 语言却鼓励我们将需要共享的变量传入 Channel 中，所有被共享的变量并不会同时被多个<strong>活跃的</strong> Goroutine 访问，这种方式可以保证在同一时间只有一个 Goroutine 能够访问对应的值，所以数据冲突和线程竞争的问题在设计上就不可能出现。</p>
 
 <blockquote>
-<p>The principle reason for the three-way handshake is to prevent old duplicate connection initiations from causing confusion.</p>
+<p>Do not communicate by sharing memory; instead, share memory by communicating.</p>
 </blockquote>
 
-<p><div align="center">
+<p>『不要通过共享内存来通信，我们应该通过通信来共享内存』，Go 语言鼓励我们使用这种方式设计能够处理高并发请求的程序。</p>
+
+<p>Go 语言在实现上通过 Channel 保证被共享的变量不会同时被多个活跃的 Goroutine 访问，一旦某个消息被发送到了 Channel 中，我们就失去了当前消息的控制权，作为接受者的 Goroutine 在收到这条消息之后就可以根据该消息进行一些计算任务；从这个过程来看，消息在被发送前只由发送方进行访问，在发送之后仅可被唯一的接受者访问，所以从这个设计上来看我们就避免了线程竞争。</p>
+
+<div align="center">
 
 <div class="box">
 <figure  itemprop="associatedMedia"
   itemscope itemtype="http://schema.org/ImageObject" >
     <div class="img">
-      <img itemprop="thumbnail" src="/image/tcp-recovery-from-old-duplicate-syn.png" />
+      <img itemprop="thumbnail" src="/image/data-race.png" />
     </div>
-    <a href="/image/tcp-recovery-from-old-duplicate-syn.png" itemprop="contentUrl"></a>
-      <figcaption><h4>tcp-recovery-from-old-duplicate-syn</h4>
+    <a href="/image/data-race.png" itemprop="contentUrl"></a>
+      <figcaption><h4>data-race</h4>
       </figcaption>
   </figure>
 </div>
 </div>
-想象一下这个场景，如果通信双方的通信次数只有两次，那么发送方一旦发出建立连接的请求之后它就没有办法撤回这一次请求，如果在网络状况复杂或者较差的网络中，发送方连续发送多次建立连接的请求，如果 TCP 建立连接只能通信两次，那么接收方只能选择接受或者拒绝发送方发起的请求，它并不清楚这一次请求是不是由于网络拥堵而早早过期的连接。</p>
 
-<p>所以，TCP 选择使用三次握手来建立连接并在连接引入了 <code>RST</code> 这一控制消息，接收方当收到请求时会将发送方发来的 <code>SEQ+1</code> 发送回接收方，这时由发送方来判断当前连接是否是历史连接：</p>
+<p>需要注意的是，如果我们向 Channel 中发送了一个指针而不是值的话，发送方在发送该条消息之后其实也<strong>保留了修改指针对应值的权利</strong>，如果这时发送方和接收方都尝试修改指针对应的值，仍然会造成数据冲突的问题。</p>
 
-<ul>
-<li>如果当前连接是历史连接，即 <code>SEQ</code> 过期或者超时，那么发送方就会直接发送 <code>RST</code> 控制消息中止这一次连接；</li>
-<li>如果当前连接不是历史连接，那么发送方就会发送 <code>ACK</code> 控制消息，通信双方就会成功建立连接；</li>
-</ul>
-
-<p>使用三次握手和 <code>RST</code> 控制消息将是否建立连接的最终控制权交给了发送方，因为只有发送方有足够的上下文来判断当前连接是否是错误的或者过期的，这也是 TCP 使用三次握手建立连接的最主要原因。</p>
-
-<h3 id="#初始序列号">初始序列号</h3>
-
-<p>另一个使用三次握手的重要的原因就是通信双方都需要获得一个用于发送信息的初始化序列号，作为一个可靠的传输层协议，TCP 需要在不稳定的网络环境中构建一个可靠的传输层，网络的不确定性可能会导致数据包的确实和顺序颠倒等问题，常见的问题可能包括：</p>
-
-<ul>
-<li>数据包被发送方多次发送造成数据的重复；</li>
-<li>数据包在传输的过程中被路由或者其他节点丢失；</li>
-<li>数据包到达接收方可能无法按照发送顺序；</li>
-</ul>
-
-<p>为了解决上述这些可能存在的问题，TCP 协议要求发送方在数据包中加入『序列号』字段，有了数据包对应的序列号，我们就可以：</p>
-
-<ul>
-<li>接收方可以通过序列号对重复的数据包进行去重；</li>
-<li>发送方会在对应数据包未被 ACK 时进行重复发送；</li>
-<li>接收方可以根据数据包的序列号对它们进行重新排序；</li>
-</ul>
-
-<p>序列号在 TCP 连接中有着非常重要的作用，初始序列号作为 TCP 连接的一部分也需要在三次握手期间进行初始化，由于 TCP 连接通信的双方都需要获得初始序列号，所以它们其实需要向对方发送 <code>SYN</code> 控制消息并携带自己期望的初始化序列号 <code>SEQ</code>，对方在收到 <code>SYN</code> 消息之后会通过 <code>ACK</code> 控制消息以及 <code>SEQ+1</code> 来进行确认。</p>
-
-<p><div align="center">
-
-<div class="box">
-<figure  itemprop="associatedMedia"
-  itemscope itemtype="http://schema.org/ImageObject" >
-    <div class="img">
-      <img itemprop="thumbnail" src="/image/basic-4-way-handshake.png" />
-    </div>
-    <a href="/image/basic-4-way-handshake.png" itemprop="contentUrl"></a>
-      <figcaption><h4>basic-4-way-handshake</h4>
-      </figcaption>
-  </figure>
-</div>
-</div>
-如上图所示，通信双方的两个 <code>TCP A/B</code> 分别向对方发送 <code>SYN</code> 和 <code>ACK</code> 控制消息，等待通信双方都获取到了自己期望的初始化序列号之后就可以开始通信了，由于 TCP 消息头的设计，我们可以将中间的两次通信合成一个，<code>TCP B</code> 可以向 <code>TCP A</code> 同时发送 <code>ACK</code> 和 <code>SYN</code> 控制消息，这也就帮助我们将四次通信减少至三次。</p>
-
-<blockquote>
-<p>A three way handshake is necessary because sequence numbers are not tied to a global clock in the network, and TCPs may have different mechanisms for picking the ISN’s. The receiver of the first SYN has no way of knowing whether the segment was an old delayed one or not, unless it remembers the last sequence number used on the connection (which is not always possible), and so it must ask the sender to verify this SYN. The three way handshake and the advantages of a clock-driven scheme are discussed in [3].</p>
-</blockquote>
-
-<p>除此之外，网络作为一个分布式的系统，其中并不存在一个用于计数的全局时钟，而 TCP 可以通过不同的机制来初始化序列号，作为 TCP 连接的接收方我们无法判断对方传来的初始化序列号是否过期，所以我们需要交由对方来判断，TCP 连接的发起方可以通过保存发出的序列号判断连接是否过期，如果让接收方来保存并判断序列号却是不现实的，这也再一次强化了我们在上一节中提出的观点 —— 避免历史错连接的初始化。</p>
-
-<h3 id="#通信次数">通信次数</h3>
-
-<p>当我们讨论 TCP 建立连接需要的通信次数时，我们经常会执着于为什么通信三次才可以建立连接，而不是两次或者四次；讨论使用更多的通信次数来建立连接往往是没有意义的，因为我们总可以<strong>使用更多的通信次数交换相同的信息</strong>，所以使用四次、五次或者更多次数建立连接在技术上都是完全可以实现的。</p>
-
-<p><div align="center">
-
-<div class="box">
-<figure  itemprop="associatedMedia"
-  itemscope itemtype="http://schema.org/ImageObject" >
-    <div class="img">
-      <img itemprop="thumbnail" src="/image/basic-3-way-handshake.png" />
-    </div>
-    <a href="/image/basic-3-way-handshake.png" itemprop="contentUrl"></a>
-      <figcaption><h4>basic-3-way-handshake</h4>
-      </figcaption>
-  </figure>
-</div>
-</div>
-这种增加 TCP 连接通信次数的问题往往没有讨论的必要性，我们追求的其实是用更少的通信次数（理论上的边界）完成信息的交换，也就是为什么我们在上两节中也一再强调使用『两次握手』没有办法建立 TCP 连接，使用三次握手是建立连接所需要的最小次数。</p>
+<p>对于在同一个机器和进程上运行的程序来说，由于内存对于当前进程都是可见的，所以我们没有办法避免这种问题的发生，只能说这并不是一种被鼓励的做法和常规的行为，当我们需要处理这种场景时使用更为底层的互斥锁才是一种正确的方式，然而在大多数时候这都意味着不正确的设计，我们需要重新思考线程之间的关系。</p>
 
 <h2 id="总结">总结</h2>
 
-<p>我们在这篇文章中讨论了为什么 TCP 建立连接需要经过三次握手，在具体分析这个问题之前，我们首先重新思考了 TCP 连接究竟是什么，<a href="https://tools.ietf.org/html/rfc793">RFC 793 - Transmission Control Protocol - IETF Tools</a> 对 TCP 连接有着非常清楚的定义 —— 用于保证可靠性和流控制机制的数据，包括 Socket、序列号以及窗口大小。</p>
+<p>Go 语言并发模型的设计深受 CSP 模型的影响，我们简单总结一下为什么我们应该使用通信的方式来共享内存。</p>
 
-<p>TCP 建立连接时通过三次握手可以有效地避免历史错误连接的建立，减少通信双方不必要的资源消耗，三次握手能够帮助通信双方获取初始化序列号，它们能够保证数据包传输的不重不丢，还能保证它们的传输顺序，不会因为网络传输的问题发生混乱，到这里不使用『两次握手』和『四次握手』的原因已经非常清楚了：</p>
+<blockquote>
+<p>Do not communicate by sharing memory; instead, share memory by communicating.</p>
+</blockquote>
+
+<ol>
+<li>首先，使用发送消息来同步信息相比于直接使用共享内存和互斥锁是一种更高级的抽象，使用更高级的抽象能够为我们在程序设计上提供更好的封装，让程序的逻辑更加清晰；</li>
+<li>其次，消息发送在解耦方面与共享内存相比也有一定优势，我们可以将线程的职责分成生产者和消费者，并通过消息传递的方式将它们解耦，不需要再依赖共享内存；</li>
+<li>最后，Go 语言选择消息发送的方式，通过保证同一时间只有一个活跃的线程能够访问数据，能够从设计上天然地避免线程竞争和数据冲突的问题；</li>
+</ol>
+
+<p>上面的这几点虽然不能完整地解释 Go 语言选择这种设计的方方面面，但是也给出了鼓励使用通信同步信息的充分原因，我们在设计和实现 Go 语言的程序中也应该学会这种思考方式，通过这种并发模型让我们的程序变得更容易理解。到了现在我们其实可以讨论一些更加开放的问题，各位读者可以想一想下面问题的答案：</p>
 
 <ul>
-<li>『两次握手』：无法避免历史错误连接的初始化，浪费接收方的资源；</li>
-<li>『四次握手』：TCP 协议的设计可以让我们同时传递 <code>ACK</code> 和 <code>SYN</code> 两个控制信息，减少了通信次数，所以不需要使用更多的通信次数传输相同的信息；</li>
-</ul>
-
-<p>我们重新回到在文章开头提的问题，为什么使用类比解释 TCP 使用三次握手是错误的？这主要还是因为，这个类比没有解释清楚核心问题 —— 避免历史上的重复连接。到最后，我们还是来看一些比较开放的相关问题，有兴趣的读者可以仔细想一下下面的问题：</p>
-
-<ul>
-<li>除了使用序列号是否还有其他方式保证消息的不重不丢？</li>
-<li>UDP 协议有连接的概念么，它能保证数据传输的可靠么？</li>
+<li>除了使用发送消息和共享内存的方式，我们还可以选择哪些方式在不同的线程之间传递消息呢？</li>
+<li>共享内存和共享数据库作为同步信息的机制是不是有一些相似性，它们之间有什么异同呢？</li>
 </ul>
 
 <blockquote>
@@ -627,11 +599,17 @@ if (!doNotTrack) {
 <h2 id="Reference">Reference</h2>
 
 <ul>
-<li><a href="https://tools.ietf.org/html/rfc793">RFC 793 - Transmission Control Protocol - IETF Tools</a></li>
-<li><a href="https://networkengineering.stackexchange.com/questions/24068/why-do-we-need-a-3-way-handshake-why-not-just-2-way">Why do we need a 3-way handshake? Why not just 2-way?</a></li>
+<li><a href="https://golang.org/doc/faq#csp">Why build concurrency on the ideas of CSP?</a></li>
+<li><a href="http://www.minaandrawos.com/2015/12/06/concurrency-in-golang/">Concurrency in Golang</a></li>
+<li><a href="https://medium.com/@niteshagarwal_/communicating-sequential-processes-golang-a3d6d5d4b25e">Communicating Sequential Processes &amp; Golang.</a></li>
+<li><a href="https://stackoverflow.com/questions/36391421/explain-dont-communicate-by-sharing-memory-share-memory-by-communicating">Explain: Don’t communicate by sharing memory; share memory by communicating</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Communicating_sequential_processes">Communicating sequential processes</a></li>
+<li><a href="https://blog.golang.org/share-memory-by-communicating">Share Memory By Communicating</a></li>
+<li><a href="https://www.quora.com/What-is-the-actual-meaning-of-Gos-Dont-communicate-by-sharing-memory-share-memory-by-communicating">What is the actual meaning of Go’s “Don’t communicate by sharing memory, share memory by communicating.”?</a></li>
+<li><a href="https://golang.org/doc/faq#What_operations_are_atomic_What_about_mutexes">What operations are atomic? What about mutexes?</a></li>
+<li><a href="https://golang.org/doc/effective_go.html#sharing">Share by communicating</a></li>
+<li><a href="https://www.brianstorti.com/the-actor-model/">The actor model in 10 minutes</a></li>
 </ul>
-
-<h5 id="转载文章-原文链接为-https-draveness-me-https-draveness-me-whys-the-design-tcp-three-way-handshake-推荐关注原作者"><strong>转载文章，原文链接为：<a href="https://draveness.me/whys-the-design-tcp-three-way-handshake">https://draveness.me</a> 推荐关注原作者</strong></h5>
     </div>
 
     
@@ -645,13 +623,6 @@ if (!doNotTrack) {
     <span class="item-title">上次更新</span>
     <span class="item-content">
       2019-11-01
-      
-        <a href="https://github.com/wingsxdu/blog/commit/326dbd75b0f27aac7d281cbbc06d47f71caa1905" title="commit">
-          (326dbd7)
-        </a>
-        
-          <br>commit
-        
       
     </span>
   </p>
@@ -678,22 +649,9 @@ if (!doNotTrack) {
       
       <nav class="post-nav">
         
-          <a class="prev" href="/post/2019-11-01-whys-the-design-communication-shared-memory/">
-            
-            <i class="iconfont">
-              <svg  class="icon" viewBox="0 0 1024 1024" version="1.1"
-  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-  width="18" height="18">
-  <path d="M691.908486 949.511495l75.369571-89.491197c10.963703-12.998035 10.285251-32.864502-1.499144-44.378743L479.499795 515.267417 757.434875 204.940602c11.338233-12.190647 11.035334-32.285311-0.638543-44.850487l-80.46666-86.564541c-11.680017-12.583596-30.356378-12.893658-41.662889-0.716314L257.233596 494.235404c-11.332093 12.183484-11.041474 32.266891 0.657986 44.844348l80.46666 86.564541c1.772366 1.910513 3.706415 3.533476 5.750981 4.877077l306.620399 321.703933C662.505829 963.726242 680.945807 962.528973 691.908486 949.511495z"></path>
-</svg>
-
-            </i>
-            <span class="prev-text nav-default">为什么使用通信来共享内存？· Why&#39;s THE Design?</span>
-            <span class="prev-text nav-mobile">上一篇</span>
-          </a>
         
-          <a class="next" href="/post/2019-10-18-%E4%B8%80%E4%BA%9B%E7%BB%8F%E5%B8%B8%E5%BF%98%E8%AE%B0%E7%9A%84%E5%91%BD%E4%BB%A4/">
-            <span class="next-text nav-default">一些经常忘记的命令</span>
+          <a class="next" href="/post/2019-11-01-whys-the-design-tcp-three-way-handshake/">
+            <span class="next-text nav-default">为什么 TCP 建立连接需要三次握手 · Why&#39;s THE Design? （转载）</span>
             <span class="prev-text nav-mobile">下一篇</span>
             
             <i class="iconfont">
@@ -731,7 +689,7 @@ if (!doNotTrack) {
   <div id="disqus_thread"></div>
   <script type="text/javascript">
     var disqus_config = function () {
-      this.page.url = "https://www.wingsxdu.com/post/2019-11-01-whys-the-design-tcp-three-way-handshake/";
+      this.page.url = "https://www.wingsxdu.com/post/2019-11-01-whys-the-design-communication-shared-memory/";
     };
     function load_disqus() {
       
