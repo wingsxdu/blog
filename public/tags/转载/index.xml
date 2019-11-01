@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>科普 on beihai</title>
-    <link>https://www.wingsxdu.com/categories/%E7%A7%91%E6%99%AE/</link>
-    <description>Recent content in 科普 on beihai</description>
+    <title>转载 on beihai</title>
+    <link>https://www.wingsxdu.com/tags/%E8%BD%AC%E8%BD%BD/</link>
+    <description>Recent content in 转载 on beihai</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <lastBuildDate>Fri, 01 Nov 2019 12:14:37 +0800</lastBuildDate>
     
-	<atom:link href="https://www.wingsxdu.com/categories/%E7%A7%91%E6%99%AE/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://www.wingsxdu.com/tags/%E8%BD%AC%E8%BD%BD/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -20,15 +20,6 @@
       <description>&lt;blockquote&gt;
 &lt;p&gt;为什么这么设计（Why’s THE Design）是一系列关于计算机领域中程序设计决策的文章，我们在这个系列的每一篇文章中都会提出一个具体的问题并从不同的角度讨论这种设计的优缺点、对具体实现造成的影响。如果你有想要了解的问题，可以在文章下面留言。&lt;/p&gt;
 &lt;/blockquote&gt;</description>
-    </item>
-    
-    <item>
-      <title>UTF-8 编码与 mysql中的 utf8、utf8mb4</title>
-      <link>https://www.wingsxdu.com/p1373/</link>
-      <pubDate>Mon, 19 Aug 2019 15:10:43 +0000</pubDate>
-      
-      <guid>https://www.wingsxdu.com/p1373/</guid>
-      <description>UTF-8编码 UTF-8 是一种变长字节编码方式。对于某一个字符的UTF-8编码，如果只有一个字节则其最高二进制位为0；如果是多字节，其第一个字节从最</description>
     </item>
     
   </channel>

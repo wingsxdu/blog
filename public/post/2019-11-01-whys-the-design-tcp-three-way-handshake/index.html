@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>一些经常忘记的命令 - beihai</title>
+  <title>为什么 TCP 建立连接需要三次握手 · Why&#39;s THE Design? （转载） - beihai</title>
   
 
 <meta name="renderer" content="webkit" />
@@ -23,7 +23,8 @@
 <meta name="mobile-web-app-capable" content="yes">
 
 <meta name="author" content="beihai" />
-  <meta name="description" content="Ubuntu Ubuntu 后台运行程序 1 nohup ./test 输出 appendding output to &amp;lsquo;nohub.out&amp;rsquo; 大意为将命令行输出的信息写入到&amp;rsquo;nohub.out&amp;rsquo;文件 如何关闭进程? 1 2 3 ps -A #" />
+  <meta name="description" content=" 为什么这么设计（Why’s THE Design）是一系列关于计算机领域中程序设计决策的文章，我们在这个系列的每一篇文章中都会提出一个具体的问题并从不同的角度讨论这种设计的优缺点、对具体实现造成的影响。如果你有想要了解的问题，可以在文章下面留言。
+" />
 
   <meta name="keywords" content="Golang, Go, back-end, 后端, 分布式" />
 
@@ -35,7 +36,7 @@
 <meta name="generator" content="Hugo 0.58.3" />
 
 
-<link rel="canonical" href="https://www.wingsxdu.com/post/2019-10-18-%E4%B8%80%E4%BA%9B%E7%BB%8F%E5%B8%B8%E5%BF%98%E8%AE%B0%E7%9A%84%E5%91%BD%E4%BB%A4/" />
+<link rel="canonical" href="https://www.wingsxdu.com/post/2019-11-01-whys-the-design-tcp-three-way-handshake/" />
 
 
 
@@ -57,26 +58,32 @@
 
 
 
-<meta property="og:title" content="一些经常忘记的命令" />
-<meta property="og:description" content="Ubuntu Ubuntu 后台运行程序 1 nohup ./test 输出 appendding output to &lsquo;nohub.out&rsquo; 大意为将命令行输出的信息写入到&rsquo;nohub.out&rsquo;文件 如何关闭进程? 1 2 3 ps -A #" />
+<meta property="og:title" content="为什么 TCP 建立连接需要三次握手 · Why&#39;s THE Design? （转载）" />
+<meta property="og:description" content="
+为什么这么设计（Why’s THE Design）是一系列关于计算机领域中程序设计决策的文章，我们在这个系列的每一篇文章中都会提出一个具体的问题并从不同的角度讨论这种设计的优缺点、对具体实现造成的影响。如果你有想要了解的问题，可以在文章下面留言。
+" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://www.wingsxdu.com/post/2019-10-18-%E4%B8%80%E4%BA%9B%E7%BB%8F%E5%B8%B8%E5%BF%98%E8%AE%B0%E7%9A%84%E5%91%BD%E4%BB%A4/" />
-<meta property="article:published_time" content="2019-10-18T12:50:20+08:00" />
-<meta property="article:modified_time" content="2019-10-18T12:50:20+08:00" />
-<meta itemprop="name" content="一些经常忘记的命令">
-<meta itemprop="description" content="Ubuntu Ubuntu 后台运行程序 1 nohup ./test 输出 appendding output to &lsquo;nohub.out&rsquo; 大意为将命令行输出的信息写入到&rsquo;nohub.out&rsquo;文件 如何关闭进程? 1 2 3 ps -A #">
+<meta property="og:url" content="https://www.wingsxdu.com/post/2019-11-01-whys-the-design-tcp-three-way-handshake/" />
+<meta property="article:published_time" content="2019-11-01T12:14:37+08:00" />
+<meta property="article:modified_time" content="2019-11-01T12:14:37+08:00" />
+<meta itemprop="name" content="为什么 TCP 建立连接需要三次握手 · Why&#39;s THE Design? （转载）">
+<meta itemprop="description" content="
+为什么这么设计（Why’s THE Design）是一系列关于计算机领域中程序设计决策的文章，我们在这个系列的每一篇文章中都会提出一个具体的问题并从不同的角度讨论这种设计的优缺点、对具体实现造成的影响。如果你有想要了解的问题，可以在文章下面留言。
+">
 
 
-<meta itemprop="datePublished" content="2019-10-18T12:50:20&#43;08:00" />
-<meta itemprop="dateModified" content="2019-10-18T12:50:20&#43;08:00" />
-<meta itemprop="wordCount" content="786">
+<meta itemprop="datePublished" content="2019-11-01T12:14:37&#43;08:00" />
+<meta itemprop="dateModified" content="2019-11-01T12:14:37&#43;08:00" />
+<meta itemprop="wordCount" content="3627">
 
 
 
-<meta itemprop="keywords" content="技术向,linux,windows,备忘录," />
+<meta itemprop="keywords" content="技术向,底层,科普,转载," />
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="一些经常忘记的命令"/>
-<meta name="twitter:description" content="Ubuntu Ubuntu 后台运行程序 1 nohup ./test 输出 appendding output to &lsquo;nohub.out&rsquo; 大意为将命令行输出的信息写入到&rsquo;nohub.out&rsquo;文件 如何关闭进程? 1 2 3 ps -A #"/>
+<meta name="twitter:title" content="为什么 TCP 建立连接需要三次握手 · Why&#39;s THE Design? （转载）"/>
+<meta name="twitter:description" content="
+为什么这么设计（Why’s THE Design）是一系列关于计算机领域中程序设计决策的文章，我们在这个系列的每一篇文章中都会提出一个具体的问题并从不同的角度讨论这种设计的优缺点、对具体实现造成的影响。如果你有想要了解的问题，可以在文章下面留言。
+"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -363,21 +370,21 @@ if (!doNotTrack) {
           <article class="post bg-white">
     
     <header class="post-header">
-      <h1 class="post-title">一些经常忘记的命令</h1>
+      <h1 class="post-title">为什么 TCP 建立连接需要三次握手 · Why&#39;s THE Design? （转载）</h1>
       
       <div class="post-meta">
-        <time datetime="2019-10-18" class="post-time">
-          2019-10-18
+        <time datetime="2019-11-01" class="post-time">
+          2019-11-01
         </time>
         <div class="post-category">
             <a href="https://www.wingsxdu.com/categories/%E6%8A%80%E6%9C%AF%E5%90%91/"> 技术向 </a>
-            <a href="https://www.wingsxdu.com/categories/linux/"> linux </a>
-            <a href="https://www.wingsxdu.com/categories/windows/"> windows </a>
-            <a href="https://www.wingsxdu.com/categories/%E5%A4%87%E5%BF%98%E5%BD%95/"> 备忘录 </a>
+            <a href="https://www.wingsxdu.com/categories/%E5%BA%95%E5%B1%82/"> 底层 </a>
+            <a href="https://www.wingsxdu.com/categories/%E7%A7%91%E6%99%AE/"> 科普 </a>
+            <a href="https://www.wingsxdu.com/categories/%E8%BD%AC%E8%BD%BD/"> 转载 </a>
             
           </div>
-        <span class="more-meta"> 约 786 字 </span>
-          <span class="more-meta"> 预计阅读 2 分钟 </span>
+        <span class="more-meta"> 约 3627 字 </span>
+          <span class="more-meta"> 预计阅读 8 分钟 </span>
 
         
         
@@ -400,23 +407,15 @@ if (!doNotTrack) {
 <ul>
 <li>
 <ul>
-<li><a href="#Ubuntu">Ubuntu</a>
+<li><a href="#概述">概述</a></li>
+<li><a href="#设计">设计</a>
 <ul>
-<li>
-<ul>
-<li><a href="##Ubuntu 后台运行程序">Ubuntu 后台运行程序</a></li>
-<li><a href="##Ubuntu 18.04 更改阿里源">Ubuntu 18.04 更改阿里源</a></li>
+<li><a href="##历史连接">历史连接</a></li>
+<li><a href="##初始序列号">初始序列号</a></li>
+<li><a href="##通信次数">通信次数</a></li>
 </ul></li>
-</ul></li>
-<li><a href="#Windows">Windows</a>
-<ul>
-<li>
-<ul>
-<li><a href="##获取日期时间字符串">获取日期时间字符串</a></li>
-<li><a href="##设置 WSL 版本">设置 WSL 版本</a></li>
-<li><a href="##解决双系统时间不一致">解决双系统时间不一致</a></li>
-</ul></li>
-</ul></li>
+<li><a href="#总结">总结</a></li>
+<li><a href="#Reference">Reference</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -425,151 +424,195 @@ if (!doNotTrack) {
 
     
     <div class="post-content">
-      
+      <blockquote>
+<p>为什么这么设计（Why’s THE Design）是一系列关于计算机领域中程序设计决策的文章，我们在这个系列的每一篇文章中都会提出一个具体的问题并从不同的角度讨论这种设计的优缺点、对具体实现造成的影响。如果你有想要了解的问题，可以在文章下面留言。</p>
+</blockquote>
 
-<h2 id="Ubuntu">Ubuntu</h2>
+<p><strong>注：转载文章，原文链接为：<a href="https://draveness.me/whys-the-design-tcp-three-way-handshake">https://draveness.me</a> 推荐关注原作者</strong></p>
 
-<h4 id="#Ubuntu 后台运行程序">Ubuntu 后台运行程序</h4>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash">nohup ./test</code></pre></td></tr></table>
-</div>
-</div>
-<p>输出 appendding output to &lsquo;nohub.out&rsquo;  大意为将命令行输出的信息写入到&rsquo;nohub.out&rsquo;文件</p>
+<p>TCP 协议是我们几乎每天都会接触到的网络协议，绝大多数网络连接的建立都是基于 TCP 协议的，学过计算机网络或者对 TCP 协议稍有了解的人都知道 —— 使用 TCP 协议建立连接需要经过三次握手（three-way handshake）。</p>
 
-<p>如何关闭进程?</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash">ps -A  <span class="c1"># 列出所有的进程</span>
+<p>如果让我们简单说说 TCP 建立连接的过程，相信很多准备过面试的人都会非常了解，但是一旦想要深究『为什么 TCP 建立连接需要三次握手？』，作者相信大多数人都没有办法回答这个问题或者会给出错误的答案，这边文章就会讨论究竟为什么我们需要三次握手才能建立 TCP 连接？</p>
 
-<span class="nb">kill</span> <span class="m">1234</span> <span class="c1"># 杀死进程命令</span></code></pre></td></tr></table>
-</div>
-</div>
-<h4 id="#Ubuntu 18.04 更改阿里源">Ubuntu 18.04 更改阿里源</h4>
+<blockquote>
+<p>需要注意的是我们会将重点放到为什么需要 TCP 建立连接需要<strong>『三次握手』</strong>，而*不仅仅*是为什么需要<strong>『三次』</strong>握手。</p>
+</blockquote>
 
-<p>备份源文件</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash">sudo cp /etc/apt/sources.list /etc/apt/sources.list.bak </code></pre></td></tr></table>
-</div>
-</div>
-<p>清空文件</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash">sudo &gt; /etc/apt/sources.list</code></pre></td></tr></table>
-</div>
-</div>
-<p>写入阿里源</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash">sudo vim /etc/apt/sources.list</code></pre></td></tr></table>
-</div>
-</div><div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span></pre></td>
-<td class="lntd">
-<pre class="chroma">deb http://mirrors.aliyun.com/ubuntu/ trusty main restricted universe multiverse
-deb http://mirrors.aliyun.com/ubuntu/ trusty-security main restricted universe multiverse
-deb http://mirrors.aliyun.com/ubuntu/ trusty-updates main restricted universe multiverse
-deb http://mirrors.aliyun.com/ubuntu/ trusty-proposed main restricted universe multiverse
-deb http://mirrors.aliyun.com/ubuntu/ trusty-backports main restricted universe multiverse
-deb-src http://mirrors.aliyun.com/ubuntu/ trusty main restricted universe multiverse
-deb-src http://mirrors.aliyun.com/ubuntu/ trusty-security main restricted universe multiverse
-deb-src http://mirrors.aliyun.com/ubuntu/ trusty-updates main restricted universe multiverse
-deb-src http://mirrors.aliyun.com/ubuntu/ trusty-proposed main restricted universe multiverse
-deb-src http://mirrors.aliyun.com/ubuntu/ trusty-backports main restricted universe multiverse</pre></td></tr></table>
-</div>
-</div>
-<h2 id="Windows">Windows</h2>
+<h2 id="概述">概述</h2>
 
-<h4 id="#获取日期时间字符串">获取日期时间字符串</h4>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-powershell" data-lang="powershell"><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-powershell" data-lang="powershell"><span class="n">echo</span> <span class="k">%</span><span class="n">date</span><span class="p">%</span></code></pre></td></tr></table>
-</div>
-</div>
-<p>输出结果格式与 Windows 设置中的区域格式数据一致</p>
+<p>在具体分析今天的问题之前，我们首先可以了解一下最常见的错误类比，这个对 TCP 连接过程的错误比喻误导了很多人，作者在比较长的一段时间内也认为它能够很好地描述 TCP 建立连接为什么需要三次握手：</p>
 
-<p>自定义格式示例:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-powershell" data-lang="powershell"><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-powershell" data-lang="powershell"><span class="n">echo</span> <span class="k">%</span><span class="n">date</span><span class="err">:</span><span class="p">~</span><span class="n">10</span><span class="p">,</span><span class="n">4</span><span class="p">%-</span><span class="k">%</span><span class="n">date</span><span class="err">:</span><span class="p">~</span><span class="n">4</span><span class="p">,</span><span class="n">2</span><span class="p">%-</span><span class="k">%</span><span class="n">date</span><span class="err">:</span><span class="p">~</span><span class="n">7</span><span class="p">,</span><span class="n">2</span><span class="p">%</span></code></pre></td></tr></table>
-</div>
-</div>
-<p>%date:~10,4% 表示从左向右指针向右偏10位，然后从指针偏移到的位置开始提取4位字符，结果是2019（年的值）</p>
+<ol>
+<li>你听得到吗？</li>
+<li>我能听到，你听得到？</li>
+<li>我也能听到；</li>
+</ol>
 
-<p>%date:~4,2% 表示指针从左向右偏移4位，然后从偏移处开始提取2位字符，结果是10（月）</p>
+<p>这种用类比来解释问题往往就会面临『十个类比九个错』的尴尬局面，如果别人用类比回答你的为什么，你需要仔细想一想它的类比里究竟哪里有漏洞；类比带来的解释往往只能有片面的相似性，我们永远也无法找到绝对正确的类比，它只在我们想要通俗易懂地展示事物的特性时才能发挥较大的作用，我们在文章的后面会介绍为什么这里的类比有问题，各位读者也可以带着疑问来阅读剩下的内容。</p>
 
-<p>%date:~7,2% 表示指针从左向右偏移7位，然后从偏移处开始提取2位字符，结果是18（日）</p>
+<p>很多人尝试回答或者思考这个问题的时候其实关注点都放在了三次握手中的<strong>三次</strong>上面，这确实很重要，但是如果重新审视这个问题，我们对于『什么是连接』真的清楚？只有知道<strong>连接的定义</strong>，我们才能去尝试回答为什么 TCP 建立连接需要三次握手。</p>
 
-<h4 id="#设置 WSL 版本">设置 WSL 版本</h4>
+<blockquote>
+<p>The reliability and flow control mechanisms described above require that TCPs initialize and maintain certain status information for each data stream. The combination of this information, including sockets, sequence numbers, and window sizes, is called a connection.</p>
+</blockquote>
 
-<p>设置默认版本为 WSL2,这将使任何新安装的发行版将初始化为 WSL 2 发行版。</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-powershell" data-lang="powershell"><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-powershell" data-lang="powershell"><span class="n">wsl</span> <span class="p">-</span><span class="n">-set-default-version</span> <span class="n">2</span></code></pre></td></tr></table>
+<p><a href="https://tools.ietf.org/html/rfc793">RFC 793 - Transmission Control Protocol</a> 文档中非常清楚地定义了 TCP 中的连接是什么，我们简单总结一下：用于保证可靠性和流控制机制的信息，包括 Socket、序列号以及窗口大小叫做连接。</p>
+
+<p><div align="center">
+<link rel="stylesheet" href="/css/hugo-easy-gallery.css" />
+<div class="box">
+<figure  itemprop="associatedMedia"
+  itemscope itemtype="http://schema.org/ImageObject" >
+    <div class="img">
+      <img itemprop="thumbnail" src="/image/what-is-tcp-connection.png" />
+    </div>
+    <a href="/image/what-is-tcp-connection.png" itemprop="contentUrl"></a>
+      <figcaption><h4>what-is-tcp-connection</h4>
+      </figcaption>
+  </figure>
 </div>
 </div>
-<p>或者手动切换</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-powershell" data-lang="powershell"><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-powershell" data-lang="powershell"><span class="n">wsl</span> <span class="p">-</span><span class="n">-set-version</span> <span class="n">Ubuntu</span><span class="p">-</span><span class="n">18</span><span class="p">.</span><span class="n">04</span> <span class="n">2</span></code></pre></td></tr></table>
-</div>
-</div>
-<h4 id="#解决双系统时间不一致">解决双系统时间不一致</h4>
+所以，建立 TCP 连接就是通信的双方需要对上述的三种信息达成共识，连接中的一对 Socket 是由互联网地址标志符和端口组成的，窗口大小主要用来做流控制，最后的序列号是用来追踪通信发起方发送的数据包序号，接收方可以通过序列号向发送方确认某个数据包的成功接收。</p>
 
-<p>Windows把计算机硬件时间当作本地时间(local time)，所以在Windows系统中显示的时间跟 BIOS 中显示的时间是一样的。Linux/Unix/Mac把计算机硬件时间当作 UTC， 所以在Linux/Unix/Mac系统启动后在该时间的基础上，加上电脑设置的时区数（ 比如我们在中国，它就加上“8” ），因此，Linux/Unix/Mac系统中显示的时间总是比Windows系统中显示的时间快8个小时。所以，当你在Linux/Unix/Mac系统中，把系统现实的时间设置正确后，其实计算机硬件时间是在这个时间上减去8小时，所以当你切换成Windows系统后，会发现时间慢了8小时。</p>
+<p>到这里，我们将原有的问题转换成了『为什么需要通过三次握手才可以初始化 Sockets、窗口大小和初始序列号？』，那么接下来我们就开始对这个细化的问题进行分析并寻找解释。</p>
 
-<p>修改 Windows对硬件时间的对待方式，让 Windows把硬件时间当作UTC：（需要重启）</p>
+<h2 id="设计">设计</h2>
 
-<p>在 Terminal  管理员权限下输入：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-powershell" data-lang="powershell"><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-powershell" data-lang="powershell"><span class="n">Reg</span> <span class="n">add</span> <span class="n">HKLM</span><span class="p">\</span><span class="n">SYSTEM</span><span class="p">\</span><span class="n">CurrentControlSet</span><span class="p">\</span><span class="n">Control</span><span class="p">\</span><span class="n">TimeZoneInformation</span> <span class="p">/</span><span class="n">v</span> <span class="n">RealTimeIsUniversal</span> <span class="p">/</span><span class="n">t</span> <span class="n">REG_DWORD</span> <span class="p">/</span><span class="n">d</span> <span class="n">1</span></code></pre></td></tr></table>
+<p>这篇文章主要会从以下几个方面介绍为什么我们需要通过三次握手才可以初始化 Sockets、窗口大小、初始序列号并建立 TCP 连接：</p>
+
+<ul>
+<li>通过三次握手才能阻止重复历史连接的初始化；</li>
+<li>通过三次握手才能对通信双方的初始序列号进行初始化；</li>
+<li>讨论其他次数握手建立连接的可能性；</li>
+</ul>
+
+<p>这几个论点中的第一个是 TCP 选择使用三次握手的最主要原因，其他的几个原因相比之下都是次要的原因，我们在这里对它们的讨论只是为了让整个视角更加丰富，通过多方面理解这一有趣的设计决策。</p>
+
+<h3 id="#历史连接">历史连接</h3>
+
+<p><a href="https://tools.ietf.org/html/rfc793">RFC 793 - Transmission Control Protocol</a> 其实就指出了 TCP 连接使用三次握手的首要原因 —— 为了阻止历史的重复连接初始化造成的混乱问题，防止使用 TCP 协议通信的双方建立了错误的连接。</p>
+
+<blockquote>
+<p>The principle reason for the three-way handshake is to prevent old duplicate connection initiations from causing confusion.</p>
+</blockquote>
+
+<p><div align="center">
+
+<div class="box">
+<figure  itemprop="associatedMedia"
+  itemscope itemtype="http://schema.org/ImageObject" >
+    <div class="img">
+      <img itemprop="thumbnail" src="/image/tcp-recovery-from-old-duplicate-syn.png" />
+    </div>
+    <a href="/image/tcp-recovery-from-old-duplicate-syn.png" itemprop="contentUrl"></a>
+      <figcaption><h4>tcp-recovery-from-old-duplicate-syn</h4>
+      </figcaption>
+  </figure>
 </div>
 </div>
+想象一下这个场景，如果通信双方的通信次数只有两次，那么发送方一旦发出建立连接的请求之后它就没有办法撤回这一次请求，如果在网络状况复杂或者较差的网络中，发送方连续发送多次建立连接的请求，如果 TCP 建立连接只能通信两次，那么接收方只能选择接受或者拒绝发送方发起的请求，它并不清楚这一次请求是不是由于网络拥堵而早早过期的连接。</p>
+
+<p>所以，TCP 选择使用三次握手来建立连接并在连接引入了 <code>RST</code> 这一控制消息，接收方当收到请求时会将发送方发来的 <code>SEQ+1</code> 发送回接收方，这时由发送方来判断当前连接是否是历史连接：</p>
+
+<ul>
+<li>如果当前连接是历史连接，即 <code>SEQ</code> 过期或者超时，那么发送方就会直接发送 <code>RST</code> 控制消息中止这一次连接；</li>
+<li>如果当前连接不是历史连接，那么发送方就会发送 <code>ACK</code> 控制消息，通信双方就会成功建立连接；</li>
+</ul>
+
+<p>使用三次握手和 <code>RST</code> 控制消息将是否建立连接的最终控制权交给了发送方，因为只有发送方有足够的上下文来判断当前连接是否是错误的或者过期的，这也是 TCP 使用三次握手建立连接的最主要原因。</p>
+
+<h3 id="#初始序列号">初始序列号</h3>
+
+<p>另一个使用三次握手的重要的原因就是通信双方都需要获得一个用于发送信息的初始化序列号，作为一个可靠的传输层协议，TCP 需要在不稳定的网络环境中构建一个可靠的传输层，网络的不确定性可能会导致数据包的确实和顺序颠倒等问题，常见的问题可能包括：</p>
+
+<ul>
+<li>数据包被发送方多次发送造成数据的重复；</li>
+<li>数据包在传输的过程中被路由或者其他节点丢失；</li>
+<li>数据包到达接收方可能无法按照发送顺序；</li>
+</ul>
+
+<p>为了解决上述这些可能存在的问题，TCP 协议要求发送方在数据包中加入『序列号』字段，有了数据包对应的序列号，我们就可以：</p>
+
+<ul>
+<li>接收方可以通过序列号对重复的数据包进行去重；</li>
+<li>发送方会在对应数据包未被 ACK 时进行重复发送；</li>
+<li>接收方可以根据数据包的序列号对它们进行重新排序；</li>
+</ul>
+
+<p>序列号在 TCP 连接中有着非常重要的作用，初始序列号作为 TCP 连接的一部分也需要在三次握手期间进行初始化，由于 TCP 连接通信的双方都需要获得初始序列号，所以它们其实需要向对方发送 <code>SYN</code> 控制消息并携带自己期望的初始化序列号 <code>SEQ</code>，对方在收到 <code>SYN</code> 消息之后会通过 <code>ACK</code> 控制消息以及 <code>SEQ+1</code> 来进行确认。</p>
+
+<p><div align="center">
+
+<div class="box">
+<figure  itemprop="associatedMedia"
+  itemscope itemtype="http://schema.org/ImageObject" >
+    <div class="img">
+      <img itemprop="thumbnail" src="/image/basic-4-way-handshake.png" />
+    </div>
+    <a href="/image/basic-4-way-handshake.png" itemprop="contentUrl"></a>
+      <figcaption><h4>basic-4-way-handshake</h4>
+      </figcaption>
+  </figure>
+</div>
+</div>
+如上图所示，通信双方的两个 <code>TCP A/B</code> 分别向对方发送 <code>SYN</code> 和 <code>ACK</code> 控制消息，等待通信双方都获取到了自己期望的初始化序列号之后就可以开始通信了，由于 TCP 消息头的设计，我们可以将中间的两次通信合成一个，<code>TCP B</code> 可以向 <code>TCP A</code> 同时发送 <code>ACK</code> 和 <code>SYN</code> 控制消息，这也就帮助我们将四次通信减少至三次。</p>
+
+<blockquote>
+<p>A three way handshake is necessary because sequence numbers are not tied to a global clock in the network, and TCPs may have different mechanisms for picking the ISN’s. The receiver of the first SYN has no way of knowing whether the segment was an old delayed one or not, unless it remembers the last sequence number used on the connection (which is not always possible), and so it must ask the sender to verify this SYN. The three way handshake and the advantages of a clock-driven scheme are discussed in [3].</p>
+</blockquote>
+
+<p>除此之外，网络作为一个分布式的系统，其中并不存在一个用于计数的全局时钟，而 TCP 可以通过不同的机制来初始化序列号，作为 TCP 连接的接收方我们无法判断对方传来的初始化序列号是否过期，所以我们需要交由对方来判断，TCP 连接的发起方可以通过保存发出的序列号判断连接是否过期，如果让接收方来保存并判断序列号却是不现实的，这也再一次强化了我们在上一节中提出的观点 —— 避免历史错连接的初始化。</p>
+
+<h3 id="#通信次数">通信次数</h3>
+
+<p>当我们讨论 TCP 建立连接需要的通信次数时，我们经常会执着于为什么通信三次才可以建立连接，而不是两次或者四次；讨论使用更多的通信次数来建立连接往往是没有意义的，因为我们总可以<strong>使用更多的通信次数交换相同的信息</strong>，所以使用四次、五次或者更多次数建立连接在技术上都是完全可以实现的。</p>
+
+<p><div align="center">
+
+<div class="box">
+<figure  itemprop="associatedMedia"
+  itemscope itemtype="http://schema.org/ImageObject" >
+    <div class="img">
+      <img itemprop="thumbnail" src="/image/basic-3-way-handshake.png" />
+    </div>
+    <a href="/image/basic-3-way-handshake.png" itemprop="contentUrl"></a>
+      <figcaption><h4>basic-3-way-handshake</h4>
+      </figcaption>
+  </figure>
+</div>
+</div>
+这种增加 TCP 连接通信次数的问题往往没有讨论的必要性，我们追求的其实是用更少的通信次数（理论上的边界）完成信息的交换，也就是为什么我们在上两节中也一再强调使用『两次握手』没有办法建立 TCP 连接，使用三次握手是建立连接所需要的最小次数。</p>
+
+<h2 id="总结">总结</h2>
+
+<p>我们在这篇文章中讨论了为什么 TCP 建立连接需要经过三次握手，在具体分析这个问题之前，我们首先重新思考了 TCP 连接究竟是什么，<a href="https://tools.ietf.org/html/rfc793">RFC 793 - Transmission Control Protocol - IETF Tools</a> 对 TCP 连接有着非常清楚的定义 —— 用于保证可靠性和流控制机制的数据，包括 Socket、序列号以及窗口大小。</p>
+
+<p>TCP 建立连接时通过三次握手可以有效地避免历史错误连接的建立，减少通信双方不必要的资源消耗，三次握手能够帮助通信双方获取初始化序列号，它们能够保证数据包传输的不重不丢，还能保证它们的传输顺序，不会因为网络传输的问题发生混乱，到这里不使用『两次握手』和『四次握手』的原因已经非常清楚了：</p>
+
+<ul>
+<li>『两次握手』：无法避免历史错误连接的初始化，浪费接收方的资源；</li>
+<li>『四次握手』：TCP 协议的设计可以让我们同时传递 <code>ACK</code> 和 <code>SYN</code> 两个控制信息，减少了通信次数，所以不需要使用更多的通信次数传输相同的信息；</li>
+</ul>
+
+<p>我们重新回到在文章开头提的问题，为什么使用类比解释 TCP 使用三次握手是错误的？这主要还是因为，这个类比没有解释清楚核心问题 —— 避免历史上的重复连接。到最后，我们还是来看一些比较开放的相关问题，有兴趣的读者可以仔细想一下下面的问题：</p>
+
+<ul>
+<li>除了使用序列号是否还有其他方式保证消息的不重不丢？</li>
+<li>UDP 协议有连接的概念么，它能保证数据传输的可靠么？</li>
+</ul>
+
+<blockquote>
+<p>如果对文章中的内容有疑问或者想要了解更多软件工程上一些设计决策背后的原因，可以在博客下面留言，作者会及时回复本文相关的疑问并选择其中合适的主题作为后续的内容。</p>
+</blockquote>
+
+<h2 id="Reference">Reference</h2>
+
+<ul>
+<li><a href="https://tools.ietf.org/html/rfc793">RFC 793 - Transmission Control Protocol - IETF Tools</a></li>
+<li><a href="https://networkengineering.stackexchange.com/questions/24068/why-do-we-need-a-3-way-handshake-why-not-just-2-way">Why do we need a 3-way handshake? Why not just 2-way?</a></li>
+</ul>
+
+<p><strong>转载文章，原文链接为：<a href="https://draveness.me/whys-the-design-tcp-three-way-handshake">https://draveness.me</a> 推荐关注原作者</strong></p>
     </div>
 
     
@@ -582,7 +625,7 @@ deb-src http://mirrors.aliyun.com/ubuntu/ trusty-backports main restricted unive
   <p class="copyright-item">
     <span class="item-title">上次更新</span>
     <span class="item-content">
-      2019-10-18
+      2019-11-01
       
     </span>
   </p>
@@ -600,31 +643,18 @@ deb-src http://mirrors.aliyun.com/ubuntu/ trusty-backports main restricted unive
     <footer class="post-footer">
       <div class="post-tags">
           <a href="https://www.wingsxdu.com/tags/%E6%8A%80%E6%9C%AF%E5%90%91/">技术向</a>
-          <a href="https://www.wingsxdu.com/tags/linux/">linux</a>
-          <a href="https://www.wingsxdu.com/tags/windows/">windows</a>
-          <a href="https://www.wingsxdu.com/tags/%E5%A4%87%E5%BF%98%E5%BD%95/">备忘录</a>
+          <a href="https://www.wingsxdu.com/tags/%E5%BA%95%E5%B1%82/">底层</a>
+          <a href="https://www.wingsxdu.com/tags/%E7%A7%91%E6%99%AE/">科普</a>
+          <a href="https://www.wingsxdu.com/tags/%E8%BD%AC%E8%BD%BD/">转载</a>
           
         </div>
 
       
       <nav class="post-nav">
         
-          <a class="prev" href="/post/2019-11-01-whys-the-design-tcp-three-way-handshake/">
-            
-            <i class="iconfont">
-              <svg  class="icon" viewBox="0 0 1024 1024" version="1.1"
-  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-  width="18" height="18">
-  <path d="M691.908486 949.511495l75.369571-89.491197c10.963703-12.998035 10.285251-32.864502-1.499144-44.378743L479.499795 515.267417 757.434875 204.940602c11.338233-12.190647 11.035334-32.285311-0.638543-44.850487l-80.46666-86.564541c-11.680017-12.583596-30.356378-12.893658-41.662889-0.716314L257.233596 494.235404c-11.332093 12.183484-11.041474 32.266891 0.657986 44.844348l80.46666 86.564541c1.772366 1.910513 3.706415 3.533476 5.750981 4.877077l306.620399 321.703933C662.505829 963.726242 680.945807 962.528973 691.908486 949.511495z"></path>
-</svg>
-
-            </i>
-            <span class="prev-text nav-default">为什么 TCP 建立连接需要三次握手 · Why&#39;s THE Design? （转载）</span>
-            <span class="prev-text nav-mobile">上一篇</span>
-          </a>
         
-          <a class="next" href="/post/2019-10-13-windows-terminal-preview-background/">
-            <span class="next-text nav-default">Windows Terminal Preview 背景图片美化</span>
+          <a class="next" href="/post/2019-10-18-%E4%B8%80%E4%BA%9B%E7%BB%8F%E5%B8%B8%E5%BF%98%E8%AE%B0%E7%9A%84%E5%91%BD%E4%BB%A4/">
+            <span class="next-text nav-default">一些经常忘记的命令</span>
             <span class="prev-text nav-mobile">下一篇</span>
             
             <i class="iconfont">
@@ -662,7 +692,7 @@ deb-src http://mirrors.aliyun.com/ubuntu/ trusty-backports main restricted unive
   <div id="disqus_thread"></div>
   <script type="text/javascript">
     var disqus_config = function () {
-      this.page.url = "https://www.wingsxdu.com/post/2019-10-18-%E4%B8%80%E4%BA%9B%E7%BB%8F%E5%B8%B8%E5%BF%98%E8%AE%B0%E7%9A%84%E5%91%BD%E4%BB%A4/";
+      this.page.url = "https://www.wingsxdu.com/post/2019-11-01-whys-the-design-tcp-three-way-handshake/";
     };
     function load_disqus() {
       

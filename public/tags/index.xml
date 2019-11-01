@@ -6,10 +6,46 @@
     <description>Recent content in Tags on beihai</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 18 Oct 2019 12:50:20 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 01 Nov 2019 12:14:37 +0800</lastBuildDate>
     
 	<atom:link href="https://www.wingsxdu.com/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>底层</title>
+      <link>https://www.wingsxdu.com/tags/%E5%BA%95%E5%B1%82/</link>
+      <pubDate>Fri, 01 Nov 2019 12:14:37 +0800</pubDate>
+      
+      <guid>https://www.wingsxdu.com/tags/%E5%BA%95%E5%B1%82/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>技术向</title>
+      <link>https://www.wingsxdu.com/tags/%E6%8A%80%E6%9C%AF%E5%90%91/</link>
+      <pubDate>Fri, 01 Nov 2019 12:14:37 +0800</pubDate>
+      
+      <guid>https://www.wingsxdu.com/tags/%E6%8A%80%E6%9C%AF%E5%90%91/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>科普</title>
+      <link>https://www.wingsxdu.com/tags/%E7%A7%91%E6%99%AE/</link>
+      <pubDate>Fri, 01 Nov 2019 12:14:37 +0800</pubDate>
+      
+      <guid>https://www.wingsxdu.com/tags/%E7%A7%91%E6%99%AE/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>转载</title>
+      <link>https://www.wingsxdu.com/tags/%E8%BD%AC%E8%BD%BD/</link>
+      <pubDate>Fri, 01 Nov 2019 12:14:37 +0800</pubDate>
+      
+      <guid>https://www.wingsxdu.com/tags/%E8%BD%AC%E8%BD%BD/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>linux</title>
@@ -39,15 +75,6 @@
     </item>
     
     <item>
-      <title>技术向</title>
-      <link>https://www.wingsxdu.com/tags/%E6%8A%80%E6%9C%AF%E5%90%91/</link>
-      <pubDate>Fri, 18 Oct 2019 12:50:20 +0800</pubDate>
-      
-      <guid>https://www.wingsxdu.com/tags/%E6%8A%80%E6%9C%AF%E5%90%91/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>terminal</title>
       <link>https://www.wingsxdu.com/tags/terminal/</link>
       <pubDate>Sun, 13 Oct 2019 14:26:48 +0800</pubDate>
@@ -71,15 +98,6 @@
       <pubDate>Thu, 10 Oct 2019 10:35:26 +0800</pubDate>
       
       <guid>https://www.wingsxdu.com/tags/golang/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>底层</title>
-      <link>https://www.wingsxdu.com/tags/%E5%BA%95%E5%B1%82/</link>
-      <pubDate>Thu, 10 Oct 2019 10:35:26 +0800</pubDate>
-      
-      <guid>https://www.wingsxdu.com/tags/%E5%BA%95%E5%B1%82/</guid>
       <description></description>
     </item>
     
