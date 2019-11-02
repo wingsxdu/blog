@@ -4,12 +4,14 @@ author: "beihai"
 description: ""
 tags: [
     "技术向",
+	"Redis",
     "底层",
     "科普",
 	"转载",
 ]
 categories: [
     "技术向",
+	"Redis",
     "底层",
     "科普",
 	"转载",
@@ -41,7 +43,6 @@ Redis 作为广为人知的内存数据库，在玩具项目和复杂的工业�
 这两个看起来有些矛盾的问题实际上并不冲突，我们会分别阐述对这个看起来完全相反的设计决策作出分析和解释，不过在具体分析它们的设计之前，我们先来看一下不同版本 Redis 顶层的设计：
 
 <div align="center">{{< figure src="/image/redis-io-multiplexing.png" title="redis-io-multiplexing">}}</div>
-
 Redis 作为一个内存服务器，它需要处理很多来自外部的网络请求，它使用 I/O 多路复用机制同时监听多个文件描述符的可读和可写状态，一旦受到网络请求就会在内存中快速处理，由于绝大多数的操作都是纯内存的，所以处理的速度会非常地快。
 
 在 [Redis 4.0](https://raw.githubusercontent.com/antirez/redis/4.0/00-RELEASENOTES) 之后的版本，情况就有了一些变动，新版的 Redis 服务在执行一些命令时就会使用『主处理线程』之外的其他线程，例如 `UNLINK`、`FLUSHALL ASYNC`、`FLUSHDB ASYNC` 等非阻塞的删除操作。
@@ -72,7 +73,6 @@ Redis 从一开始就选择使用单线程模型处理来自客户端的绝大�
 可维护性对于一个项目来说非常重要，如果代码难以调试和测试，问题也经常难以复现，这对于任何一个项目来说都会严重地影响项目的可维护性。多线程模型虽然在某些方面表现优异，但是它却引入了程序执行顺序的不确定性，代码的执行过程不再是串行的，多个线程同时访问的变量如果没有谨慎处理就会带来诡异的问题。
 
 <div align="center">{{< figure src="/image/multi-threading.png" title="multi-threading">}}</div>
-
 在网络上有一个调侃多线程模型的段子，就很好地展示了多线程模型带来的潜在问题：[竞争条件 (race condition)](https://en.wikipedia.org/wiki/Race_condition) —— 如果计算机中的两个进程（线程同理）同时尝试修改一个共享内存的内容，在没有并发控制的情况下，最终的结果依赖于两个进程的执行顺序和时机，如果发生了并发访问冲突，最后的结果就会是不正确的。
 
 > Some people, when confronted with a problem, think, “I know, I’ll use threads,” and then two they hav erpoblesms.
@@ -140,7 +140,6 @@ Redis 在最新的几个版本中加入了一些可以被其他线程异步处�
 但是对于 Redis 中的一些超大键值对，几十 MB 或者几百 MB 的数据并不能在几毫秒的时间内处理完，Redis 可能会需要在释放内存空间上消耗较多的时间，这些操作就会阻塞待处理的任务，影响 Redis 服务处理请求的 PCT99 和可用性。
 
 <div align="center">{{< figure src="/image/redis-unlink.png" title="redis-unlink">}}</div>
-
 然而释放内存空间的工作其实可以由后台线程异步进行处理，这也就是 `UNLINK` 命令的实现原理，它只会将键从元数据中删除，真正的删除操作会在后台异步执行。
 
 ## 总结{#总结}

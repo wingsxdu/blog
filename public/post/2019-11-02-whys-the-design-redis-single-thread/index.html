@@ -78,7 +78,7 @@
 
 
 
-<meta itemprop="keywords" content="技术向,底层,科普,转载," />
+<meta itemprop="keywords" content="技术向,Redis,底层,科普,转载," />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="为什么 Redis 选择单线程模型 · Why&#39;s THE Design?"/>
 <meta name="twitter:description" content="
@@ -395,6 +395,7 @@ if (!doNotTrack) {
         </time>
         <div class="post-category">
             <a href="https://www.wingsxdu.com/categories/%E6%8A%80%E6%9C%AF%E5%90%91/"> 技术向 </a>
+            <a href="https://www.wingsxdu.com/categories/redis/"> Redis </a>
             <a href="https://www.wingsxdu.com/categories/%E5%BA%95%E5%B1%82/"> 底层 </a>
             <a href="https://www.wingsxdu.com/categories/%E7%A7%91%E6%99%AE/"> 科普 </a>
             <a href="https://www.wingsxdu.com/categories/%E8%BD%AC%E8%BD%BD/"> 转载 </a>
@@ -473,7 +474,7 @@ if (!doNotTrack) {
 
 <p>这两个看起来有些矛盾的问题实际上并不冲突，我们会分别阐述对这个看起来完全相反的设计决策作出分析和解释，不过在具体分析它们的设计之前，我们先来看一下不同版本 Redis 顶层的设计：</p>
 
-<div align="center">
+<p><div align="center">
 <link rel="stylesheet" href="/css/hugo-easy-gallery.css" />
 <div class="box">
 <figure  itemprop="associatedMedia"
@@ -487,8 +488,7 @@ if (!doNotTrack) {
   </figure>
 </div>
 </div>
-
-<p>Redis 作为一个内存服务器，它需要处理很多来自外部的网络请求，它使用 I/O 多路复用机制同时监听多个文件描述符的可读和可写状态，一旦受到网络请求就会在内存中快速处理，由于绝大多数的操作都是纯内存的，所以处理的速度会非常地快。</p>
+Redis 作为一个内存服务器，它需要处理很多来自外部的网络请求，它使用 I/O 多路复用机制同时监听多个文件描述符的可读和可写状态，一旦受到网络请求就会在内存中快速处理，由于绝大多数的操作都是纯内存的，所以处理的速度会非常地快。</p>
 
 <p>在 <a href="https://raw.githubusercontent.com/antirez/redis/4.0/00-RELEASENOTES">Redis 4.0</a> 之后的版本，情况就有了一些变动，新版的 Redis 服务在执行一些命令时就会使用『主处理线程』之外的其他线程，例如 <code>UNLINK</code>、<code>FLUSHALL ASYNC</code>、<code>FLUSHDB ASYNC</code> 等非阻塞的删除操作。</p>
 
@@ -521,7 +521,7 @@ if (!doNotTrack) {
 
 <p>可维护性对于一个项目来说非常重要，如果代码难以调试和测试，问题也经常难以复现，这对于任何一个项目来说都会严重地影响项目的可维护性。多线程模型虽然在某些方面表现优异，但是它却引入了程序执行顺序的不确定性，代码的执行过程不再是串行的，多个线程同时访问的变量如果没有谨慎处理就会带来诡异的问题。</p>
 
-<div align="center">
+<p><div align="center">
 
 <div class="box">
 <figure  itemprop="associatedMedia"
@@ -535,8 +535,7 @@ if (!doNotTrack) {
   </figure>
 </div>
 </div>
-
-<p>在网络上有一个调侃多线程模型的段子，就很好地展示了多线程模型带来的潜在问题：<a href="https://en.wikipedia.org/wiki/Race_condition">竞争条件 (race condition)</a> —— 如果计算机中的两个进程（线程同理）同时尝试修改一个共享内存的内容，在没有并发控制的情况下，最终的结果依赖于两个进程的执行顺序和时机，如果发生了并发访问冲突，最后的结果就会是不正确的。</p>
+在网络上有一个调侃多线程模型的段子，就很好地展示了多线程模型带来的潜在问题：<a href="https://en.wikipedia.org/wiki/Race_condition">竞争条件 (race condition)</a> —— 如果计算机中的两个进程（线程同理）同时尝试修改一个共享内存的内容，在没有并发控制的情况下，最终的结果依赖于两个进程的执行顺序和时机，如果发生了并发访问冲突，最后的结果就会是不正确的。</p>
 
 <blockquote>
 <p>Some people, when confronted with a problem, think, “I know, I’ll use threads,” and then two they hav erpoblesms.</p>
@@ -630,7 +629,7 @@ if (!doNotTrack) {
 
 <p>但是对于 Redis 中的一些超大键值对，几十 MB 或者几百 MB 的数据并不能在几毫秒的时间内处理完，Redis 可能会需要在释放内存空间上消耗较多的时间，这些操作就会阻塞待处理的任务，影响 Redis 服务处理请求的 PCT99 和可用性。</p>
 
-<div align="center">
+<p><div align="center">
 
 <div class="box">
 <figure  itemprop="associatedMedia"
@@ -644,8 +643,7 @@ if (!doNotTrack) {
   </figure>
 </div>
 </div>
-
-<p>然而释放内存空间的工作其实可以由后台线程异步进行处理，这也就是 <code>UNLINK</code> 命令的实现原理，它只会将键从元数据中删除，真正的删除操作会在后台异步执行。</p>
+然而释放内存空间的工作其实可以由后台线程异步进行处理，这也就是 <code>UNLINK</code> 命令的实现原理，它只会将键从元数据中删除，真正的删除操作会在后台异步执行。</p>
 
 <h2 id="总结">总结</h2>
 
@@ -703,6 +701,7 @@ if (!doNotTrack) {
     <footer class="post-footer">
       <div class="post-tags">
           <a href="https://www.wingsxdu.com/tags/%E6%8A%80%E6%9C%AF%E5%90%91/">技术向</a>
+          <a href="https://www.wingsxdu.com/tags/redis/">Redis</a>
           <a href="https://www.wingsxdu.com/tags/%E5%BA%95%E5%B1%82/">底层</a>
           <a href="https://www.wingsxdu.com/tags/%E7%A7%91%E6%99%AE/">科普</a>
           <a href="https://www.wingsxdu.com/tags/%E8%BD%AC%E8%BD%BD/">转载</a>
@@ -712,6 +711,19 @@ if (!doNotTrack) {
       
       <nav class="post-nav">
         
+          <a class="prev" href="/post/2019-11-02-mysql-innodb/">
+            
+            <i class="iconfont">
+              <svg  class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="18" height="18">
+  <path d="M691.908486 949.511495l75.369571-89.491197c10.963703-12.998035 10.285251-32.864502-1.499144-44.378743L479.499795 515.267417 757.434875 204.940602c11.338233-12.190647 11.035334-32.285311-0.638543-44.850487l-80.46666-86.564541c-11.680017-12.583596-30.356378-12.893658-41.662889-0.716314L257.233596 494.235404c-11.332093 12.183484-11.041474 32.266891 0.657986 44.844348l80.46666 86.564541c1.772366 1.910513 3.706415 3.533476 5.750981 4.877077l306.620399 321.703933C662.505829 963.726242 680.945807 962.528973 691.908486 949.511495z"></path>
+</svg>
+
+            </i>
+            <span class="prev-text nav-default">2019 11 02 Mysql Innodb</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
         
           <a class="next" href="/post/2019-11-01-whys-the-design-communication-shared-memory/">
             <span class="next-text nav-default">为什么使用通信来共享内存？· Why&#39;s THE Design?</span>
