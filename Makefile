@@ -11,7 +11,7 @@ new_post:
 		$(NEWPOST)$(COMPILE_TIME_WIN)$(title).md
 push:
 		$(HUGO) 
+		cd public && make push
 		$(GIT_ADD) 
 		$(GIT_COMMIT) 
 		$(GIT_Push)
-		cd public && make push
