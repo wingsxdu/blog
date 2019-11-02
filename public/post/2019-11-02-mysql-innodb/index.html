@@ -65,7 +65,7 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://www.wingsxdu.com/post/2019-11-02-mysql-innodb/" />
 <meta property="article:published_time" content="2019-11-02T16:13:13+08:00" />
-<meta property="article:modified_time" content="2019-11-02T16:33:00+08:00" />
+<meta property="article:modified_time" content="2019-11-02T17:00:47+08:00" />
 <meta itemprop="name" content="2019 11 02 Mysql Innodb">
 <meta itemprop="description" content="
 为什么这么设计（Why’s THE Design）是一系列关于计算机领域中程序设计决策的文章，我们在这个系列的每一篇文章中都会提出一个具体的问题并从不同的角度讨论这种设计的优缺点、对具体实现造成的影响。如果你有想要了解的问题，可以在文章下面留言。
@@ -73,8 +73,8 @@
 
 
 <meta itemprop="datePublished" content="2019-11-02T16:13:13&#43;08:00" />
-<meta itemprop="dateModified" content="2019-11-02T16:33:00&#43;08:00" />
-<meta itemprop="wordCount" content="8358">
+<meta itemprop="dateModified" content="2019-11-02T17:00:47&#43;08:00" />
+<meta itemprop="wordCount" content="8406">
 
 
 
@@ -401,7 +401,7 @@ if (!doNotTrack) {
             <a href="https://www.wingsxdu.com/categories/%E8%BD%AC%E8%BD%BD/"> 转载 </a>
             
           </div>
-        <span class="more-meta"> 约 8358 字 </span>
+        <span class="more-meta"> 约 8406 字 </span>
           <span class="more-meta"> 预计阅读 17 分钟 </span>
 
         
@@ -425,9 +425,8 @@ if (!doNotTrack) {
 <ul>
 <li>
 <ul>
-<li><a href="#数据库的定义">数据库的定义</a>
+<li>
 <ul>
-<li><a href="#数据库和实例">数据库和实例</a></li>
 <li><a href="#mysql-的架构">MySQL 的架构</a></li>
 </ul></li>
 <li><a href="#数据的存储">数据的存储</a>
@@ -491,7 +490,7 @@ if (!doNotTrack) {
 
 <p>作为一名开发人员，在日常的工作中会难以避免地接触到数据库，无论是基于文件的 sqlite 还是工程上使用非常广泛的 MySQL、PostgreSQL，但是一直以来也没有对数据库有一个非常清晰并且成体系的认知，所以最近两个月的时间看了几本数据库相关的书籍并且阅读了 MySQL 的官方文档，希望对各位了解数据库的、不了解数据库的有所帮助。</p>
 
-<p><div align="center">
+<div align="center">
 <link rel="stylesheet" href="/css/hugo-easy-gallery.css" />
 <div class="box">
 <figure  itemprop="associatedMedia"
@@ -503,26 +502,33 @@ if (!doNotTrack) {
   </figure>
 </div>
 </div>
-本文中对于数据库的介绍以及研究都是在 MySQL 上进行的，如果涉及到了其他数据库的内容或者实现会在文中单独指出。</p>
+本文中对于数据库的介绍以及研究都是在 MySQL 上进行的，如果涉及到了其他数据库的内容或者实现会在文中单独指出。
 
-<h2 id="数据库的定义">数据库的定义</h2>
+## 数据库的定义
 
-<p>很多开发者在最开始时其实都对数据库有一个比较模糊的认识，觉得数据库就是一堆数据的集合，但是实际却比这复杂的多，数据库领域中有两个词非常容易混淆，也就是*数据库*和*实例*：</p>
+很多开发者在最开始时其实都对数据库有一个比较模糊的认识，觉得数据库就是一堆数据的集合，但是实际却比这复杂的多，数据库领域中有两个词非常容易混淆，也就是*数据库*和*实例*：
 
-<ul>
-<li>数据库：物理操作文件系统或其他形式文件类型的集合；</li>
-<li>实例：MySQL 数据库由后台线程以及一个共享内存区组成；</li>
-</ul>
+- 数据库：物理操作文件系统或其他形式文件类型的集合；
+- 实例：MySQL 数据库由后台线程以及一个共享内存区组成；
 
-<blockquote>
-<p>对于数据库和实例的定义都来自于 <a href="https://book.douban.com/subject/24708143/">MySQL 技术内幕：InnoDB 存储引擎</a> 一书，想要了解 InnoDB 存储引擎的读者可以阅读这本书籍。</p>
-</blockquote>
+> 对于数据库和实例的定义都来自于 [MySQL 技术内幕：InnoDB 存储引擎](https://book.douban.com/subject/24708143/) 一书，想要了解 InnoDB 存储引擎的读者可以阅读这本书籍。
 
-<h3 id="数据库和实例">数据库和实例</h3>
+### 数据库和实例
 
-<p>在 MySQL 中，实例和数据库往往都是一一对应的，而我们也无法直接操作数据库，而是要通过数据库实例来操作数据库文件，可以理解为数据库实例是数据库为上层提供的一个专门用于操作的接口。</p>
+在 MySQL 中，实例和数据库往往都是一一对应的，而我们也无法直接操作数据库，而是要通过数据库实例来操作数据库文件，可以理解为数据库实例是数据库为上层提供的一个专门用于操作的接口。
 
-<p><img src="https://raw.githubusercontent.com/Draveness/Analyze/master/contents/Database/images/mysql/Database%20-%20Instance.jpg" alt="Database - Instance" /></p>
+<div align="center">
+
+<div class="box">
+<figure  itemprop="associatedMedia"
+  itemscope itemtype="http://schema.org/ImageObject" >
+    <div class="img">
+      <img itemprop="thumbnail" src="/image/Database%20-%20Instance.jpg" />
+    </div>
+    <a href="/image/Database%20-%20Instance.jpg" itemprop="contentUrl"></a>
+  </figure>
+</div>
+</div>
 
 <p>在 Unix 上，启动一个 MySQL 实例往往会产生两个进程，<code>mysqld</code> 就是真正的数据库服务守护进程，而 <code>mysqld_safe</code> 是一个用于检查和设置 <code>mysqld</code> 启动的控制程序，它负责监控 MySQL 进程的执行，当 <code>mysqld</code> 发生错误时，<code>mysqld_safe</code> 会对其状态进行检查并在合适的条件下重启。</p>
 
@@ -530,7 +536,18 @@ if (!doNotTrack) {
 
 <p>MySQL 从第一个版本发布到现在已经有了 20 多年的历史，在这么多年的发展和演变中，整个应用的体系结构变得越来越复杂：</p>
 
-<p><img src="C:UsersbeihaiDesktopWorkSpaceblogstaticimageLogical-View-of-MySQL-Architecture.jpg" alt="Logical-View-of-MySQL-Architecture" /></p>
+<div align="center">
+
+<div class="box">
+<figure  itemprop="associatedMedia"
+  itemscope itemtype="http://schema.org/ImageObject" >
+    <div class="img">
+      <img itemprop="thumbnail" src="/image/Logical-View-of-MySQL-Architecture.jpg" />
+    </div>
+    <a href="/image/Logical-View-of-MySQL-Architecture.jpg" itemprop="contentUrl"></a>
+  </figure>
+</div>
+</div>
 
 <p>最上层用于连接、线程处理的部分并不是 MySQL 『发明』的，很多服务都有类似的组成部分；第二层中包含了大多数 MySQL 的核心服务，包括了对 SQL 的解析、分析、优化和缓存等功能，存储过程、触发器和视图都是在这里实现的；而第三层就是 MySQL 中真正负责数据的存储和提取的存储引擎，例如：<a href="https://en.wikipedia.org/wiki/InnoDB">InnoDB</a>、<a href="https://en.wikipedia.org/wiki/MyISAM">MyISAM</a> 等，文中对存储引擎的介绍都是对 InnoDB 实现的分析。</p>
 
@@ -988,8 +1005,8 @@ if (!doNotTrack) {
     <span class="item-content">
       2019-11-02
       
-        <a href="https://github.com/wingsxdu/blog/commit/10da5213328aefb673039b9496836848ec142380" title="commit">
-          (10da521)
+        <a href="https://github.com/wingsxdu/blog/commit/1954a285c3a325b38b288f2ef8af89c70eaa93ce" title="commit">
+          (1954a28)
         </a>
         
           <br>commit
