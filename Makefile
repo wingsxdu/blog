@@ -14,4 +14,4 @@ push:
 		$(GIT_ADD) 
 		$(GIT_COMMIT) 
 		$(GIT_Push)
-		cd public && make
+		cd public && make push
