@@ -6,24 +6,24 @@
     <description>Recent content in Tags on beihai</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 02 Nov 2019 16:13:13 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 02 Nov 2019 14:04:10 +0800</lastBuildDate>
     
 	<atom:link href="https://www.wingsxdu.com/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>mysql</title>
-      <link>https://www.wingsxdu.com/tags/mysql/</link>
-      <pubDate>Sat, 02 Nov 2019 16:13:13 +0800</pubDate>
+      <title>Redis</title>
+      <link>https://www.wingsxdu.com/tags/redis/</link>
+      <pubDate>Sat, 02 Nov 2019 14:04:10 +0800</pubDate>
       
-      <guid>https://www.wingsxdu.com/tags/mysql/</guid>
+      <guid>https://www.wingsxdu.com/tags/redis/</guid>
       <description></description>
     </item>
     
     <item>
       <title>底层</title>
       <link>https://www.wingsxdu.com/tags/%E5%BA%95%E5%B1%82/</link>
-      <pubDate>Sat, 02 Nov 2019 16:13:13 +0800</pubDate>
+      <pubDate>Sat, 02 Nov 2019 14:04:10 +0800</pubDate>
       
       <guid>https://www.wingsxdu.com/tags/%E5%BA%95%E5%B1%82/</guid>
       <description></description>
@@ -32,7 +32,7 @@
     <item>
       <title>技术向</title>
       <link>https://www.wingsxdu.com/tags/%E6%8A%80%E6%9C%AF%E5%90%91/</link>
-      <pubDate>Sat, 02 Nov 2019 16:13:13 +0800</pubDate>
+      <pubDate>Sat, 02 Nov 2019 14:04:10 +0800</pubDate>
       
       <guid>https://www.wingsxdu.com/tags/%E6%8A%80%E6%9C%AF%E5%90%91/</guid>
       <description></description>
@@ -41,7 +41,7 @@
     <item>
       <title>科普</title>
       <link>https://www.wingsxdu.com/tags/%E7%A7%91%E6%99%AE/</link>
-      <pubDate>Sat, 02 Nov 2019 16:13:13 +0800</pubDate>
+      <pubDate>Sat, 02 Nov 2019 14:04:10 +0800</pubDate>
       
       <guid>https://www.wingsxdu.com/tags/%E7%A7%91%E6%99%AE/</guid>
       <description></description>
@@ -50,18 +50,9 @@
     <item>
       <title>转载</title>
       <link>https://www.wingsxdu.com/tags/%E8%BD%AC%E8%BD%BD/</link>
-      <pubDate>Sat, 02 Nov 2019 16:13:13 +0800</pubDate>
-      
-      <guid>https://www.wingsxdu.com/tags/%E8%BD%AC%E8%BD%BD/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Redis</title>
-      <link>https://www.wingsxdu.com/tags/redis/</link>
       <pubDate>Sat, 02 Nov 2019 14:04:10 +0800</pubDate>
       
-      <guid>https://www.wingsxdu.com/tags/redis/</guid>
+      <guid>https://www.wingsxdu.com/tags/%E8%BD%AC%E8%BD%BD/</guid>
       <description></description>
     </item>
     
