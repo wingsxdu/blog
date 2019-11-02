@@ -6,10 +6,21 @@
     <description>Recent content in 底层 on beihai</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 02 Nov 2019 14:04:10 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 02 Nov 2019 16:13:13 +0800</lastBuildDate>
     
 	<atom:link href="https://www.wingsxdu.com/tags/%E5%BA%95%E5%B1%82/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>2019 11 02 Mysql Innodb</title>
+      <link>https://www.wingsxdu.com/post/2019-11-02-mysql-innodb/</link>
+      <pubDate>Sat, 02 Nov 2019 16:13:13 +0800</pubDate>
+      
+      <guid>https://www.wingsxdu.com/post/2019-11-02-mysql-innodb/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;为什么这么设计（Why’s THE Design）是一系列关于计算机领域中程序设计决策的文章，我们在这个系列的每一篇文章中都会提出一个具体的问题并从不同的角度讨论这种设计的优缺点、对具体实现造成的影响。如果你有想要了解的问题，可以在文章下面留言。&lt;/p&gt;
+&lt;/blockquote&gt;</description>
+    </item>
     
     <item>
       <title>为什么 Redis 选择单线程模型 · Why&#39;s THE Design?</title>
