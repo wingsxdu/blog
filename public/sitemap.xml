@@ -9,13 +9,6 @@
   </url>
   
   <url>
-    <loc>https://www.wingsxdu.com/post/2019-11-02-mysql-innodb/</loc>
-    <lastmod>2019-11-02T17:44:55+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
     <loc>https://www.wingsxdu.com/</loc>
     <lastmod>2019-11-02T17:44:55+08:00</lastmod>
     <changefreq>weekly</changefreq>
@@ -38,6 +31,13 @@
   
   <url>
     <loc>https://www.wingsxdu.com/tags/mysql/</loc>
+    <lastmod>2019-11-02T17:44:55+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.wingsxdu.com/post/2019-11-02-mysql-innodb/</loc>
     <lastmod>2019-11-02T17:44:55+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
@@ -86,14 +86,14 @@
   </url>
   
   <url>
-    <loc>https://www.wingsxdu.com/tags/%E7%A7%91%E6%99%AE/</loc>
+    <loc>https://www.wingsxdu.com/categories/%E7%A7%91%E6%99%AE/</loc>
     <lastmod>2019-11-02T17:44:55+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://www.wingsxdu.com/categories/%E7%A7%91%E6%99%AE/</loc>
+    <loc>https://www.wingsxdu.com/tags/%E7%A7%91%E6%99%AE/</loc>
     <lastmod>2019-11-02T17:44:55+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
@@ -114,14 +114,14 @@
   </url>
   
   <url>
-    <loc>https://www.wingsxdu.com/categories/redis/</loc>
+    <loc>https://www.wingsxdu.com/tags/redis/</loc>
     <lastmod>2019-11-02T16:18:53+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://www.wingsxdu.com/tags/redis/</loc>
+    <loc>https://www.wingsxdu.com/categories/redis/</loc>
     <lastmod>2019-11-02T16:18:53+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
@@ -163,13 +163,6 @@
   </url>
   
   <url>
-    <loc>https://www.wingsxdu.com/tags/linux/</loc>
-    <lastmod>2019-10-18T12:50:20+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
     <loc>https://www.wingsxdu.com/categories/linux/</loc>
     <lastmod>2019-10-18T12:50:20+08:00</lastmod>
     <changefreq>weekly</changefreq>
@@ -177,7 +170,7 @@
   </url>
   
   <url>
-    <loc>https://www.wingsxdu.com/tags/windows/</loc>
+    <loc>https://www.wingsxdu.com/tags/linux/</loc>
     <lastmod>2019-10-18T12:50:20+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
@@ -191,6 +184,13 @@
   </url>
   
   <url>
+    <loc>https://www.wingsxdu.com/tags/windows/</loc>
+    <lastmod>2019-10-18T12:50:20+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
     <loc>https://www.wingsxdu.com/post/2019-10-18-%E4%B8%80%E4%BA%9B%E7%BB%8F%E5%B8%B8%E5%BF%98%E8%AE%B0%E7%9A%84%E5%91%BD%E4%BB%A4/</loc>
     <lastmod>2019-10-18T12:50:20+08:00</lastmod>
     <changefreq>weekly</changefreq>
@@ -198,14 +198,14 @@
   </url>
   
   <url>
-    <loc>https://www.wingsxdu.com/categories/%E5%A4%87%E5%BF%98%E5%BD%95/</loc>
+    <loc>https://www.wingsxdu.com/tags/%E5%A4%87%E5%BF%98%E5%BD%95/</loc>
     <lastmod>2019-10-18T12:50:20+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://www.wingsxdu.com/tags/%E5%A4%87%E5%BF%98%E5%BD%95/</loc>
+    <loc>https://www.wingsxdu.com/categories/%E5%A4%87%E5%BF%98%E5%BD%95/</loc>
     <lastmod>2019-10-18T12:50:20+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
@@ -254,14 +254,14 @@
   </url>
   
   <url>
-    <loc>https://www.wingsxdu.com/tags/%E7%BC%96%E7%A0%81%E8%A7%84%E8%8C%83/</loc>
+    <loc>https://www.wingsxdu.com/categories/%E7%BC%96%E7%A0%81%E8%A7%84%E8%8C%83/</loc>
     <lastmod>2019-10-13T14:37:13+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://www.wingsxdu.com/categories/%E7%BC%96%E7%A0%81%E8%A7%84%E8%8C%83/</loc>
+    <loc>https://www.wingsxdu.com/tags/%E7%BC%96%E7%A0%81%E8%A7%84%E8%8C%83/</loc>
     <lastmod>2019-10-13T14:37:13+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
