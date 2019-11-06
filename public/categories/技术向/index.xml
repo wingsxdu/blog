@@ -12,7 +12,7 @@
     
     
     <item>
-      <title>Mysql 与 Innodb</title>
+      <title>Mysql 与 Innodb（转载）</title>
       <link>https://www.wingsxdu.com/post/2019-11-02-mysql-innodb/</link>
       <pubDate>Sat, 02 Nov 2019 16:13:13 +0800</pubDate>
       
@@ -35,7 +35,7 @@
     </item>
     
     <item>
-      <title>为什么 Redis 选择单线程模型 · Why&#39;s THE Design?</title>
+      <title>为什么 Redis 选择单线程模型 · Why&#39;s THE Design?（转载）</title>
       <link>https://www.wingsxdu.com/post/2019-11-02-whys-the-design-redis-single-thread/</link>
       <pubDate>Sat, 02 Nov 2019 14:04:10 +0800</pubDate>
       
@@ -46,7 +46,7 @@
     </item>
     
     <item>
-      <title>为什么使用通信来共享内存？· Why&#39;s THE Design?</title>
+      <title>为什么使用通信来共享内存？· Why&#39;s THE Design?（转载）</title>
       <link>https://www.wingsxdu.com/post/2019-11-01-whys-the-design-communication-shared-memory/</link>
       <pubDate>Fri, 01 Nov 2019 14:24:34 +0800</pubDate>
       
@@ -57,7 +57,7 @@
     </item>
     
     <item>
-      <title>为什么 TCP 建立连接需要三次握手 · Why&#39;s THE Design? （转载）</title>
+      <title>为什么 TCP 建立连接需要三次握手 · Why&#39;s THE Design?（转载）</title>
       <link>https://www.wingsxdu.com/post/2019-11-01-whys-the-design-tcp-three-way-handshake/</link>
       <pubDate>Fri, 01 Nov 2019 12:14:37 +0800</pubDate>
       
