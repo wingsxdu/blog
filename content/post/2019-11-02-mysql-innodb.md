@@ -1,5 +1,5 @@
 ---
-title: "Mysql 与 Innodb"
+title: "Mysql 与 Innodb（转载）"
 author: "beihai"
 description: ""
 tags: [

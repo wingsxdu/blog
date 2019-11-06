@@ -1,5 +1,5 @@
 ---
-title: "为什么使用通信来共享内存？· Why's THE Design?"
+title: "为什么使用通信来共享内存？· Why's THE Design?（转载）"
 author: "beihai"
 description: ""
 tags: [

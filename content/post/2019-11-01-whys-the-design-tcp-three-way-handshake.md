@@ -1,5 +1,5 @@
 ---
-title: "为什么 TCP 建立连接需要三次握手 · Why's THE Design? （转载）"
+title: "为什么 TCP 建立连接需要三次握手 · Why's THE Design?（转载）"
 author: "beihai"
 description: ""
 tags: [

@@ -1,5 +1,5 @@
 ---
-title: "为什么 Redis 选择单线程模型 · Why's THE Design?"
+title: "为什么 Redis 选择单线程模型 · Why's THE Design?（转载）"
 author: "beihai"
 description: ""
 tags: [
