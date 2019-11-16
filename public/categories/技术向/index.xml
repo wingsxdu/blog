@@ -6,19 +6,10 @@
     <description>Recent content in 技术向 on beihai</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 09 Nov 2019 19:48:59 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 02 Nov 2019 16:13:13 +0800</lastBuildDate>
     
 	<atom:link href="https://www.wingsxdu.com/categories/%E6%8A%80%E6%9C%AF%E5%90%91/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>2019 11 09 Goredis</title>
-      <link>https://www.wingsxdu.com/post/2019-11-09-goredis/</link>
-      <pubDate>Sat, 09 Nov 2019 19:48:59 +0800</pubDate>
-      
-      <guid>https://www.wingsxdu.com/post/2019-11-09-goredis/</guid>
-      <description>center Title</description>
-    </item>
     
     <item>
       <title>Mysql 与 Innodb（转载）</title>
@@ -209,6 +200,15 @@
       
       <guid>https://www.wingsxdu.com/p1227/</guid>
       <description>续上篇介绍 Java GRPC proto 编译 现在我们拿到了编译的 Java 文件，其中 User.java 为 rpc 通信，文件名同 .proto 文件名称；CreateAccountGrpc.java 为定义的服务</description>
+    </item>
+    
+    <item>
+      <title>Java GRPC proto 编译</title>
+      <link>https://www.wingsxdu.com/p1216/</link>
+      <pubDate>Thu, 23 May 2019 06:04:45 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p1216/</guid>
+      <description>相较于Go，Java 中的使用步骤就繁琐了很多，我也是折腾了很久才搞清楚。、 环境 ubuntu 16.04 IDE：Intellig IDEA Java 编译：Gradle proto 编译 使用 Gradle</description>
     </item>
     
   </channel>

@@ -6,19 +6,10 @@
     <description>Recent content in Golang on beihai</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 09 Nov 2019 19:48:59 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 01 Nov 2019 14:24:34 +0800</lastBuildDate>
     
 	<atom:link href="https://www.wingsxdu.com/categories/golang/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>2019 11 09 Goredis</title>
-      <link>https://www.wingsxdu.com/post/2019-11-09-goredis/</link>
-      <pubDate>Sat, 09 Nov 2019 19:48:59 +0800</pubDate>
-      
-      <guid>https://www.wingsxdu.com/post/2019-11-09-goredis/</guid>
-      <description>center Title</description>
-    </item>
     
     <item>
       <title>为什么使用通信来共享内存？· Why&#39;s THE Design?（转载）</title>
@@ -191,6 +182,15 @@
       
       <guid>https://www.wingsxdu.com/p1095/</guid>
       <description>由于伟大的长城防火墙的存在，我们在使用到 golang.org/x/ 下的包是万万不可能正常下载成功的。但是问题不大，我们可以面向 github 编程，我们可以使用 git 指令把代码clo</description>
+    </item>
+    
+    <item>
+      <title>Go 交叉编译</title>
+      <link>https://www.wingsxdu.com/p1093/</link>
+      <pubDate>Mon, 13 May 2019 17:16:11 +0000</pubDate>
+      
+      <guid>https://www.wingsxdu.com/p1093/</guid>
+      <description>但是！ Golang支持交叉编译，也就是说你在64位平台的机器上开发，可以编译生成32位平台上的可执行程序。windows 下可以编译 linux 和 mac 的执</description>
     </item>
     
   </channel>
