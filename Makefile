@@ -10,7 +10,6 @@ all: new_post
 new_post:
 		$(NEWPOST)$(COMPILE_TIME_WIN)$(title).md
 push:
-		$(HUGO) 
 		$(GIT_ADD) 
 		$(GIT_COMMIT) 
 		$(GIT_Push)
