@@ -701,9 +701,11 @@ if (!doNotTrack) {
     $("#openSearch, #openSearchMobile").click(function(){
       $(".modal-dialog").addClass("visible");
     });
+
     $("#closeSearch").click(function(){
       $(".modal-dialog").removeClass("visible");
     });
+
     $(document).click(function(event) {
     
       if (!$(event.target).closest(".modal-content, #openSearch, #openSearchMobile").length) {
@@ -711,6 +713,7 @@ if (!doNotTrack) {
       }
     });
   </script>
+
 
 
 

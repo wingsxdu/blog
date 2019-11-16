@@ -1549,9 +1549,11 @@ B+ 树是平衡树，它查找任意节点所耗费的时间都是完全相同�
     $("#openSearch, #openSearchMobile").click(function(){
       $(".modal-dialog").addClass("visible");
     });
+
     $("#closeSearch").click(function(){
       $(".modal-dialog").removeClass("visible");
     });
+
     $(document).click(function(event) {
     
       if (!$(event.target).closest(".modal-content, #openSearch, #openSearchMobile").length) {
@@ -1559,6 +1561,7 @@ B+ 树是平衡树，它查找任意节点所耗费的时间都是完全相同�
       }
     });
   </script>
+
 
 
 

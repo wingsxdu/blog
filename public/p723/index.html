@@ -864,9 +864,11 @@ func FindMax(tree *TreeNode) *TreeNode {
     $("#openSearch, #openSearchMobile").click(function(){
       $(".modal-dialog").addClass("visible");
     });
+
     $("#closeSearch").click(function(){
       $(".modal-dialog").removeClass("visible");
     });
+
     $(document).click(function(event) {
     
       if (!$(event.target).closest(".modal-content, #openSearch, #openSearchMobile").length) {
@@ -874,6 +876,7 @@ func FindMax(tree *TreeNode) *TreeNode {
       }
     });
   </script>
+
 
 
 
