@@ -13,3 +13,6 @@ push:
 		$(GIT_ADD) 
 		$(GIT_COMMIT) 
 		$(GIT_Push)
+pull:
+		git pull
+		$(HUGO) 
