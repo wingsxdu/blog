@@ -20,5 +20,28 @@
       <description>center Title</description>
     </item>
     
+    <item>
+      <title>Mysql 与 Innodb（转载）</title>
+      <link>https://www.wingsxdu.com/post/2019-11-02-mysql-innodb/</link>
+      <pubDate>Sat, 02 Nov 2019 16:13:13 +0800</pubDate>
+      
+      <guid>https://www.wingsxdu.com/post/2019-11-02-mysql-innodb/</guid>
+      <description>&lt;p&gt;作为一名开发人员，在日常的工作中会难以避免地接触到数据库，无论是基于文件的 sqlite 还是工程上使用非常广泛的 MySQL、PostgreSQL，但是一直以来也没有对数据库有一个非常清晰并且成体系的认知，所以最近两个月的时间看了几本数据库相关的书籍并且阅读了 MySQL 的官方文档，希望对各位了解数据库的、不了解数据库的有所帮助。&lt;/p&gt;
+
+&lt;p&gt;&lt;div align=&#34;center&#34;&gt;
+
+&lt;div class=&#34;box&#34;&gt;
+&lt;figure  itemprop=&#34;associatedMedia&#34;
+  itemscope itemtype=&#34;http://schema.org/ImageObject&#34; &gt;
+    &lt;div class=&#34;img&#34;&gt;
+      &lt;img itemprop=&#34;thumbnail&#34; src=&#34;https://www.wingsxdu.com/image/mysql.png&#34; /&gt;
+    &lt;/div&gt;
+    &lt;a href=&#34;https://www.wingsxdu.com/image/mysql.png&#34; itemprop=&#34;contentUrl&#34;&gt;&lt;/a&gt;
+  &lt;/figure&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+本文中对于数据库的介绍以及研究都是在 MySQL 上进行的，如果涉及到了其他数据库的内容或者实现会在文中单独指出。&lt;/p&gt;</description>
+    </item>
+    
   </channel>
 </rss>
