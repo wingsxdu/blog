@@ -10,7 +10,6 @@ rssLimit = 20             # Limit Entry Count to Rss file # 限制 Rss 文章输
 disqusShortname = "beihai"      # disqus_shortname
 googleAnalytics = "UA-148836314-1"      # UA-XXXXXXXX-X
 # copyright = ""            # default: author.name ↓        # 默认为下面配置的author.name ↓
-uglyURLs = true 
 enableGitInfo = true
 
 # Highlight options. See https://gohugo.io/content-management/syntax-highlighting/
@@ -35,19 +34,19 @@ defaultContentLanguage = "en"  # Default language to use (if you setup multiling
   name = "Home"
   weight = 10
   identifier = "home"
-  url = "en/"
+  url = "/"
 [[languages.en.menu.main]]
   name = "Blog"
   weight = 20
   identifier = "post"
   url = "/post/"
 [[languages.en.menu.main]]
-  name = "tags"
+  name = "Tags"
   weight = 30
   identifier = "Tags"
   url = "/tags/"
 [[languages.en.menu.main]]
-  name = "categories"
+  name = "Categories"
   weight = 40
   identifier = "Categories"
   url = "/categories/"
