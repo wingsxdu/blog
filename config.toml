@@ -35,7 +35,7 @@ defaultContentLanguage = "en"  # Default language to use (if you setup multiling
   name = "Home"
   weight = 10
   identifier = "home"
-  url = "/"
+  url = "en/"
 [[languages.en.menu.main]]
   name = "Blog"
   weight = 20
@@ -84,7 +84,7 @@ defaultContentLanguage = "en"  # Default language to use (if you setup multiling
 [[languages.zh-cn.menu.main]]
   name = "关于博主"
   weight = 50             # 直接进入页面 menu 无法高亮先显示
-  identifier = "zh-cn/about"
+  identifier = "about"
   url = "zh-cn/about/"
 [[languages.zh-cn.menu.main]]
   name = "旧站迁移"
