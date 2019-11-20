@@ -16,3 +16,5 @@ push:
 pull:
 		git pull
 		$(HUGO) 
+update:
+		git submodule foreach 'git checkout -f' 
