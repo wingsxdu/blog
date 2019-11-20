@@ -3,13 +3,13 @@ title: 欢迎来到北海的博客
 author: beihai
 type: page
 date: 2018-09-06T13:22:47+00:00
-weight: 100
+weight: 20
 
 ---
 
-<p style="text-align: center;">
+<h5 style="text-align: center;">
   <strong>关于博主</strong>
-</p>
+</h5>
 
 
 

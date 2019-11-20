@@ -1,5 +1,5 @@
 baseURL = "https://www.wingsxdu.com/"
-title = "beihai"
+
 enableRobotsTXT = true
 enableEmoji = true
 theme = "jane"
@@ -19,9 +19,85 @@ pygmentsCodefencesGuessSyntax = true
 pygmentsOptions = "linenos=table"
 
 # language support # en / zh-cn / other... translations present in i18n/
-defaultContentLanguage = "zh-cn"           # Default language to use
+# defaultContentLanguage = "zh-cn"           # Default language to use
+# [languages.zh-cn]
+# languageCode = "zh-cn"
+
+# language support en / zh-cn / other... translations present in i18n/
+defaultContentLanguage = "en"  # Default language to use (if you setup multilingual support)
+[langusges]
+[languages.en]
+  title = "追求 源于热爱"
+  description = "追求 源于热爱"
+  languageName = "English"
+  weight = 1
 [languages.zh-cn]
-  languageCode = "zh-cn"
+  title = "追求 源于热爱"
+  description = "追求 源于热爱"
+  languageName = "中文"
+  weight = 2
+
+[[languages.en.menu.main]]             # config your menu              # 配置目录
+  name = "Home"
+  weight = 10
+  identifier = "home"
+  url = "/"
+[[languages.en.menu.main]]
+  name = "Blog"
+  weight = 20
+  identifier = "post"
+  url = "/post/"
+[[languages.en.menu.main]]
+  name = "tags"
+  weight = 30
+  identifier = "Tags"
+  url = "/tags/"
+[[languages.en.menu.main]]
+  name = "categories"
+  weight = 40
+  identifier = "Categories"
+  url = "/categories/"
+[[languages.en.menu.main]]
+  name = "AboutAuthor"
+  weight = 50             # 直接进入页面 menu 无法高亮先显示
+  identifier = "about"
+  url = "/about/"
+[[languages.en.menu.main]]
+  name = "Migrate"
+  weight = 60
+  url = "/migrate/"
+
+[[languages.zh-cn.menu.main]]             # config your menu              # 配置目录
+  name = "主页"
+  weight = 10
+  identifier = "home"
+  url = "/"
+[[languages.zh-cn.menu.main]]
+  name = "博客"
+  weight = 20
+  identifier = "post"
+  url = "/post/"
+[[languages.zh-cn.menu.main]]
+  name = "标签"
+  weight = 30
+  identifier = "tags"
+  url = "/tags/"
+[[languages.zh-cn.menu.main]]
+  name = "分类"
+  weight = 40
+  identifier = "categories"
+  url = "/categories/"
+[[languages.zh-cn.menu.main]]
+  name = "关于博主"
+  weight = 50             # 直接进入页面 menu 无法高亮先显示
+  identifier = "about"
+  url = "/about/"
+[[languages.zh-cn.menu.main]]
+  name = "旧站迁移"
+  weight = 60
+  url = "/migrate/"
+
+
 
 [author]                  # essential                     # 必需
   name = "beihai"
@@ -31,40 +107,15 @@ defaultContentLanguage = "zh-cn"           # Default language to use
   priority = 0.5
   filename = "sitemap.xml"
 
-[[menu.main]]             # config your menu              # 配置目录
-  name = "主页"
-  weight = 10
-  identifier = "home"
-  url = "/"
-  [[menu.main]]
-  name = "关于博主"
-  weight = 20
-  identifier = "about"
-  url = "/about/"
-[[menu.main]]
-  name = "浏览博客"
-  weight = 30
-  identifier = "post"
-  url = "/post/"
-[[menu.main]]
-  name = "分类标签"
-  weight = 40
-  identifier = "categories"
-  url = "/categories/"
-  [[menu.main]]
-  name = "旧站迁移"
-  weight = 50
-  identifier = "migrate"
-  url = "/migrate/"
-
 
 [params]
   since = "2018"            # Site creation time          # 站点建立时间
   rssFullContent = true     # if false, Rss feed instead of the summary
+  forkMeOnGithub = "https://github.com/wingsxdu"
 
   # site info (optional)                                  # 站点信息（可选，不需要的可以直接注释掉）
-  logoTitle = "北海"        # default: the title value    # 默认值: 上面设置的title值
-  keywords = ["Golang", "Go", "backend", "后端", "分布式"]
+  logoTitle = "beihai"        # default: the title value    # 默认值: 上面设置的title值
+  keywords = ["Golang", "Go", "Back-end", "后端", "分布式"]
   description = "追求 源于热爱"
   mainSections = ["post"]
 
@@ -80,7 +131,9 @@ defaultContentLanguage = "zh-cn"           # Default language to use
   baidu_push = true        # baidu push                  # 百度
   baidu_analytics = "d9caa672b116c39e151b0da7c758ad88"      # Baidu Analytics
 
-  forkMeOnGithub = "https://github.com/wingsxdu"
+
+    # show language chooser in menu
+  showMenuLanguageChooser = true
 
   [params.utteranc]         # utteranc is a comment system based on GitHub issues. see https://utteranc.es
     enable = true
@@ -105,7 +158,7 @@ defaultContentLanguage = "zh-cn"           # Default language to use
 
   # Link custom CSS and JS assets
   #   (relative to /static/css and /static/js respectively)
-  customCSS = ['custom.css']            # if ['custom.css'], load '/static/css/custom.css' file
+  customCSS = []            # if ['custom.css'], load '/static/css/custom.css' file
   customJS = []             # if ['custom.js'], load '/static/js/custom.js' file
   # 指定 git 仓库地址，可以生成指向最近更新的 git commit 的链接，需要将 enableGitInfo 设置成 true.
   [params.gitInfo]
