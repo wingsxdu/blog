@@ -10,6 +10,7 @@ rssLimit = 20             # Limit Entry Count to Rss file # 限制 Rss 文章输
 disqusShortname = "beihai"      # disqus_shortname
 googleAnalytics = "UA-148836314-1"      # UA-XXXXXXXX-X
 # copyright = ""            # default: author.name ↓        # 默认为下面配置的author.name ↓
+uglyURLs = true 
 enableGitInfo = true
 
 # Highlight options. See https://gohugo.io/content-management/syntax-highlighting/
@@ -18,22 +19,15 @@ pygmentsUseClasses = true # Use CSS classes to format highlighted code
 pygmentsCodefencesGuessSyntax = true
 pygmentsOptions = "linenos=table"
 
-# language support # en / zh-cn / other... translations present in i18n/
-# defaultContentLanguage = "zh-cn"           # Default language to use
-# [languages.zh-cn]
-# languageCode = "zh-cn"
-
 # language support en / zh-cn / other... translations present in i18n/
 defaultContentLanguage = "en"  # Default language to use (if you setup multilingual support)
 [langusges]
 [languages.en]
   title = "追求 源于热爱"
-  description = "追求 源于热爱"
   languageName = "English"
   weight = 1
 [languages.zh-cn]
   title = "追求 源于热爱"
-  description = "追求 源于热爱"
   languageName = "中文"
   weight = 2
 
@@ -58,7 +52,7 @@ defaultContentLanguage = "en"  # Default language to use (if you setup multiling
   identifier = "Categories"
   url = "/categories/"
 [[languages.en.menu.main]]
-  name = "AboutAuthor"
+  name = "Author"
   weight = 50             # 直接进入页面 menu 无法高亮先显示
   identifier = "about"
   url = "/about/"
@@ -67,35 +61,35 @@ defaultContentLanguage = "en"  # Default language to use (if you setup multiling
   weight = 60
   url = "/migrate/"
 
-[[languages.zh-cn.menu.main]]             # config your menu              # 配置目录
+[[languages.zh-cn.menu.main]]
   name = "主页"
   weight = 10
   identifier = "home"
-  url = "/"
+  url = "zh-cn/"
 [[languages.zh-cn.menu.main]]
   name = "博客"
   weight = 20
   identifier = "post"
-  url = "/post/"
+  url = "zh-cn/post/"
 [[languages.zh-cn.menu.main]]
   name = "标签"
   weight = 30
   identifier = "tags"
-  url = "/tags/"
+  url = "zh-cn/tags/"
 [[languages.zh-cn.menu.main]]
   name = "分类"
   weight = 40
   identifier = "categories"
-  url = "/categories/"
+  url = "zh-cn/categories/"
 [[languages.zh-cn.menu.main]]
   name = "关于博主"
   weight = 50             # 直接进入页面 menu 无法高亮先显示
-  identifier = "about"
-  url = "/about/"
+  identifier = "zh-cn/about"
+  url = "zh-cn/about/"
 [[languages.zh-cn.menu.main]]
   name = "旧站迁移"
   weight = 60
-  url = "/migrate/"
+  url = "zh-cn/migrate/"
 
 
 
@@ -107,7 +101,11 @@ defaultContentLanguage = "en"  # Default language to use (if you setup multiling
   priority = 0.5
   filename = "sitemap.xml"
 
-
+# Enable author pages
+[taxonomies]
+  author = "author"
+  tag = "tags"
+  category = "categories"
 [params]
   since = "2018"            # Site creation time          # 站点建立时间
   rssFullContent = true     # if false, Rss feed instead of the summary
@@ -132,13 +130,14 @@ defaultContentLanguage = "en"  # Default language to use (if you setup multiling
   baidu_analytics = "d9caa672b116c39e151b0da7c758ad88"      # Baidu Analytics
 
 
-    # show language chooser in menu
+  # show language chooser in menu
   showMenuLanguageChooser = true
 
   [params.utteranc]         # utteranc is a comment system based on GitHub issues. see https://utteranc.es
     enable = true
     repo = "wingsxdu/blog"    # The repo to store comments
     issueTerm = "pathname"
+    theme = "github-light"
 
   [params.search.google]    # google custom search, see https://cse.google.com
     enable = true
