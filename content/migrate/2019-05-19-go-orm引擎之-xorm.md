@@ -3,7 +3,6 @@ title: Go ORM引擎之 xorm
 author: beihai
 type: post
 date: 2019-05-19T06:37:51+00:00
-url: /?p=1129
 hestia_layout_select:
   - sidebar-right
   - sidebar-right

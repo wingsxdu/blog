@@ -3,7 +3,6 @@ title: HttpURLConnection执行网络请求+json数据解析并输出到RecyclerV
 author: beihai
 type: post
 date: 2018-11-21T12:08:55+00:00
-url: /?p=300
 classic-editor-remember:
   - block-editor
   - block-editor

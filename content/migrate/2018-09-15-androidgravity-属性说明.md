@@ -3,7 +3,6 @@ title: android:gravity 属性说明
 author: beihai
 type: post
 date: 2018-09-15T04:16:38+00:00
-url: /?p=169
 categories:
   - Android studio
 

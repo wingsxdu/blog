@@ -3,7 +3,6 @@ title: 添加Splash启动页并显示图片
 author: beihai
 type: post
 date: 2018-09-06T12:54:44+00:00
-url: /?p=75
 categories:
   - Android studio
 

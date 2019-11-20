@@ -4,7 +4,6 @@ author: beihai
 type: post
 date: 2019-08-09T09:45:19+00:00
 excerpt: 搬运记录
-url: /?p=1370
 hestia_layout_select:
   - sidebar-right
 categories:

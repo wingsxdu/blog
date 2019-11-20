@@ -3,7 +3,6 @@ title: Ubunutu ECS服务器安装界面图形
 author: beihai
 type: post
 date: 2019-05-29T03:52:24+00:00
-url: /?p=1256
 hestia_layout_select:
   - sidebar-right
   - sidebar-right

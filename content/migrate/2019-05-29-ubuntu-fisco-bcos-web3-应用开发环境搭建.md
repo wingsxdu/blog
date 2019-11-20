@@ -3,7 +3,6 @@ title: Ubuntu FISCO BCOS Web3 应用开发环境搭建
 author: beihai
 type: post
 date: 2019-05-29T03:08:31+00:00
-url: /?p=1250
 hestia_layout_select:
   - sidebar-right
   - sidebar-right

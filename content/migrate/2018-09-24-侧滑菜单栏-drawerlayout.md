@@ -3,7 +3,6 @@ title: 侧滑菜单栏——DrawerLayout
 author: beihai
 type: post
 date: 2018-09-24T04:03:48+00:00
-url: /?p=231
 categories:
   - Android studio
 

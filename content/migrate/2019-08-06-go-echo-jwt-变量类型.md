@@ -3,7 +3,6 @@ title: Go ECHO JWT 变量类型
 author: beihai
 type: post
 date: 2019-08-06T10:09:33+00:00
-url: /?p=1364
 categories:
   - Golang
   - 技术向

@@ -3,7 +3,6 @@ title: UTF-8 编码与 mysql中的 utf8、utf8mb4
 author: beihai
 type: post
 date: 2019-08-19T15:10:43+00:00
-url: /?p=1373
 hestia_layout_select:
   - sidebar-right
 categories:
