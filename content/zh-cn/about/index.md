@@ -6,6 +6,8 @@ date: 2018-11-21T20:12:15+00:00
 weight: 20
 ---
 
+[See In English](https://www.wingsxdu.com/about/)
+
 Gopher，软件开发者，电子产品爱好者
 
 不务正业的某西北 211 在校学生，前区块链、后端、数据库开发，现 docker&k8s
