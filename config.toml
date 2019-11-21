@@ -48,10 +48,6 @@ defaultContentLanguage = "zh-cn"           # Default language to use
   weight = 50             # 直接进入页面 menu 无法高亮先显示
   identifier = "about"
   url = "/about/"
-[[menu.main]]
-  name = "Migrate"
-  weight = 60
-  url = "/migrate/"
 
 [author]                  # essential                     # 必需
   name = "beihai"
