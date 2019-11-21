@@ -1,5 +1,5 @@
 baseURL = "https://www.wingsxdu.com/"
-
+title = "追求 源于热爱"
 enableRobotsTXT = true
 enableEmoji = true
 theme = "jane"
@@ -19,78 +19,39 @@ pygmentsCodefencesGuessSyntax = true
 pygmentsOptions = "linenos=table"
 
 # language support en / zh-cn / other... translations present in i18n/
-defaultContentLanguage = "en"  # Default language to use (if you setup multilingual support)
-[langusges]
-[languages.en]
-  title = "追求 源于热爱"
-  languageName = "English"
-  weight = 1
+defaultContentLanguage = "zh-cn"           # Default language to use
 [languages.zh-cn]
-  title = "追求 源于热爱"
-  languageName = "中文"
-  weight = 2
+  languageCode = "zh-cn"
 
-[[languages.en.menu.main]]             # config your menu              # 配置目录
+[[menu.main]]
   name = "Home"
   weight = 10
   identifier = "home"
   url = "/"
-[[languages.en.menu.main]]
-  name = "Blog"
+[[menu.main]]
+  name = "Archive"
   weight = 20
-  identifier = "post"
+  identifier = "archive"
   url = "/post/"
-[[languages.en.menu.main]]
+[[menu.main]]
   name = "Tags"
   weight = 30
   identifier = "Tags"
   url = "/tags/"
-[[languages.en.menu.main]]
+[[menu.main]]
   name = "Categories"
   weight = 40
   identifier = "Categories"
   url = "/categories/"
-[[languages.en.menu.main]]
+[[menu.main]]
   name = "About"
   weight = 50             # 直接进入页面 menu 无法高亮先显示
   identifier = "about"
   url = "/about/"
-[[languages.en.menu.main]]
+[[menu.main]]
   name = "Migrate"
   weight = 60
   url = "/migrate/"
-
-[[languages.zh-cn.menu.main]]
-  name = "主页"
-  weight = 10
-  identifier = "home"
-  url = "zh-cn/"
-[[languages.zh-cn.menu.main]]
-  name = "博客"
-  weight = 20
-  identifier = "post"
-  url = "zh-cn/post/"
-[[languages.zh-cn.menu.main]]
-  name = "标签"
-  weight = 30
-  identifier = "tags"
-  url = "zh-cn/tags/"
-[[languages.zh-cn.menu.main]]
-  name = "分类"
-  weight = 40
-  identifier = "categories"
-  url = "zh-cn/categories/"
-[[languages.zh-cn.menu.main]]
-  name = "关于博主"
-  weight = 50             # 直接进入页面 menu 无法高亮先显示
-  identifier = "about"
-  url = "zh-cn/about/"
-[[languages.zh-cn.menu.main]]
-  name = "旧站迁移"
-  weight = 60
-  url = "zh-cn/migrate/"
-
-
 
 [author]                  # essential                     # 必需
   name = "beihai"
@@ -118,7 +79,7 @@ defaultContentLanguage = "en"  # Default language to use (if you setup multiling
 
   # The date format to use; for a list of valid formats, see https://gohugo.io/functions/format/
   dateFormatToUse = "2006-01-02"
-  moreMeta = true
+  moreMeta = false
   # 一些全局开关，你也可以在每一篇内容的 front matter 中针对单篇内容关闭或开启某些功能，在 archetypes/default.md 查看更多信息。
   # Some global options, you can also close or open something in front matter for a single post, see more information from `archetypes/default.md`.
   toc = true                                                                            # 是否开启目录
@@ -130,7 +91,7 @@ defaultContentLanguage = "en"  # Default language to use (if you setup multiling
 
 
   # show language chooser in menu
-  showMenuLanguageChooser = true
+  showMenuLanguageChooser = false
 
   [params.utteranc]         # utteranc is a comment system based on GitHub issues. see https://utteranc.es
     enable = true
