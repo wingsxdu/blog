@@ -3,14 +3,13 @@ title: 2018回首
 author: beihai
 type: post
 date: 2018-12-03T03:51:34+00:00
-draft: true
+draft: false
 tags: [
     "总结",
   	"年终总结",
 ]
 categories: [
     "总结",
-
 ]
 
 ---
