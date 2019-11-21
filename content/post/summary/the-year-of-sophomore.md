@@ -8,7 +8,6 @@ tags: [
 ]
 categories: [
     "总结",
-    "大学生涯",
 ]
 lastmod: 
 date: 2019-10-02T18:32:12+08:00

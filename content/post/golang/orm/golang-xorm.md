@@ -14,7 +14,6 @@ tags: [
 ]
 categories: [
     "golang",
-    "orm",
 ]
 
 ---

@@ -10,11 +10,6 @@ tags: [
 categories: [
     "golang",
 ]
-categories:
-
-  - Golang
-  - 技术向
-
 ---
 ##### 1.1 简介
 

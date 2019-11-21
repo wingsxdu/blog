@@ -1,6 +1,6 @@
 ---
 author: "beihai"
-title: "GC 垃圾回收机制(改)"
+title: "GC 垃圾回收机制"
 description: "Golang GC 时会发生什么"
 tags: [
     "golang",

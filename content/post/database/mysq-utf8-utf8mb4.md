@@ -13,12 +13,6 @@ categories: [
     "mysql",
     "utf8",
 ]
-
-categories:
-  - mysql
-  - 技术向
-  - 科普
-
 ---
 ##### UTF-8编码
 
