@@ -6,7 +6,7 @@ date: 2018-11-21T20:12:15+00:00
 weight: 20
 ---
 
-[See In English](https://www.wingsxdu.com/about/)
+[See In English](https://www.wingsxdu.com/about)
 
 Gopher，软件开发者，电子产品爱好者
 

@@ -6,7 +6,7 @@ date: 2018-11-21T20:12:15+00:00
 weight: 20
 ---
 
-[转至中文版](https://www.wingsxdu.com/zh-cn/about/)
+[转至中文版](https://www.wingsxdu.com/zh-cn/about)
 
 Gopher, Software Developer, Digital Product Enthusiasts
 
