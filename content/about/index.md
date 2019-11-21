@@ -1,60 +1,43 @@
 ---
-title: 欢迎来到北海的博客
+title: About Author
 author: beihai
 type: page
-date: 2018-09-06T13:22:47+00:00
+date: 2018-11-21T20:12:15+00:00
 weight: 20
-
 ---
 
-<h5 style="text-align: center;">
-  <strong>关于博主</strong>
-</h5>
+Gopher, Software Developer, Digital Product Enthusiasts
 
+A northwest China 211 college current student, not Computer Science.
 
+Born in 1998 in mainland China, decided to **self study programming** from 2018.
 
-Gopher，电子产品爱好者，Software Developer
+Did **Back-end**, **Database** and **Blockchain** developments with **Golang**, now learning docker&k8s.
 
-不务正业的某西北211在校学生，前区块链、后端、数据库开发，现 docker&k8s
+I am keen on **reading** and like music, film, artistic performance.
 
-家境贫寒，一身本事全凭自学
+------
 
+#### Person Experience
 
-热爱阅读，喜欢音乐、电影与艺术表演
+Former member of hwclub, student union,and leave all because of talk big.
 
- 
+Self study programming when I was a freshman at college, then write codes for my schoolmate's start-up, in 2019 research Blockchan with nominal mentor.
 
-#### 个人简历
+Defeatist of China's education, but not a pessimist.
 
-前华创俱乐部、院科协、学生会成员，因不喜学生社团吹水气氛于大一退部；
+ Personal projects are hosted on: [Github](https://github.com/wingsxdu)
 
-大一下开始自学 IT，同学创业帮敲代码，大二与名义上的导师研究区块链；
+#### Technology Stack
 
-半个中国式教育的抨击者（当然现在不然随便说话了）；
+- Golang Back-end&Database: gin、echo、gorm、grpc .eg
+- know a little bit about Blockchain
+- can write nativa app and web
+- experienced in 996 🙂
 
- 现 分布式&docker 开发
+#### Reading
 
-Github 地址： https://github.com/wingsxdu
-
-##### 技术栈
-
-- Golang 后端&数据库：gin、echo、gorm、Grpc 等
-- 区块链应用开发
-- 原生应用、小程序一类的都能写一写
-- 996经验丰富 🙂
-
-##### 阅读
-
-- 《三体》
-- 《文化苦旅》、《活着》、《平凡的世界》
-- 《下一个倒下的会不会是华为》
-- 《五分钟商学院》
-
-##### 设备
-
-- 笔记本：HP Spectre X360 2019
-- 游戏主机：Xbox One X
-- 键盘：massdrop CTRL
-- 移动硬盘：华为备咖存储
-- 耳机：森海塞尔 IE80S、赛睿 X100
-- 屏幕：LG 29UM59A 21:9（打算换掉了）
+- *The Three-Body Problem*
+- *To Live*
+-  *World of Plainness*
+-  *Huawei: Leadership, Culture and Connectivity*

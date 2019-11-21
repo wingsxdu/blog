@@ -24,12 +24,10 @@ defaultContentLanguage = "en"  # Default language to use (if you setup multiling
 [languages.en]
   title = "追求 源于热爱"
   languageName = "English"
-  contentDir = "content/"
   weight = 1
 [languages.zh-cn]
   title = "追求 源于热爱"
   languageName = "中文"
-  contentDir = "content/"
   weight = 2
 
 [[languages.en.menu.main]]             # config your menu              # 配置目录
