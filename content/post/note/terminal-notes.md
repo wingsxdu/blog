@@ -11,6 +11,7 @@ tags: [
 categories: [
     "linux",
     "windows",
+    "terminal"
 ]
 lastmod: 
 date: 2019-10-18T12:50:20+08:00

@@ -29,19 +29,19 @@ defaultContentLanguage = "zh-cn"           # Default language to use
   identifier = "home"
   url = "/"
 [[menu.main]]
-  name = "Archive"
+  name = "Archives"
   weight = 20
   identifier = "archive"
   url = "/post/"
 [[menu.main]]
   name = "Tags"
   weight = 30
-  identifier = "Tags"
+  identifier = "tags"
   url = "/tags/"
 [[menu.main]]
   name = "Categories"
   weight = 40
-  identifier = "Categories"
+  identifier = "categories"
   url = "/categories/"
 [[menu.main]]
   name = "About"
