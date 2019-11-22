@@ -8,7 +8,7 @@ GIT_COMMIT = git commit -m "$(msg)"
 GIT_Push = git push
 all: new_post
 new_post:
-		$(NEWPOST)$(COMPILE_TIME_WIN)$(title).md
+		$(NEWPOST)$(title).md
 push:
 		$(GIT_ADD) 
 		$(GIT_COMMIT) 
