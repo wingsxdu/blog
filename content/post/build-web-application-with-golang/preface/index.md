@@ -1,5 +1,6 @@
 ---
-title: "序言 · Build Web Application With Golang"
+
+title: "序言"
 author: "beihai"
 description: "Build Web Application With Golang"
 tags: [
@@ -13,13 +14,15 @@ date: 2019-11-22T20:34:24+08:00
 draft: false
 ---
 
-> 学习如何 Web 编程可能正是你阅读此文章的原因，一个 Web 应用应该具有哪些特性，开发过程中注意哪些问题。在此系列中作者不会用长长的列表指出开发者需要掌握的工具、框架，也不会刻画入微地去深究某一项程序设计的实现原理，旨在为初学者构建学习体系。如果你有想了解的问题、错误指正，可以在文章下面留言。
+![](/image/build-web-application-with-golang.png)
+
+> 学习如何 Web 编程可能正是你阅读此文章的原因，一个 Web 应用应该具有哪些特性，开发过程中注意哪些问题。在此系列中作者不会用长长的列表指出开发者需要掌握的工具、框架，也不会刻画入微地去深究某一项程序设计的实现原理，旨在为初学者构建知识体系。如果你有想了解的问题、错误指正，可以在文章下面留言。
 
 <!--more-->
 
 ## 概述{#概述}
 
-Go 语言目前已经拥有了成熟的 HTTP 处理包，这使得编写稳健、动态的 Web 程序更加方便灵活。 在本系列文章中将从以下角度为初学者快速构建 Web 开发知识体系：
+Go 语言目前已经拥有了成熟的 HTTP 处理包，这使得编写稳健、动态的 Web 程序更加方便灵活。 在本系列文章中将从以下角度分析 Web 开发：
 
 - [Go 语言基础]()
 - [Web 工作方式]()
@@ -127,7 +130,7 @@ $ go get github.com/gin-gonic/gin@v1.3 #更改版本为 1.3
 
 我们刚刚用 Gin 框架作为例子简单演示了 go mod 的使用。与其他语言不同的是，Go 语言的框架更类似于一类工具包，对一些常用方法进行封装，开发者可根据需要自行组合定制。
 
-除 Gin 外，比较热门的还有 Echo、Beego 等十余种框架，也可以应用原生的 http 包进行 web 开发。本系列文章主要应用 [Gin](https://gin-gonic.com/) 与 [Echo](https://echo.labstack.com)。
+除 Gin 外，比较热门的还有 Echo、Beego 等十余种 Web 框架，也可以应用原生的 http 包进行 web 开发。本系列文章主要应用 [Gin](https://gin-gonic.com/) 与 [Echo](https://echo.labstack.com)。除此之外，也会介绍一些纯 go 语言编写的 orm 引擎、数据库驱动等 。
 
 ### 开发工具{##开发工具}
 
