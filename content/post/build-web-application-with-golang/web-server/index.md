@@ -1,5 +1,5 @@
 ---
-title: "{{ replace .Name "-" " " | title }}"
+title: "Web Server"
 author: "beihai"
 description: "Build Web Application With Golang"
 tags: [
@@ -9,7 +9,7 @@ tags: [
 categories: [
     "Build Web Application With Golang",
 ]
-date: {{ .Date }}
+date: 2019-11-24T16:36:37+08:00
 draft: false
 ---
 ![](/image/build-web-application-with-golang.png)
