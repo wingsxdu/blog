@@ -488,7 +488,9 @@ Go 里面有两个保留的函数：`init`函数（能够应用于所有的`pack
 
 ## 总结{#总结}
 
+语言的学习过程是循序渐进的，本文仅简单介绍了一些常用的数据结构即 Go 中的流程。
 
+ 如果对Go语言不太了解，作者推荐通过以下资料开始学习 Go 语言。安装 Go 语言环境，然后通过`tour`命令打开“A Tour of Go”教程学习。若想系统地学习 Go 语言，可以阅读Go语言官方团队出版的[《The Go Programming Language》](http://www.gopl.io/)一书，这本书在国内 Go 语言社区被称为 Go 语言圣经。 也可以通过`godoc`所有的官方文档以及标准库。
 
 ## Reference{#Reference}
 
