@@ -24,7 +24,7 @@ draft: false
 
 Go 语言目前已经拥有了成熟的 HTTP 处理包，这使得编写稳健、动态的 Web 程序更加方便灵活。 在本系列文章中将从以下角度分析 Web 开发：
 
-- [Go 语言基础]()
+- [Go 语言基础]( https://www.wingsxdu.com/post/build-web-application-with-golang/01-golang-base/ )
 - [Web 工作方式]()
 - [Web 服务]()
 - [文本文件处理]()
@@ -136,7 +136,7 @@ $ go get github.com/gin-gonic/gin@v1.3 #更改版本为 1.3
 
 几乎所有编辑器都支持 Golang ，但还是列下了几种常用的编辑器
 
-- [Goland](https://www.jetbrains.com/go/) ：Jetbrains 家族系列产品，最强大的 Go 语言 IDE，也是我的主力编辑器，在后面的文章中我也会介绍一些提高效率的小技巧。可使用教育优惠。
+- [Goland](https://www.jetbrains.com/go/) ：Jetbrains 家族系列产品，最强大的 Go 语言 IDE，也是我的主力编辑器。强大的集成工具使用可参考[Jetbrains 文档](https://www.jetbrains.com/zh-cn/go/features/)
 - [Visual Studio Code](https://code.visualstudio.com/)：目前使用最多的开源文本编辑器
 - [LiteIDE](https://github.com/visualfc/liteide)： 专门为 Go 语言开发的跨平台轻量级 IDE 
 
