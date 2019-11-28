@@ -5,6 +5,8 @@ description: "Build Web Application With Golang"
 tags: [
     "golang",
     "Build Web Application With Golang",
+    "DNS",
+    "HTTP",
 ]
 categories: [
     "Build Web Application With Golang",
