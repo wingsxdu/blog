@@ -3,7 +3,7 @@ title: "Go 语言基础"
 author: "beihai"
 description: "Build Web Application With Golang"
 tags: [
-    "golang",
+    "Golang",
     "Build Web Application With Golang",
 ]
 categories: [

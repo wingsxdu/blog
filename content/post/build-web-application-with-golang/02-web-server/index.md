@@ -3,7 +3,7 @@ title: "Web 基础原理"
 author: "beihai"
 description: "Build Web Application With Golang"
 tags: [
-    "golang",
+    "Golang",
     "Build Web Application With Golang",
     "DNS",
     "HTTP",

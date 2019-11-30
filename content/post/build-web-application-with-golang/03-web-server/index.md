@@ -3,7 +3,7 @@ title: "Web 服务"
 author: "beihai"
 description: "Build Web Application With Golang"
 tags: [
-    "golang",
+    "Golang",
 	"Socket",
 	"RPC",
     "Build Web Application With Golang",
