@@ -4,12 +4,12 @@ author: beihai
 type: post
 date: 2019-05-22T11:59:06+00:00
 tags: [
-    "golang",
-    "grpc",
+    "Golang",
+    "Grpc",
 ]
 categories: [
-    "golang",
-    "grpc",
+    "Golang",
+    "Grpc",
 ]
 ---
 ##### 1.1RPC简介

@@ -3,12 +3,12 @@ title: "并发编程与 Goroutine 调度"
 author: "beihai"
 description: "DO NOT COMMUNICATE BY SHARING MEMORY; INSTEAD, SHARE MEMORY BY COMMUNICATING."
 tags: [
-    "golang",
+    "Golang",
     "实现原理",
     "底层",
 ]
 categories: [
-    "golang",
+    "Golang",
 ]
 toc: true
 date: 2019-09-29T17:20:37+08:00

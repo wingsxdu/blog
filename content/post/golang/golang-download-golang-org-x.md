@@ -7,11 +7,11 @@ hestia_layout_select:
   - sidebar-right
   - sidebar-right
 tags: [
-    "golang",
+    "Golang",
     "代理",
 ]
 categories: [
-    "golang",
+    "Golang",
 ]
 
 ---

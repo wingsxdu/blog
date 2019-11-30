@@ -4,12 +4,12 @@ author: beihai
 type: post
 date: 2019-05-23T07:06:40+00:00
 tags: [
-    "java",
-    "grpc",
+    "Java",
+    "Grpc",
 ]
 categories: [
-    "java",
-    "grpc",
+    "Java",
+    "Grpc",
 ]
 ---
 ##### 续上篇介绍

@@ -4,14 +4,14 @@ author: beihai
 type: post
 date: 2019-05-29T03:08:31+00:00
 tags: [
-    "linux",
-    "ubuntu",
-    "java",
+    "Linux",
+    "Ubuntu",
+    "Java",
     "FISCO BCOS",
 ]
 categories: [
-    "linux",
-    "java",
+    "Linux",
+    "Java",
 ]
 
 ---

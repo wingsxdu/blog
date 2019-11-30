@@ -3,13 +3,13 @@ title: "内存空洞"
 author: "beihai"
 description: "Should we pay attention to the memory layout in struct?"
 tags: [
-    "golang",
+    "Golang",
     "一些猜想",
     "底层",
     "编码规范",
 ]
 categories: [
-    "golang",
+    "Golang",
 ]
 lastmod: 
 date: 2019-10-10T10:35:26+08:00

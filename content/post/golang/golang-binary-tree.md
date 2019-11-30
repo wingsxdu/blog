@@ -4,11 +4,11 @@ author: beihai
 type: post
 date: 2018-12-11T10:16:22+00:00
 tags: [
-    "golang",
+    "Golang",
     "算法",
 ]
 categories: [
-	"golang",
+    "Golang",
 	"算法",
 ]
 ---

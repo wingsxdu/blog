@@ -4,11 +4,11 @@ author: beihai
 type: post
 date: 2019-05-29T03:52:24+00:00
 tags: [
-    "linux",
-    "ubuntu",
+    "Linux",
+    "Ubuntu",
 ]
 categories: [
-    "linux",
+    "Linux",
 ]
 
 ---

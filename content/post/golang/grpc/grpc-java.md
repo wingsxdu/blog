@@ -4,12 +4,12 @@ author: beihai
 type: post
 date: 2019-05-23T06:04:45+00:00
 tags: [
-    "java",
-    "grpc",
+    "Java",
+    "Grpc",
 ]
 categories: [
-    "java",
-    "grpc",
+    "Java",
+    "Grpc",
 ]
 ---
 相较于Go，Java 中的使用步骤就繁琐了很多，我也是折腾了很久才搞清楚。、

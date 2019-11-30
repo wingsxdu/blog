@@ -9,11 +9,11 @@ hestia_layout_select:
   - sidebar-right
   - sidebar-right
 tags: [
-    "golang",
-    "orm",
+    "Golang",
+    "ORM",
 ]
 categories: [
-    "golang",
+    "Golang",
 ]
 
 ---

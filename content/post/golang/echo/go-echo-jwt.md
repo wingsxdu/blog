@@ -4,11 +4,11 @@ author: beihai
 type: post
 date: 2019-05-19T05:58:55+00:00
 tags: [
-   "golang",
-   "echo",
+   "Golang",
+   "Echo",
 ]
 categories: [
-    "golang",
+   "Golang",
 ]
 ---
 ##### 1.1 简介

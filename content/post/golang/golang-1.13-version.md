@@ -4,12 +4,12 @@ author: beihai
 type: post
 date: 2019-09-09T03:45:17+00:00
 tags: [
-    "golang",
+    "Golang",
     "译文",
     "版本变更",
 ]
 categories: [
-    "golang",
+    "Golang",
     "译文",
 ]
 ---

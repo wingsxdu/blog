@@ -3,13 +3,13 @@ title: "Windows Terminal Preview 背景图片美化"
 author: "beihai"
 description: ""
 tags: [
-    "windows",
-    "terminal",
+    "Windows",
+    "Terminal",
     "备忘录",
 ]
 categories: [
-    "windows",
-    "terminal",
+    "Windows",
+    "Terminal",
 ]
 lastmod: 
 date: 2019-10-13T14:26:48+08:00

@@ -3,15 +3,15 @@ title: "一些经常忘记的命令"
 author: "beihai"
 description: ""
 tags: [
-    "linux",
-    "windows",
+    "Linux",
+    "Windows",
     "备忘录",
     "terminal"
 ]
 categories: [
-    "linux",
-    "windows",
-    "terminal"
+    "Linux",
+    "Windows",
+    "Terminal"
 ]
 lastmod: 
 date: 2019-10-18T12:50:20+08:00

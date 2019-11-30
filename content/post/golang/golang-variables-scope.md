@@ -4,10 +4,10 @@ author: beihai
 type: post
 date: 2019-07-23T10:55:16+00:00
 tags: [
-    "golang",
+    "Golang",
 ]
 categories: [
-    "golang",
+    "Golang",
 ]
 
 ---
