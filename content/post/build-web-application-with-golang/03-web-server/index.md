@@ -4,6 +4,8 @@ author: "beihai"
 description: "Build Web Application With Golang"
 tags: [
     "golang",
+	"Socket",
+	"RPC",
     "Build Web Application With Golang",
 ]
 categories: [
@@ -231,17 +233,58 @@ Middleware，中间件，是为应用提供操作系统功能以外服务的多�
 
 ![middleware-hander](index.assets/middleware-hander.png)
 
-#### Go 示例
+#### Gin Middleware
 
+Gin 支持自定义 Middleware，我们写一个简单的在终端打印程序执行时间的中间件。
 
+```go
+func main() {
+	gin.SetMode(gin.ReleaseMode)
+	e := gin.Default()
+	e.Use(CallTime())
+	e.GET("/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "pong",
+		})
+	})
+	log.Print(e.Run(":1323"))
+}
 
+func CallTime() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		start := time.Now() // 功能函数开始执行时间
+		// some evil middleware modify this values
+		path := c.Request.URL.Path
+		c.Next() // 进行下一步，即功能函数执行结束后
 
+		end := time.Now()         // 功能函数结束执行时间
+		latency := end.Sub(start) // 相减
+		end = end.UTC()
+		fmt.Printf("URL is: %s , use time: %s \n", path, latency)
+	}
+}
+```
 
+执行程序
 
+```bash
+$ go run main.go
+  # open a new bash
+$ curl http://localhost:1323/ping
+  {"message":"pong"}
+  #main.go terminal will print
+  URL is: /ping , use time: 757.7µs
+```
+
+该中间件程序会打印出来请求的 URL 和程序执行的时间：757.7µs
+
+Gin 自带了一些常用中间件，如流式压缩 Gzip、日志 Zap，十分实用。
 
 ## 总结
 
+![web-server](index.assets/web-server.png)
 
+本文介绍 Web 服务中一些流行的网络应用开发方式，了解这些概念对程序的设计与开发有一定的帮助。作为 Web  的基石，熟知网络相关知识是开发者必备的技能之一，更多内容还需自行了解。
 
 ## Reference
 
@@ -253,3 +296,4 @@ Middleware，中间件，是为应用提供操作系统功能以外服务的多�
 - [RPC Introduction](https://dubbo.apache.org/zh-cn/blog/rpc-introduction.html)
 - [RPC 服务](https://en.swoft.org/docs/2.x/zh-CN/rpc-server/index.html)
 - [Middleware Patterns in Go](https://drstearns.github.io/tutorials/gomiddleware/)
+- [Gin: Using middleware](https://gin-gonic.com/docs/examples/using-middleware/)
