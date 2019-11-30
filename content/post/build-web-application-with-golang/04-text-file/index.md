@@ -1,9 +1,9 @@
 ---
-title: "04 Text File"
+title: "文本文件处理"
 author: "beihai"
 description: "Build Web Application With Golang"
 tags: [
-    "golang",
+    "Golang",
     "Build Web Application With Golang",
 ]
 categories: [

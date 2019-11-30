@@ -3,7 +3,7 @@ title: "{{ replace .Name "-" " " | title }}"
 author: "beihai"
 description: "Build Web Application With Golang"
 tags: [
-    "golang",
+    "Golang",
     "Build Web Application With Golang",
 ]
 categories: [
@@ -18,22 +18,21 @@ draft: false
 
 <!--more-->
 
-## 概述{#概述}
+## 概述
 
 
 
-## 环境配置{#环境配置}
+## 环境配置
 
-#### Go{##Go}
-
-
-###### GOPATH {###GOPATH}
+#### Go
 
 
-
-## 总结{#总结}
-
+###### GOPATH 
 
 
-## Reference{#Reference}
+## 总结
+
+
+
+## Reference
 

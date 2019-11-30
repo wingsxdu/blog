@@ -4,20 +4,20 @@ author: "beihai"
 description: ""
 tags: [
     "技术向",
-    "golang",
+    "Golang",
     "底层",
-    "linux",
-    "mysql",
+    "Linux",
+    "Mysql",
     "科普",
     "译文",
     "随便写写",
 ]
 categories: [
     "技术向",
-    "golang",
+    "Golang",
     "底层",
-    "linux",
-    "mysql",
+    "Linux",
+    "Mysql",
     "科普",
     "译文",
     "随便写写",
