@@ -161,7 +161,7 @@ RPC 是微服务架构的核心，微服务之间通过 RPC 进行通信，由�
 
 server.go
 
-注册 HelloService.Hello 方法并监听 TCP 端口
+注册`HelloService.Hello`方法并监听 TCP 端口
 
 ```go
 type HelloService struct {}
@@ -193,9 +193,9 @@ func main() {
 
 client.go
 
-调用 方法并传递了一个"word"参数
+调用`HelloService.Hello`方法并传递了一个"word"参数
 
-```
+```go
 func main() {
 	client, err := rpc.Dial("tcp", "localhost:1323")
 	if err != nil {
@@ -214,11 +214,26 @@ func main() {
 
 运行程序
 
-![example](index.assets/example.png)
-
-
+```bash
+$ go run server.go
+  # open a new bash
+$ go run client.go
+  hello,word
+```
 
 ## Middleware
+
+Middleware，中间件，是为应用提供操作系统功能以外服务的多功能软件。任何位于内核和用户应用之间的软件都可以是中间件。 
+
+到目前为止，我们根据请求的 URL 和 HTTP 动词将路由绑定到不同的功能函数。但是，如果您希望在每个请求之前或之后执行一些处理程序， 如记录日志、统计调用时间等，而不考虑请求的 URL。在每个 API 功能函数中添加相同的执行代码未免不够优雅，我们可以使用 Middleware 轻松高效地完成这些操作。
+
+**Middleware Handler** 包装一个程序来执行请求的一些预处理和/或后处理。被称为"中间件"，是因为它位于 Go Web 服务器和实际处理程序的中间层。
+
+![middleware-hander](index.assets/middleware-hander.png)
+
+#### Go 示例
+
+
 
 
 
@@ -237,4 +252,4 @@ func main() {
 - [REST 和 RESTful 有什么区别？](https://cloud.tencent.com/developer/ask/27329)
 - [RPC Introduction](https://dubbo.apache.org/zh-cn/blog/rpc-introduction.html)
 - [RPC 服务](https://en.swoft.org/docs/2.x/zh-CN/rpc-server/index.html)
-- 
+- [Middleware Patterns in Go](https://drstearns.github.io/tutorials/gomiddleware/)

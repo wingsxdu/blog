@@ -115,18 +115,6 @@ HTTP 定义了一组**请求方法**，以表明要对给定资源执行的操�
 
 ![http-response](index.assets/http-response.png)
 
-```
-HTTP/1.1 200							// 状态行
-access-control-allow-origin: *			// 跨域请求
-date: Thu, 28 Nov 2019 01:44:30 GMT		// 发送时间
-accept-ranges: bytes					// 标识自身支持范围请求
-content-encoding: gzip					// 流式压缩
-content-type: text/html; charset=utf-8	// 服务器发送消息格式
-// 空行 用来分割消息头和主体
-<!DOCTYPE html>
-<html lang="zh-cn" itemscope itemtype="http://schema.org/WebPage">... //消息体
-```
-
 Response 包中的第一行为状态行，由`HTTP协议版本号/状态码/状态消息`三部分组成。
 
 状态码由三位数字组成，第一个数字定义了响应的类别，用来告诉客户端 HTTP 服务器是否产生了预期的 Response。HTTP/1.1 协议中定义了5类状态码：
