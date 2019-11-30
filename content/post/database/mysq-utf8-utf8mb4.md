@@ -11,7 +11,7 @@ tags: [
 ]
 categories: [
     "Mysql",
-    "UTF8",
+    "字符编码",
 ]
 ---
 ##### UTF-8编码
