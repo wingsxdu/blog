@@ -286,15 +286,25 @@ if m, _ := regexp.MatchString(`^(\d{17})([0-9]|X)$`, r.Form.Get("usercard")); !m
 }
 ```
 
-
-
 ## Template 模板
 
+官方定义`template`包是数据驱动的文本输出模板，说白了就是在写好的模板中填充数据。下面是一个简单的模板示例：
 
+```go
+func main() {
+	temp := "Time is {{ . }}"
+	// 创建新模板
+	tmpl, _ := template.New("example").Parse(temp)
+	// 数据驱动模板
+	data :=time.Now()
+	_ = tmpl.Execute(os.Stdout, data)
+}
+// output:Time is 2019-12-02 21:36:46.1615279 +0800 CST m=+0.003995501
+```
 
-## 总结
+{{ 和 }} 中间的 `.` 代表传入模板的数据，根据传入的数据不同渲染不同的内容。`.` 可以是 Go 语言中的任何数据类型，如结构体、切片等。
 
-
+由于前后端分离的 Restful 架构大行其道，传统的模板技术已经很少使用了。
 
 ## Reference
 
