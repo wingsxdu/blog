@@ -10,8 +10,8 @@ classic-editor-remember:
   - block-editor
 categories:
   - Android studio
+tags:
   - Android studio
-
 ---
 利用 HttpURLConnection 从后端拽取数据展示在app上
 
@@ -20,7 +20,6 @@ categories:
 代码如下：
 
 <pre class="pure-highlightjs"><code class="java"></code></pre>
-
 <pre class="pure-highlightjs"><code class="java">    //开启线程来发起网络请求获取数据
     private void sendRequestWithHttpURLConnection(){
         new Thread(new Runnable() {
@@ -64,14 +63,14 @@ categories:
 #### 2.json数据解析
 
 我们从后端获取的数据是以字符串的形式传输的，但实际上它具有一定的数据结构，常用的形式有 xml 和 json；这里探究 json 数据的解析
-  
+
 首先将 <span style="display: inline !important; float: none; background-color: #ffffff; color: #333333; cursor: text; font-family: 'Noto Serif',serif; font-size: 17px; font-style: normal; font-variant: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-decoration: none; text-indent: 0px; text-transform: none; -webkit-text-stroke-width: 0px; white-space: normal; word-spacing: 0px;">response 转成字符串并传输到函数 showResponse中：</span>在Log.e调试修改为
 
 <pre class="pure-highlightjs"><code class="java">Log.e("测试","获取到的数据:"+response);
 showResponse(response.toString());</code></pre>
 
 2.1便于理解但很麻烦的方法：JSONObject
-  
+
 大致写一下思路：将字符串转成json数据类型，遍历所有数据获取信息并封装为 list。但是操作过于繁琐。
 
 <pre class="pure-highlightjs"><code class="java">    private void showResponse (final String response) {
@@ -103,21 +102,19 @@ showResponse(response.toString());</code></pre>
     }</code></pre>
 
 2.2使用 Gson 解析工具
-  
+
 引入工具包
 
 <pre class="pure-highlightjs"><code class="java">implementation 'com.google.code.gson:gson:2.8.5'</code></pre>
-
 使用AS插件 GsonFormat
-  
+
 新建 JavaBean 类，我这里命名为 chapter，将json数据复制到 <span style="display: inline !important; float: none; background-color: #ffffff; color: #333333; cursor: text; font-family: 'Noto Serif',serif; font-size: 17px; font-style: normal; font-variant: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-decoration: none; text-indent: 0px; text-transform: none; -webkit-text-stroke-width: 0px; white-space: normal; word-spacing: 0px;">GsonFormat ，点击OK，自动根据 json 结构生成 JavaBean 类。</span>
-  
+
 <img width="912" height="804" class="alignnone size-full wp-image-310" alt="" src="http://120.78.201.42/wp-content/uploads/2018/11/GsonFormat-1.jpg" />
-  
+
 声明全局变量
 
 <pre class="pure-highlightjs"><code class="java">public ArrayList&lt;chapter&gt; list = new ArrayList&lt;&gt;();</code></pre>
-
 解析过程
 
 <pre class="pure-highlightjs"><code class="java">   //解析json传入list
@@ -132,7 +129,7 @@ showResponse(response.toString());</code></pre>
     }</code></pre>
 
 注：不同结构的 json 数据写法也不太相同，<a href="https://github.com/google/gson/blob/master/UserGuide.md" target="_blank" rel="noopener noreferrer">点击链接查看官方文档</a>
-  
+
 2.3阿里的fastjson解析工具（没用过）
 
 #### 3.在RecyclerView中展示数据
