@@ -123,3 +123,8 @@ defaultContentLanguage = "zh-cn"           # Default language to use
     a-email = "mailto:beihai@wingsxdu.com"
     g-github = "https://github.com/wingsxdu"
     h-weibo = "https://weibo.com/u/6120467917"
+# 内置 HTML 需启用
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true

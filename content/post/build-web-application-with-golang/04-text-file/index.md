@@ -2,6 +2,7 @@
 title: "04-文本文件处理"
 author: "beihai"
 description: "Build Web Application With Golang"
+summary: "<blockquote><p>一个 Web 应用应该具有哪些特性，开发过程中注意哪些问题，这是我在初学 Web 时常常思考的问题。在此系列中作者不会用长长的列表指出开发者需要掌握的工具、框架，也不会刻画入微地去深究某一项程序设计的实现原理，旨在为初学者构建知识体系。如果你有想了解的问题、错误指正，可以在文章下面留言。</p></blockquote>"
 tags: [
     "Golang",
     "Build Web Application With Golang",
@@ -14,9 +15,7 @@ draft: false
 ---
 ![](/image/build-web-application-with-golang.png)
 
-> 学习如何 Web 编程可能正是你阅读此文章的原因，一个 Web 应用应该具有哪些特性，开发过程中注意哪些问题。在此系列中作者不会用长长的列表指出开发者需要掌握的工具、框架，也不会刻画入微地去深究某一项程序设计的实现原理，旨在为初学者构建知识体系。如果你有想了解的问题、错误指正，可以在文章下面留言。
-
-<!--more-->
+> 一个 Web 应用应该具有哪些特性，开发过程中注意哪些问题，这是我在初学 Web 时常常思考的问题。在此系列中作者不会用长长的列表指出开发者需要掌握的工具、框架，也不会刻画入微地去深究某一项程序设计的实现原理，旨在为初学者构建知识体系。如果你有想了解的问题、错误指正，可以在文章下面留言。
 
 ## FORM 表单
 
@@ -40,12 +39,11 @@ draft: false
 </form>
 </body>
 </html>
-
 ```
 
 form 与 XML 和 JSON 的不同之处就是能够上传文件。要使表单能够上传文件，首先要添加 form 的`enctype`属性，`enctype`属性有如下三种情况：
 
-```
+```http
 application/x-www-form-urlencoded   表示在发送前编码所有字符（默认）
 multipart/form-data      不对字符编码。在使用包含文件上传控件的表单时，必须使用该值。
 text/plain      空格转换为 "+" 加号，但不对特殊字符编码。
@@ -59,25 +57,26 @@ Content-Type: multipart/form-data
 
 对文件进行处理：
 
-```
+```go
 func upload(w http.ResponseWriter, r *http.Request) {
-    if r.Method == "POST" {
-        r.ParseMultipartForm(32 << 20)
-        file, handler, err := r.FormFile("files")
-        if err != nil {
-            fmt.Println(err)
-            return
-        }
-        defer file.Close()
-        fmt.Fprintf(w, "%v", handler.Header)
-        f, err := os.OpenFile("./test/"+handler.Filename, os.O_WRONLY|os.O_CREATE, 0666)  			// 此处假设当前目录下已存在 test 目录
-        if err != nil {
-            fmt.Println(err)
-            return
-        }
-        defer f.Close()
-        io.Copy(f, file) // 存储文件
-    }
+	if r.Method == "POST" {
+		r.ParseMultipartForm(32 << 20)
+		file, handler, err := r.FormFile("files")
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		defer file.Close()
+		fmt.Fprintf(w, "%v", handler.Header)
+		f, err := os.OpenFile("./test/"+handler.Filename, os.O_WRONLY|os.O_CREATE, 0666)
+		// 此处假设当前目录下已存在 test 目录
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		defer f.Close()
+		io.Copy(f, file) // 存储文件
+	}
 }
 ```
 
@@ -220,7 +219,7 @@ func jsonDecoder() {
 
 ###### 动态解析
 
-预先定义 JSON的结构进行解析是理想的情况。在实际开发中，JSON 可能非但格式不确定，还可能是动态数据类型。例如登录的时候，用户名可以是手机号也可以是邮箱，客户端传的 JSON 可能是字符串，也可能是数字。此时可以使用空接口 interface{} 对数据进行解析，并利用类型断言获取数据。
+预先定义 JSON 的结构进行解析是理想的情况。在实际开发中，JSON 可能非但格式不确定，还可能是动态数据类型。例如登录的时候，用户名可以是手机号也可以是邮箱，客户端传的 JSON 可能是字符串，也可能是数字。此时可以使用空接口 interface{} 对数据进行解析，并利用类型断言获取数据。
 
 ```go
 func jsonDecoder() {
@@ -252,7 +251,7 @@ func jsonDecoder() {
 
 #### 通过正则判断是否匹配
 
-`regexp`包中含有三个函数用来判断是否匹配，如果匹配返回 true，否则返回 false。
+**`regexp`**包中含有三个函数用来判断是否匹配，如果匹配返回 true，否则返回 false。
 
 ```Go
 func Match(pattern string, b []byte) (matched bool, error error)
@@ -266,9 +265,9 @@ func MatchString(pattern string, s string) (matched bool, error error)
 
 ```Go
 if m, _ := regexp.MatchString(`^([\w\.\_]{2,10})@(\w{1,}).([a-z]{2,4})$`, r.Form.Get("email")); !m {
-    fmt.Println("no")
+	fmt.Println("no")
 }else{
-    fmt.Println("yes")
+	fmt.Println("yes")
 }
 ```
 
@@ -277,18 +276,18 @@ if m, _ := regexp.MatchString(`^([\w\.\_]{2,10})@(\w{1,}).([a-z]{2,4})$`, r.Form
 ```Go
 // 验证 15 位身份证，全部为数字
 if m, _ := regexp.MatchString(`^(\d{15})$`, r.Form.Get("usercard")); !m {
-    return false
+	return false
 }
 
 // 验证 18 位身份证，18 位前 17 位为数字，最后一位是校验位，可能为数字或字符 X。
 if m, _ := regexp.MatchString(`^(\d{17})([0-9]|X)$`, r.Form.Get("usercard")); !m {
-    return false
+	return false
 }
 ```
 
 ## Template 模板
 
-官方定义`template`包是数据驱动的文本输出模板，说白了就是在写好的模板中填充数据。下面是一个简单的模板示例：
+官方定义**`template`**包是数据驱动的文本输出模板，说白了就是在写好的模板中填充数据。下面是一个简单的模板示例：
 
 ```go
 func main() {
@@ -302,7 +301,7 @@ func main() {
 // output:Time is 2019-12-02 21:36:46.1615279 +0800 CST m=+0.003995501
 ```
 
-{{ 和 }} 中间的 `.` 代表传入模板的数据，根据传入的数据不同渲染不同的内容。`.` 可以是 Go 语言中的任何数据类型，如结构体、切片等。
+{{ }} 中间的`.`代表传入模板的数据，根据传入的数据不同渲染不同的内容。`.`可以是 Go 语言中的任何数据类型，如结构体、切片等。
 
 由于前后端分离的 Restful 架构大行其道，传统的模板技术已经很少使用了。
 
