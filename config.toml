@@ -12,15 +12,30 @@ googleAnalytics = "UA-148836314-1"      # UA-XXXXXXXX-X
 # copyright = ""            # default: author.name ↓        # 默认为下面配置的author.name ↓
 enableGitInfo = true
 
-PygmentsCodeFences = true # Enable syntax highlighting with GitHub flavoured code fences
-PygmentsUseClasses = false # Use CSS classes to format highlighted code
-PygmentsCodefencesGuessSyntax = true
-PygmentsOptions = "linenos=table"
-
 # language support en / zh-cn / other... translations present in i18n/
 defaultContentLanguage = "zh-cn"           # Default language to use
 [languages.zh-cn]
   languageCode = "zh-cn"
+
+# 内置 HTML 需启用
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+  
+  [markup.highlight]
+    codeFences = true
+    hl_Lines = ""
+    lineNoStart = 1
+    lineNos = true
+    lineNumbersInTable = true
+    noClasses = true
+    style = "solarized-dark"
+    tabWidth = 4
+
+  [markup.tableOfContents]
+    endLevel = 6
+    startLevel = 1
 
 [[menu.main]]
   name = "Home"
@@ -124,18 +139,4 @@ defaultContentLanguage = "zh-cn"           # Default language to use
     h-weibo = "https://weibo.com/u/6120467917"
 
 
-# 内置 HTML 需启用
-[markup]
-  [markup.goldmark]
-    [markup.goldmark.renderer]
-      unsafe = true
-  
-  [markup.highlight]
-    codeFences = true
-    hl_Lines = ""
-    lineNoStart = 1
-    lineNos = true
-    lineNumbersInTable = true
-    noClasses = false
-    style = "solarized-dark"
-    tabWidth = 4
+
