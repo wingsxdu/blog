@@ -32,7 +32,7 @@ Go1.13 版本在 Go1.12 发布六个月后推出。它的大部分变化都在�
 ###### Modules 改进
 
 GO111MODULE 环境变量默认值仍为 auto，但只要当前工作目录包含或位于包含 go.mod 文件的目录下，auto 就会激活 go command 模块感知模式——即使当前目录在 GOPATH/src 内。
-  
+
 此变更简化了 GOPATH/src 中现有代码的迁移，以及对模块感知软件包与非模块感知导入器的持续维护。
 
 GOPROXY 环境变量现在可以设置为以逗号分隔的代理 URL 列表或特殊的token值 direct，其默认值现为https://proxy.golang.org,direct。解析包含其模块的包路径时，go命令将连续尝试列表中每个代理上的所有候选模块路径。除404、410之外，无法访问的代理或 HTTP 状态代码将使搜索终止，而无需咨询其余代理。
@@ -42,10 +42,12 @@ GOPRIVATE(new) 环境变量用于声明不公开的模块路径。用作较低�
 GOSUMDB(new) 环境变量可标识数据库的名称、可选的公钥和服务器 URL，以查询主模块的go.sum文件中尚未列出的模块的校验和。如果 GOSUMDB 不包含显式 URL，则通过检索支持校验和数据库的 GOPROXY URL来选择 URL，如果所有代理都不支持，则返回到指定数据库的直接连接。如果GOSUMDB设置为off，则不会查询校验和数据库，只验证 go.sum 文件中的现有校验和。
 
 若用户无法访问默认代理和校验和数据库（例如由于防火墙配置）可将 GOPROXY设置为 dircet和/或将 GOSUMDB 设置为 off 。
-  
+
 go env -w 指令可用于设置这些变量的默认值，全平台通用：
 
-<pre class="pure-highlightjs"><code class="bash">go env -w GOPROXY=direct
-go env -w GOSUMDB=off</code></pre>
+```shell
+go env -w GOPROXY=direct
+go env -w GOSUMDB=off
+```
 
 &nbsp;

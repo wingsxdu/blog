@@ -15,22 +15,19 @@ categories: [
 ##### 续上篇介绍
 
 <a href="https://www.wingsxdu.com/?p=1216" target="_blank" rel="noopener noreferrer">Java GRPC proto 编译</a>
-  
-现在我们拿到了编译的 Java 文件，其中 User.java 为 rpc 通信，文件名同 .proto 文件名称；CreateAccountGrpc.java 为定义的服务名称，定义几个服务就会编译出几个**Grpc.java 文件
-  
-<img src="https://www.wingsxdu.com/wp-content/uploads/2019/05/java-proto-1-name-1-1.png" alt="" width="646" height="340" class="size-full wp-image-1228 aligncenter" />
+
+现在我们拿到了编译的 Java 文件，其中 User.java 为 rpc 通信，文件名同 .proto 文件名称；CreateAccountGrpc.java 为定义的服务名称，定义几个服务就会编译出几个 Grpc.java 文件
 
 ##### 工程中使用
 
 在 src 目录下新建 package grpc.user，将proto 编译得到的 java类文件都复制到目录下
-  
-<img src="https://www.wingsxdu.com/wp-content/uploads/2019/05/java-proto-1-use-1-1.png" alt="" width="457" height="437" class="size-full wp-image-1229 aligncenter" />
 
 ###### build.gradle环境配置
 
 和 proto 编译配置保持一致即可
 
-<pre class="pure-highlightjs"><code class="null">apply plugin: 'java'
+```java
+apply plugin: 'java'
 apply plugin: 'com.google.protobuf'
 apply plugin: 'idea'
 repositories {
@@ -63,13 +60,15 @@ protobuf {
             grpc { }
         }
     }
-}</code></pre>
+}
+```
 
 ###### 客户端
 
 在目录下新建 UserClient.java
 
-<pre class="pure-highlightjs"><code class="java">package grpc.user;
+```java
+package grpc.user;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import java.util.concurrent.TimeUnit;
@@ -90,7 +89,7 @@ public class UserClient {
         this(ManagedChannelBuilder.forAddress(host, port).usePlaintext());
     }
     /** Construct client for accessing RouteGuide server using the existing channel. */
-    public UserClient(ManagedChannelBuilder&lt;?&gt; channelBuilder) {
+    public UserClient(ManagedChannelBuilder<?> channelBuilder) {
         channel = channelBuilder.build();
         blockingStub = CreateAccountGrpc.newBlockingStub(channel);
         Stub = CreateAccountGrpc.newStub(channel);
@@ -103,13 +102,15 @@ public class UserClient {
         User.CreateRequestResponse response = blockingStub.createAccount(request);
         return response.getValue();
     }
-}</code></pre>
+}
+```
 
 ###### 服务端
 
 在目录下新建 UserServer.java
 
-<pre class="pure-highlightjs"><code class="null">package grpc.user;
+```java
+package grpc.user;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
@@ -124,7 +125,7 @@ public class UserServer {
                 .addService(new UserServer.CreateAccountImpl())
                 .build()
                 .start();
-        Runtime.getRuntime().addShutdownHook(new Thread(() -&gt; {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             // Use stderr here since the logger may have been reset by its JVM shutdown hook.
             System.err.println("*** shutting down gRPC server since JVM is shutting down");
             UserServer.this.stop();
@@ -154,7 +155,7 @@ public class UserServer {
     }
     static class CreateAccountImpl extends CreateAccountGrpc.CreateAccountImplBase {
         @Override
-        public void createAccount(User.CreateAccountRequest req, StreamObserver&lt;User.CreateRequestResponse&gt; responseObserver) {
+        public void createAccount(User.CreateAccountRequest req, StreamObserver<User.CreateRequestResponse> responseObserver) {
             //System.out.println(req.getUid());
             String value ;
             if (req.getService().equals("Register")) {
@@ -179,6 +180,7 @@ public class UserServer {
             responseObserver.onCompleted();
         }
     }
-}</code></pre>
+}
+```
 
 先运行 server 端监听端口，再运行客户端发送信息，可在控制台看到输出。

@@ -3,11 +3,6 @@ title: HttpURLConnection执行网络请求+json数据解析并输出到RecyclerV
 author: beihai
 type: post
 date: 2018-11-21T12:08:55+00:00
-classic-editor-remember:
-  - block-editor
-  - block-editor
-  - block-editor
-  - block-editor
 categories:
   - Android studio
 tags:
@@ -19,8 +14,8 @@ tags:
 
 代码如下：
 
-<pre class="pure-highlightjs"><code class="java"></code></pre>
-<pre class="pure-highlightjs"><code class="java">    //开启线程来发起网络请求获取数据
+```java
+    //开启线程来发起网络请求获取数据
     private void sendRequestWithHttpURLConnection(){
         new Thread(new Runnable() {
             @Override
@@ -56,7 +51,8 @@ tags:
                 }
             }
         }).start();
-    }</code><code class="java"></code><code class="java"></code></pre>
+    }
+```
 
 分析：由于执行网络请求属于耗时操作，需要开启子线程执行，有关多线程常用方法<a href="https://blog.csdn.net/wuqingsen1/article/details/82896463" target="_blank" rel="noopener noreferrer">点击链接跳转</a>；url 为 后端地址，这里输入的是百度首页地址；设置最大请求时长为8秒:Timeout(8000)；将获取的数据读取到 response，并使用 Log.e 调试输出。运行程序后即可看到百度首页的数据构成
 
@@ -66,22 +62,27 @@ tags:
 
 首先将 <span style="display: inline !important; float: none; background-color: #ffffff; color: #333333; cursor: text; font-family: 'Noto Serif',serif; font-size: 17px; font-style: normal; font-variant: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-decoration: none; text-indent: 0px; text-transform: none; -webkit-text-stroke-width: 0px; white-space: normal; word-spacing: 0px;">response 转成字符串并传输到函数 showResponse中：</span>在Log.e调试修改为
 
-<pre class="pure-highlightjs"><code class="java">Log.e("测试","获取到的数据:"+response);
-showResponse(response.toString());</code></pre>
+```java
+Log.e("测试","获取到的数据:"+response);
+showResponse(response.toString());
+```
+
+
 
 2.1便于理解但很麻烦的方法：JSONObject
 
 大致写一下思路：将字符串转成json数据类型，遍历所有数据获取信息并封装为 list。但是操作过于繁琐。
 
-<pre class="pure-highlightjs"><code class="java">    private void showResponse (final String response) {
+```java
+private void showResponse (final String response) {
         if(response!=null) {
-            Map&lt;String, Object&gt; map;
-            List&lt;Map&lt;String, Object&gt;&gt; list = new ArrayList&lt;&gt;();
+            Map<String, Object> map;
+            List<Map<String, Object>> list = new ArrayList<>();
             try {
                 JSONArray jsonArray = new JSONArray(response);
-                for (int i = 0; i &lt; jsonArray.length(); i++) {
+                for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    map = new HashMap&lt;&gt;();
+                    map = new HashMap<>();
                     if (jsonObject != null) {
                         int id = jsonObject.optInt("id");
                         String name = jsonObject.optString("name");
@@ -99,7 +100,10 @@ showResponse(response.toString());</code></pre>
                 e.printStackTrace();
             }
         }
-    }</code></pre>
+    }
+```
+
+
 
 2.2使用 Gson 解析工具
 
@@ -117,16 +121,20 @@ showResponse(response.toString());</code></pre>
 <pre class="pure-highlightjs"><code class="java">public ArrayList&lt;chapter&gt; list = new ArrayList&lt;&gt;();</code></pre>
 解析过程
 
-<pre class="pure-highlightjs"><code class="java">   //解析json传入list
+```java
+	//解析json传入list
     private void showResponse (final String response) {
         Gson gson = new Gson();
-        Type listType = new TypeToken&lt;List&lt;chapter&gt;&gt;() {
+        Type listType = new TypeToken<List<chapter>>() {
         }.getType();
         list = gson.fromJson(response, listType);
         Message msg = new Message();
         msg.what = 1;
         handler.sendMessage(msg);
-    }</code></pre>
+    }
+```
+
+
 
 注：不同结构的 json 数据写法也不太相同，<a href="https://github.com/google/gson/blob/master/UserGuide.md" target="_blank" rel="noopener noreferrer">点击链接查看官方文档</a>
 
@@ -136,7 +144,8 @@ showResponse(response.toString());</code></pre>
 
 我们已经获得一个封装好的 list，使用 handler 方法更新 ui
 
-<pre class="pure-highlightjs"><code class="java">    //在RecycleView中展示数据,点击item页面跳转
+```JAVA
+	//在RecycleView中展示数据,点击item页面跳转
     @SuppressLint("HandlerLeak")
     public Handler handler = new Handler(){
         @Override
@@ -154,15 +163,19 @@ showResponse(response.toString());</code></pre>
                     break;
             }
         }
-    };</code></pre>
+    };
+```
+
+
 
 创建适配器 chapter_itemAdapter
 
-<pre class="pure-highlightjs"><code class="java">public class chapter_itemAdapter extends RecyclerView.Adapter&lt;chapter_itemAdapter.ViewHolder&gt; {
-    private ArrayList&lt;chapter&gt; list;
+```java
+public class chapter_itemAdapter extends RecyclerView.Adapter<chapter_itemAdapter.ViewHolder> {
+    private ArrayList<chapter> list;
     public Context context;
     private LayoutInflater inflater;
-    chapter_itemAdapter(ArrayList&lt;chapter&gt; list, Context context){
+    chapter_itemAdapter(ArrayList<chapter> list, Context context){
         this.context = context;
         this.list = list;
         inflater = LayoutInflater.from(context);
@@ -188,23 +201,27 @@ holder.recy_name.setText(Html.fromHtml(Objects.requireNonNull(list.get(position)
             recy_name = itemView.findViewById(R.id.recy_name);
         }
     }
-}</code></pre>
+}
+```
+
+
 
 对应布局 recyclerview_item
 
-<pre class="pure-highlightjs"><code class="xml">&lt;?xml version="1.0" encoding="utf-8"?&gt;
-&lt;RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"&gt;
-    &lt;LinearLayout
+    android:layout_height="wrap_content">
+    <LinearLayout
         android:id="@+id/LinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/touch_bg"
         android:orientation="vertical"
-        tools:ignore="UselessParent"&gt;
-        &lt;TextView
+        tools:ignore="UselessParent">
+        <TextView
             android:id="@+id/recy_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -213,8 +230,11 @@ holder.recy_name.setText(Html.fromHtml(Objects.requireNonNull(list.get(position)
             android:paddingStart="15dp"
             android:paddingEnd="15dp"
             android:textColor="#00BBD3"
-            android:textSize="17sp"/&gt;
-    &lt;/LinearLayout&gt;
-&lt;/RelativeLayout&gt;</code></pre>
+            android:textSize="17sp"/>
+    </LinearLayout>
+</RelativeLayout>
+```
+
+
 
 有关RecyclerView更多用法<a href="http://120.78.201.42/?p=313&preview=true" target="_blank" rel="noopener noreferrer">点击链接跳转</a>

@@ -38,20 +38,23 @@ categories: [
 
 ##### 创建结构体
 
-<pre class="pure-highlightjs"><code class="null">type TreeNode struct {
+```go
+type TreeNode struct {
 	elem  int
 	left  *TreeNode
 	right *TreeNode
-}</code></pre>
+}
+```
 
 创建一个空树或者清空树
 
 <span style="color: #ff99cc;">注：</span>
 
-  * 创建一棵空树: 不像其他一些数据结构中通过一个结构体来定义一棵空树，我们直接通过空指针来定义一棵空树，所以在MakeEmpty尾部我们直接返回了空指针来代表一棵空树。
-  * 清空一棵树: MakeEmpty函数还可以清空一棵树，由于Go语言中并不需要我们手动管理内存空间，所以删除树节点并不需要释放空间，只需要将指向树节点的指针置为nil即可。
+  * 创建一棵空树: 不像其他一些数据结构中通过一个结构体来定义一棵空树，我们直接通过空指针来定义一棵空树，所以在 MakeEmpty 尾部我们直接返回了空指针来代表一棵空树。
+  * 清空一棵树：MakeEmpty 函数还可以清空一棵树，由于Go语言中并不需要我们手动管理内存空间，所以删除树节点并不需要释放空间，只需要将指向树节点的指针置为nil即可。
 
-<pre class="pure-highlightjs"><code class="null">func MakeEmpty(tree *TreeNode) *TreeNode {
+```go
+func MakeEmpty(tree *TreeNode) *TreeNode {
 	if tree != nil {
 		MakeEmpty(tree.left)
 		tree.left = nil
@@ -59,63 +62,78 @@ categories: [
 		tree.right = nil
 	}
 	return nil
-}</code></pre>
+}
+```
 
 插入数据
 
 <span style="color: #ff99cc;">注意</span>：如果要插入的值已经在树中存在，我们什么也不做，树中不会保存两个相同的值。
 
-<pre class="pure-highlightjs"><code class="null">func Insert(elem int, tree *TreeNode) *TreeNode {
+```go
+func Insert(elem int, tree *TreeNode) *TreeNode {
 	if tree == nil {
 		tree = &TreeNode{}
 		tree.left = nil
 		tree.right = nil
 		tree.elem = elem
-	} else if elem &lt; tree.elem {
+	} else if elem < tree.elem {
 		tree.left = Insert(elem, tree.left)
-	} else if elem &gt; tree.elem {
+	} else if elem > tree.elem {
 		tree.right = Insert(elem, tree.right)
 	} else {
 		// 该节点已经在这颗树中了，我们什么也不做
 	}
 	return tree
-}</code></pre>
+}
+```
 
 在main函数中新建一个数组和空树，插入数据
 
-<pre class="pure-highlightjs"><code class="null">func main() {
+```go
+func main() {
 	var a = [10]int{9,12,5,8,35,22,9,33,1,2}
 	var testTree *TreeNode
 	MakeEmpty(testTree)
-	for i:=0; i&lt;len(a);i++ {
+	for i:=0; i<len(a);i++ {
 		testTree = Insert(a[i], testTree)
 	}
-}</code></pre>
+}
+```
+
+
 
 ##### 判断是否存在某值，添加函数：
 
-<pre class="pure-highlightjs"><code class="null">func Find(elem int, tree *TreeNode) bool {
+```go
+func Find(elem int, tree *TreeNode) bool {
 	if tree == nil {
 		return false
 	}
 	if tree.elem == elem {
 		return true
-	} else if elem &gt; tree.elem {// 查找节点比当前树节点要大
+	} else if elem > tree.elem {// 查找节点比当前树节点要大
 		return Find(elem, tree.right)
 	} else { // 查找节点比当前树节点要小
 		return Find(elem, tree.left)
 	}
-}</code></pre>
+}
+```
 
 在main函数中进行配对：
 
-<pre class="pure-highlightjs"><code class="null">exist := Find(35,testTree)&lt;br />exists := Find(3,testTree)&lt;br />fmt.Println(exist)&lt;br />fmt.Println(exists)</code></pre>
+```GO
+exist := Find(35,testTree)
+exists := Find(3,testTree)
+fmt.Println(exist)
+fmt.Println(exists)
+```
 
 Find操作的功能是通过递归来实现的。判断当前树节点是否是要查找的节点，如果是则返回当前节点。否则，根据目标关键字的值的是否小于当前节点的<span style="color: #e91e63;">关键字值</span>分别去当前节点的左子树或右子树中去查找目标节点。打印的第一个值为 true，第二个值为 false（输出结果为 bool 型）
 
 ##### 查找最小、最大值：
 
-<pre class="pure-highlightjs"><code class="null">func FindMin(tree *TreeNode) *TreeNode {
+```go
+func FindMin(tree *TreeNode) *TreeNode {
 	if tree == nil {
 		return nil
 	}
@@ -132,11 +150,8 @@ func FindMax(tree *TreeNode) *TreeNode {
 		return tree
 	}
 	return FindMax(tree.right)
-}</code></pre>
-
-main函数使用：
-
-<pre class="pure-highlightjs"><code class="null">min := FindMin(testTree).elem&lt;br />max := FindMax(testTree).elem&lt;br />fmt.Println(min)&lt;br />fmt.Println(max)</code></pre>
+}
+```
 
 <span>查找最小值是通过迭代实现的，由于二叉搜索树中某个树节点的<span style="color: #e91e63;">左子树</span>的关键字始终小于这个树节点的关键字值，所以我们只需要一直遍历，找到</span>最左<span>的那个树节点，它就是整个树中最小的节点。</span>
 
