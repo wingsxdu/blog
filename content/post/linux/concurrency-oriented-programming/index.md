@@ -1,5 +1,5 @@
 ---
-title: "面向并发编程原理分析 · Analyze"
+assembly title: "面向并发编程原理分析 · Analyze"
 author: "beihai"
 description: "Build Web Application With Golang"
 summary: "<blockquote><p>并发这个概念由来已久，其主要思想是使多个任务可以在同一个时间段内下执行以便更快地得到结果。最早支持并发编程的语言是汇编语言，不过那时并没有任何的理论基础来支持这种编程方式，一个细微的编程错误就可能使程序变得非常不稳定，而且对程序的测试也几乎是不可能的。随着计算机软硬件技术的发展，并发程序的编写早已没有以前那么复杂了。如果我们想真正理解一门编程语言以及领悟怎样才能编好程序，学习并发编程这一步必不可少。</p></blockquote>"
@@ -15,7 +15,7 @@ categories: [
     "Analyze",
 ]
 date: 2019-12-04T12:23:23+08:00
-draft: false
+draft: true
 ---
 > *原理分析（Analyze The Principles）是一系列对计算机科学领域中的程序设计进行分析，每一篇文章都会着重于某一个实际问题。如果你有想了解的问题、错误指正，可以在文章下面留言。* 
 
