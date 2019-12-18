@@ -14,7 +14,7 @@ categories: [
 	"同步",
 ]
 date: 2019-12-17T17:45:23+08:00
-draft: trye
+draft: true
 
 ---
 
