@@ -94,7 +94,7 @@ defaultContentLanguage = "zh-cn"           # Default language to use
   # Some global options, you can also close or open something in front matter for a single post, see more information from `archetypes/default.md`.
   toc = true                                                                            # 是否开启目录
   fancybox = true         # see https://github.com/dimsemenov/PhotoSwipe            # 是否启用PhotoSwipe（图片可点击）
-  contentCopyright = '<a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a>'
+  contentCopyright = '<span>文章采用<a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名 4.0 国际许可协议</a>进行许可，转载请注明原文链接。</span>'
   # tencent_analytics = ""    # Tencent Analytics
   baidu_push = true        # baidu push                  # 百度
   baidu_analytics = "d9caa672b116c39e151b0da7c758ad88"      # Baidu Analytics
