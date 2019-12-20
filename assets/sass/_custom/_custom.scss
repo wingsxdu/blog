@@ -20,35 +20,34 @@ $theme-color-map: (
   'Dark Violet': #9932CC #f5f4fa
 );
 
-h1 {
-  border-bottom: 1px solid #ddd;
-  margin-top: 2em;
-}
-
-h2 {
-  // font-size: 1.6em;
-  border-bottom: 1px solid #ddd;
-  margin-top: 0em;
-}
-
-h3 {
-  // font-size: 1.3em;
-  margin-top: 1.5em;
-}
 
 h4 {
   margin-top: 0em;
   margin-bottom: 0em;
+  margin-block-start: 1em;
+  margin-block-end: 0.5em;
 }
 
 h5 {
   margin-top: 0em;
+  margin-block-start: 1em;
+  margin-block-end: 0em;
 }
 
 h6 {
   margin-top: 0em;
+  margin-block-start: 0em;
+  margin-block-end: 0em;
 }
 
+
+p {
+  display: block;
+  margin-block-start: 0em;
+  margin-block-end: 0.5em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+}
 
 // Check theme color config.
 // if it does not exist, use default theme color.
@@ -89,10 +88,10 @@ $global-container-padding: 0 20px !default;
 $global-lineheight: 1.8 !default;
 
 // Font family of the site.
-$global-font-family: 'Source Sans Pro', 'Helvetica Neue', Arial, sans-serif !default;
+$global-font-family: "Hiragino Sans GB", "Heiti SC", "Microsoft YaHei", sans-serif, "Merriweather", serif !default;
 
 // Serif font family of the site.
-$global-serif-font-family: Athelas, STHeiti, Microsoft Yahei, serif !default;
+$global-serif-font-family: "Hiragino Sans GB", "Heiti SC", "Microsoft YaHei", sans-serif, "Merriweather", serif !default;
 
 // Background color of the site.
 $global-background: $white !default;
@@ -308,3 +307,4 @@ $categories-tags-link-margin: 5px 10px !default;
 
 // Font size of the category count
 $category-count-font-size: 12px !default;
+
