@@ -1,5 +1,5 @@
 ---
-title: "并发编程与 Goroutine 调度"
+title: "Go 语言并发模型与 Goroutine · Analyze"
 author: "beihai"
 description: "DO NOT COMMUNICATE BY SHARING MEMORY; INSTEAD, SHARE MEMORY BY COMMUNICATING."
 tags: [
@@ -50,7 +50,9 @@ Goroutine，Go语言基于并发（并行）编程给出的解决方案。通常
 
 goroutine使用方式非常的简单，只需使用 `go` 关键字即可启动一个协程，并且它是处于异步方式运行，你不需要等它运行完成以后在执行以后的代码。
 
-`go func() // 通过go关键字启动一个协程来运行函数`
+```go
+go func() // 通过go关键字启动一个协程来运行函数
+```
 
 Go的调度器内部有四个重要的结构：M，P，S，Sched，如上图所示（Sched 未给出）。
 
@@ -60,11 +62,9 @@ Go的调度器内部有四个重要的结构：M，P，S，Sched，如上图所�
 - Sched：代表调度器，它维护有存储M和G的队列以及调度器的一些状态信息等。
 
 <div align="center">{{< figure src="/image/goroutine1.jpg" style="center">}}</div>
-
 ###### G-P-M 模型调度
 
 <div align="center">{{< figure src="/image/goroutine-scheduler-model.png" style="center">}}</div>
-
 Go 调度器工作时会维护两种用来保存 G 的任务队列：一种是一个 Global 任务队列，一种是每个 P 维护的 Local 任务队列。
 
 当通过` go `关键字创建一个新的 goroutine 的时候，它会优先被放入P 的本地队列。为了运行goroutine，M 需要持有（绑定）一个 P，接着M会启动一个 OS线程，循环从P的本地队列里取出一个 goroutine 并执行。
@@ -76,7 +76,6 @@ Go 调度器工作时会维护两种用来保存 G 的任务队列：一种是�
 除此之外还有 ` work-stealing `调度算法：当 M 执行完了当前 P 的 Local 队列里的所有 G 后，P 也不会就这么在那躺尸啥都不干，它会先尝试从 Global 队列寻找 G 来执行，如果 Global队列为空，它会随机挑选另外一个 P，从它的队列里中拿走一半的 G 到自己的队列中执行。
 
 <div align="center">{{< figure src="/image/goroutine3.jpg" style="center">}}</div>
-
 #### 为什么要有 P(Processor) ？
 
 你可能会想，为什么一定需要一个上下文，我们能不能直接除去上下文，让 `Goroutine` 的 `runqueues` 挂到M上呢？答案是不行，需要上下文的目的，是让我们可以直接放开其他线程，当遇到内核线程阻塞的时候。

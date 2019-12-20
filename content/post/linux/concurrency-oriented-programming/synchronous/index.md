@@ -113,7 +113,7 @@ C atomic_load（const volatile A * obj）;
 
 条件变量是一种通知机制，当条件成立时，通过系统调用`pthread_cond_singal`单发或`pthread_cond_broadcast`广播唤醒其他线程执行任务。但 POSIX 为了简化实现，允许`pthread_cond_singal`可以唤醒不止一个线程。
 
-条件变量通常与互斥锁一起使用。这是为了应对线程 A 在调用`pthread_cond_wait`但还没有进入 wait cond 的状态时，线程 B 就对其进行唤醒的情况。 如果不使用互斥锁，这个唤醒信号就会丢失。加了锁时，在线程 A 进入等待状态后再解锁，线程 B 在这之后才能进行唤醒操作。
+条件变量通常与互斥锁一起使用。这是为了应对线程 A 在调用`pthread_cond_wait`但还没有进入 wait cond 的状态时，线程 B 就对其进行唤醒的情况。 如果不使用互斥锁，这个唤醒信号就会丢失。加了锁时，在线程 A 进入等待状态后再解锁，线程 B 在这之后才能进行唤醒操作。 
 
 ## 总结
 
@@ -124,3 +124,6 @@ C atomic_load（const volatile A * obj）;
 - [有了互斥锁，为什么还要条件变量？](https://www.jianshu.com/p/01ad36b91d39)
 - 《Go 并发编程实战》
 - 《UNIX 环境高级编程》
+
+## 相关文章
+
