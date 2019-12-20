@@ -9,6 +9,8 @@ tags: [
 ]
 categories: [
     "Golang",
+    "Analyze",
+	"并发编程",
 ]
 toc: true
 date: 2019-09-29T17:20:37+08:00

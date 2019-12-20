@@ -11,6 +11,7 @@ tags: [
 categories: [
     "Analyze",
 	"并发编程",
+	"Linux",
 ]
 date: 2019-12-17T17:45:23+08:00
 draft: false
