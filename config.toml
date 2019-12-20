@@ -79,7 +79,6 @@ defaultContentLanguage = "zh-cn"           # Default language to use
 [params]
   since = "2018"            # Site creation time          # 站点建立时间
   rssFullContent = true     # if false, Rss feed instead of the summary
-  forkMeOnGithub = "https://github.com/wingsxdu"
 
   # site info (optional)                                  # 站点信息（可选，不需要的可以直接注释掉）
   logoTitle = "beihai"        # default: the title value    # 默认值: 上面设置的title值
