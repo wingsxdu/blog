@@ -190,3 +190,9 @@ Linux 系统中，进程每个时刻都是有状态的，其可能的状态通�
 - [anatomy-of-a-program-in-memory](https://manybutfinite.com/post/anatomy-of-a-program-in-memory/)
 - [深入 Linux 的进程优先级](https://linux.cn/article-7325-1.html)
 - [线程的3种实现方式](https://blog.csdn.net/gatieme/article/details/51892437)
+
+## 相关文章
+
+- [Go 语言并发模型与 Goroutine · Analyze](https://www.wingsxdu.com/post/linux/concurrency-oriented-programming/goroutine/)
+- [浅论并发编程中的同步问题 · Analyze](https://www.wingsxdu.com/post/linux/concurrency-oriented-programming/synchronous/)
+- [浅析进程与线程的设计 · Analyze](https://www.wingsxdu.com/post/linux/concurrency-oriented-programming/process-and-thread/)

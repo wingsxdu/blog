@@ -81,3 +81,9 @@ Go 调度器工作时会维护两种用来保存 G 的任务队列：一种是�
 你可能会想，为什么一定需要一个上下文，我们能不能直接除去上下文，让 `Goroutine` 的 `runqueues` 挂到M上呢？答案是不行，需要上下文的目的，是让我们可以直接放开其他线程，当遇到内核线程阻塞的时候。
 
 一个很简单的例子就是系统调用 `sysall`，一个线程肯定不能同时执行代码和系统调用被阻塞，这个时候，此线程M需要放弃当前的上下文环境 P，以便可以让其他的 `Goroutine` 被调度执行。
+
+## 相关文章
+
+- [Go 语言并发模型与 Goroutine · Analyze](https://www.wingsxdu.com/post/linux/concurrency-oriented-programming/goroutine/)
+- [浅论并发编程中的同步问题 · Analyze](https://www.wingsxdu.com/post/linux/concurrency-oriented-programming/synchronous/)
+- [浅析进程与线程的设计 · Analyze](https://www.wingsxdu.com/post/linux/concurrency-oriented-programming/process-and-thread/)
