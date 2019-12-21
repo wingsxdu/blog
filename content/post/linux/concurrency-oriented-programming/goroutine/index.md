@@ -1,12 +1,13 @@
 ---
-title: "Go 语言并发模型与 Goroutine · Analyze"
+title: "Goroutine 与 Go 语言并发模型 · Analyze"
 author: "beihai"
 description: "面向并发编程"
-summary: "<blockquote><p>Go 语言最吸引人的地方是它内建的并发支持。Go 语言并发体系的理论是 C.A.R Hoare 在1978年提出的 CSP 模型。在并发编程中，目前的绝大多数语言，都是通过加锁等线程同步方案来解决数据共享问题，而 Go 语言另辟蹊径，它将共享的值通过 Channel 传递。在任意给定的时刻，最好只有一个Goroutine 能够拥有该资源。数据竞争从设计层面上就被杜绝了。</p></blockquote>"
+summary: "<blockquote><p>Go 语言最吸引人的地方是它内建的并发支持。Go 语言并发体系的理论是 C.A.R Hoare 在 1978 年提出的 CSP 模型。在并发编程中，目前的绝大多数语言，都是通过加锁等线程同步方案来解决数据共享问题，而 Go 语言另辟蹊径，它将共享的值通过 Channel 传递。在任意给定的时刻，最好只有一个Goroutine 能够拥有该资源。数据竞争从设计层面上就被杜绝了。</p></blockquote>"
 tags: [
     "Golang",
-    "实现原理",
     "底层",
+    "Analyze",
+    "Goroutine",
 ]
 categories: [
     "Golang",
@@ -18,20 +19,26 @@ date: 2019-09-29T17:20:37+08:00
 draft: false
 ---
 
-> *原理分析（Analyze The Principles）是一系列对计算机科学领域中的程序设计进行分析，每一篇文章都会着重于某一个实际问题。如果你有想了解的问题、错误指正，可以在文章下面留言。* 
+> *原理分析（Analyze The Principles）是一系列对计算机科学领域中的程序设计进行分析，每一篇文章都会着重于某一个实际问题。如果你有想了解的问题、错误指正，可以在文章下面留言。*
 
-Go 语言最吸引人的地方是它内建的并发支持。Go 语言并发体系的理论是 C.A.R Hoare 在1978年提出的 CSP 模型（Communicating Sequential Process，通讯顺序进程）。在并发编程中，目前的绝大多数语言，都是通过加锁等线程同步方案来解决数据共享问题，而 Go 语言另辟蹊径，它将共享的值通过 Channel 传递。在任意给定的时刻，最好只有一个Goroutine 能够拥有该资源。数据竞争从设计层面上就被杜绝了。
+Go 语言最吸引人的地方是它内建的并发支持。Go 语言并发体系的理论是 C.A.R Hoare 在 1978 年提出的 CSP 模型（Communicating Sequential Process，通讯顺序进程）。在并发编程中，目前的绝大多数语言，都是通过加锁等线程同步方案来解决数据共享问题，而 Go 语言另辟蹊径，它将共享的值通过 Channel 传递。在任意给定的时刻，最好只有一个Goroutine 能够拥有该资源。数据竞争从设计层面上就被杜绝了。
 
 ## 概述
 
-Go的 CSP 并发模型，是通过`goroutine`和`channel`来实现的。
+Go 的 CSP 并发模型，是通过`goroutine`和`channel`来实现的。
 
 - **Goroutine** ：Go 语言中并发的执行单位。是一种轻量线程，它不是操作系统的线程，而是将一个操作系统线程分段使用，通过调度器实现协作式调度。
 - **Channel**：Goroutine 之间的通信机制，类似于 UNIX 中的管道。
 
-我们会在 Go 语言中使用 Goroutine 并行执行任务并将 Channel 作为 Goroutine 之间的通信方式，虽然使用互斥锁和共享内存在 Go 语言中也可以完成 Goroutine 间的通信，但是使用 Channel 才是更推荐的做法 — **不要通过共享内存的方式进行通信，而是应该通过通信的方式共享内存**。
+在 Go 语言中，一个最常见的也是经常被人提及的设计模式就是**不要通过共享内存的方式进行通信，而是应该通过通信的方式共享内存**，在很多主流的编程语言中，当我们想要并发执行一些代码时，我们往往都会在多个线程之间共享变量，同时为了解决线程冲突的问题，我们又需要在读写这些变量时加锁。
 
+![Golang-Channel-Share-Memory](index.assets/Golang-Channel-Share-Memory.png)
 
+Go 语言对于并发编程的设计与上述这种共享内存的方式完全不同，虽然我们在 Golang 中也能使用共享内存加互斥锁来实现并发编程，但是与此同时，Go 语言也提供了一种不同的并发模型，也就是 CSP，即通信顺序进程（Communicating sequential processes），Goroutine 其实就是 CSP 中的实体，Channel 就是用于传递信息的通道，使用 CSP 并发模型的 Goroutine 就会通过 Channel 来传递消息。
+
+![Golang-Channel-CSP](index.assets/Golang-Channel-CSP.png)
+
+上图中的两个 Goroutine，一个会负责向 Channel 中发送消息，另一个会负责从 Channel 中接收消息，它们两者并没有任何直接的关联，能够独立地工作和运行，但是间接地通过 Channel 完成了通信。
 
 ## Goroutine
 
@@ -43,6 +50,8 @@ Goroutine 使用方式非常的简单，只需使用 `go` 关键字即可启动�
 go func() // 通过go关键字启动一个协程来运行函数
 ```
 
+## G-P-M 模型调度
+
 Go的调度器内部有四个重要的结构：M，P，S，Sched，如上图所示（Sched 未给出）。
 
 - G：表示 Goroutine，每个 Goroutine 对应一个G结构体，G 存储 Goroutine 的运行堆栈、状态以及任务函数，可重用。G并非执行体，每个 G 需要绑定到 P 才能被调度执行。
@@ -51,14 +60,14 @@ Go的调度器内部有四个重要的结构：M，P，S，Sched，如上图所�
 - Sched：代表调度器，它维护有存储M和G的队列以及调度器的一些状态信息等。
 
 <div align="center">{{< figure src="/image/goroutine1.jpg" style="center">}}</div>
-#### G-P-M 模型调度
+
 
 <div align="center">{{< figure src="/image/goroutine-scheduler-model.png" style="center">}}</div>
 Go 调度器工作时会维护两种用来保存 G 的任务队列：一种是一个 Global 任务队列，一种是每个 P 维护的 Local 任务队列。
 
 当通过` go `关键字创建一个新的 goroutine 的时候，它会优先被放入P 的本地队列。为了运行goroutine，M 需要持有（绑定）一个 P，接着M会启动一个 OS线程，循环从P的本地队列里取出一个 goroutine 并执行。
 
-![](https://www.wingsxdu.com/image/goroutine2.jpg)
+<div align="center">{{< figure src="/image/goroutine2.jpg" style="center">}}</div>
 
 从上图中可以看到，有2个物理线程M，每一个M都拥有一个处理器P，每一个也都有一个正在运行的goroutine。P的数量可以通过GOMAXPROCS()来设置，它其实也就代表了真正的并发度，即有多少个goroutine可以同时运行。
 
@@ -71,8 +80,14 @@ Go 调度器工作时会维护两种用来保存 G 的任务队列：一种是�
 
 一个很简单的例子就是系统调用 `sysall`，一个线程肯定不能同时执行代码和系统调用被阻塞，这个时候，此线程M需要放弃当前的上下文环境 P，以便可以让其他的 `Goroutine` 被调度执行。
 
+## Reference
+
+- [Goroutine 并发调度模型深度解析](https://taohuawu.club/high-performance-implementation-of-goroutine-pool)
+- [Goroutine](https://draveness.me/golang/docs/part3-runtime/ch06-concurrency/golang-goroutine/)
+- 《UNIX 环境高级编程》
+
 ## 相关文章
 
-- [Go 语言并发模型与 Goroutine · Analyze](https://www.wingsxdu.com/post/linux/concurrency-oriented-programming/goroutine/)
+- [Goroutine 与 Go 语言并发模型 · Analyze](https://www.wingsxdu.com/post/linux/concurrency-oriented-programming/goroutine/)
 - [浅论并发编程中的同步问题 · Analyze](https://www.wingsxdu.com/post/linux/concurrency-oriented-programming/synchronous/)
 - [浅析进程与线程的设计 · Analyze](https://www.wingsxdu.com/post/linux/concurrency-oriented-programming/process-and-thread/)
