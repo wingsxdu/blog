@@ -1,6 +1,6 @@
 ---
 author: "beihai"
-title: "Go 语言内存管理"
+title: "Go 语言 GC 机制 · Analyze"
 description: "Golang GC 时会发生什么"
 tags: [
     "Golang",
@@ -56,54 +56,65 @@ Java 的 jvm 就使用的分代回收的思路。在面向对象编程语言中�
 
 ## Golang GC
 
+#### 三色标记法
+
 > Golang 1.5后，采取的是**非分代的、非移动的、并发的、三色的**标记清除垃圾回收算法。
 >
 
-在Go 1.5 后采用的三色标记算法，是对标记-清除算法的改进。
+在Go 1.5 后采用的三色标记算法，是对标记-清除算法的改进，一共分为四个阶段：
 
-当垃圾回收器第⼀次启动的时候，它把所有的对象都看成⽩⾊的，如果这个对象引⽤了另外⼀个对象，那么被引⽤的对象称之为灰⾊的，把灰⾊的放⼊⼀个队列⾥去，那么当它第⼀次扫描完了以后这个⽆⾮就是变成两种状态，⽩⾊的和灰⾊的，⽩⾊的不属于我们要管的。
+1. 栈扫描：当垃圾回收器第⼀次启动的时候，将对象都看成⽩⾊的。初始化GC任务，包括开启写屏障(write barrier)和辅助 GC(mutator assist)，统计 root 对象的任务数量等，将扫描任务作为多个并发的 Goroutine 立即入队给调度器，进而被 CPU 处理。**这个过程需要STW**；
 
-![img](index.assets/mark_sweep_5.png)
+   <div align="center">{{< figure src="/post/golang/gc/index.assets/mark_sweep_5.png" style="center">}}</div>
 
-gc开始：扫描所有可到达的对象，标记为灰色
+2. 第一次标记：第一轮先扫描 root 对象，包括全局指针和 Goroutine 栈上的指针，标记为灰色放入队列：
 
-![img](index.assets/mark_sweep_6.png)
+   <div align="center">{{< figure src="/post/golang/gc/index.assets/mark_sweep_6.png" style="center">}}</div>
 
-从灰色对象中找到其引用对象标记为灰色，把灰色对象本身标记为黑色
+3. 第二次标记：第二轮标记将第一步队列中的对象引用的对象置为灰色加入队列，一个对象引用的所有对象都置灰并加入队列后，将这个对象置为黑色（表示扫描完成），**这个过程也会开启STW的**。
 
-![img](index.assets/mark_sweep_7.png)
+   <div align="center">{{< figure src="/post/golang/gc/index.assets/mark_sweep_7.png" style="center">}}</div>
 
-监视对象中的内存修改，并持续上一步的操作，直到灰色标记的对象不存在
+   一级一级执行下去，最后灰色队列为空时，整个图剩下的白色内存空间即不可到达的对象，即没有被引用的对象；
 
-![img](index.assets/mark_sweep_8.png)
+   <div align="center">{{< figure src="/post/golang/gc/index.assets/mark_sweep_8.png" style="center">}}</div>
 
-此时，gc回收白色对象。
+4. 清除：此时，GC 回收白色对象。
 
-![img](index.assets/mark_sweep_9.png)
+   <div align="center">{{< figure src="/post/golang/gc/index.assets/mark_sweep_9.png" style="center">}}</div>
 
-最后，将所有黑色对象变为白色，并重复以上所有过程。
+   最后，将所有黑色对象变为白色，并重复以上所有过程。
 
-![img](index.assets/mark_sweep_10.png)
 
-GC 的过程一共分为四个阶段：
+<div align="center">{{< figure src="/post/golang/gc/index.assets/mark_sweep_10.png" style="center">}}</div>
 
-1. 栈扫描（开始时 STW）
-2. 第一次标记（并发）
-3. 第二次标记（STW）
-4. 清除（并发）
+在传统的标记-清除算法中 STW 操作时，要把所有的线程全部冻结掉，这意味着在 STW 期间用户逻辑是暂停的。
+而 Golang 三色标记法中最后只剩下的黑白两种对象，黑色对象是程序恢复后继续使用的对象，如果不碰触黑色对象，只清除白色的对象，就不会影响程序逻辑。清除操作和用户逻辑可以并发执行，有效缩短了 STW 时间。
 
-整个进程空间里申请每个对象占据的内存可以视为一个图，初始状态下每个内存对象都是白色标记。
+#### 混合写屏障
 
-1. 先 STW(Stop-The-World) 做一些准备工作，比如打开写屏障。然后取消 STW，将扫描任务作为多个并发的 Goroutine 立即入队给调度器，进而被 CPU 处理；
-2. 第一轮先扫描 root 对象，包括全局指针和 Goroutine 栈上的指针，标记为灰色放入队列;
-3. 第二轮将第一步队列中的对象引用的对象置为灰色加入队列，一个对象引用的所有对象都置灰并加入队列后，这个对象才能置为黑色并从队列之中取出。循环往复，最后队列为空时，整个图剩下的白色内存空间即不可到达的对象，即没有被引用的对象；
-4. 第三轮再次 STW，将第二轮过程中新增对象申请的内存进行标记（灰色），这里使用了写屏障记录。
+由于标记操作和用户逻辑是并发执行的，用户逻辑会时常生成对象或者改变对象的引用。例如把⼀个对象标记为⽩⾊准备回收时，⽤户逻辑突然引⽤了它，或者⼜创建了新的对象。由于对象初始时都看为白色，会被 GC 回收掉，为了解决这个问题，引入了写屏障机制。
 
-Golang GC 优化的核心就是尽量使得 STW(Stop The World) 的时间越来越短。
+GC 对扫描过后的对象使⽤操作系统写屏障功能来监控这段内存。如果这段内存发⽣引⽤改变，写屏障会给垃圾回收期发送⼀个信号，垃圾回收器捕获到信号后就知道这个对象发⽣改变，然后重新扫描这个对象，看看它的引⽤或者被引⽤是否改变。利⽤状态的重置实现当对象状态发⽣改变的时候，依然可以再次其引用的对象。
 
-详细的Golang的GC介绍可以参看[Golang垃圾回收](https://github.com/KeKe-Li/For-learning-Go-Tutorial/blob/master/src/spec/02.0.md)。
+<div align="center">{{< figure src="/post/golang/gc/index.assets/mark_sweep_12.png" style="center">}}</div>
 
-#### 内存优化
+#### 辅助GC
+
+从上面的 GC 工作的完整流程可以看出 Golang GC 实际上把单次暂停时间分散掉了，本来程序执⾏可能是“⽤户代码-->⼤段 GC-->⽤户代码”，分散以后实际上变成了“⽤户代码-->⼩段 GC-->⽤户代码-->⼩段 GC-->⽤户代码”。如果 GC 回收的速度跟不上用户代码分配对象的速度呢？
+Go 语⾔如果发现扫描后回收的速度跟不上分配的速度它依然会把⽤户逻辑暂停，⽤户逻辑暂停了以后也就意味着不会有新的对象出现，同时会把⽤户线程抢过来加⼊到垃圾回收⾥⾯加快垃圾回收的速度。这样⼀来原来的并发还是变成了 STW，还是得把⽤户线程暂停掉，要不然扫描和回收没完没了了停不下来，因为新分配对象⽐回收快，所以这种东⻄叫做辅助回收。
+
+#### GC 触发时机
+
+自动垃圾回收的触发条件有两个：
+
+1. 超过内存大小阈值
+2. 达到定时时间
+   阈值是由一个gcpercent的变量控制的,当新分配的内存占已在使用中的内存的比例超过gcprecent时就会触发。比如一次回收完毕后，内存的使用量为5M，那么下次回收的时机则是内存分配达到10M的时候。也就是说，并不是内存分配越多，垃圾回收频率越高。
+   如果一直达不到内存大小的阈值呢？这个时候GC就会被定时时间触发，比如一直达不到10M，那就定时（默认2min触发一次）触发一次GC保证资源的回收。
 
 通常小对象过多会导致 GC 三色法消耗过多的GPU。在编程过程中，尽可能减少对象分配，如使用结构体变量、减少值传递等。
 
+## Reference 与图片来源
+
+- [图解Golang的GC算法](https://i6448038.github.io/2019/03/04/golang-garbage-collector/)
