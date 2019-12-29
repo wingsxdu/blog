@@ -14,68 +14,58 @@ categories: [
     "字符编码",
 ]
 ---
-##### UTF-8编码
+## UTF-8编码
 
-<span>UTF-8 是一种<strong><span style="color: #ff0000;">变长字节编码</span></strong>方式。对于某一个字符的UTF-8编码，如果只有一个字节则其最高二进制位为0；如果是多字节，其第一个字节从最高位开始，连续的二进制位值为1的个数决定了其编码的位数，其余各字节均以10开头。UTF-8 最多可用到6个字节。</span>
-  
-<span>如表：</span>
-  
-<span>1字节 0xxxxxxx</span>
-  
-<span>2字节 110xxxxx 10xxxxxx</span>
-  
-<span>3字节 1110xxxx 10xxxxxx 10xxxxxx</span>
-  
-<span>4字节 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx</span>
-  
-<span>5字节 111110xx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx</span>
-  
-<span>6字节 1111110x 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx</span>
-  
-<span>因此 UTF-8 中可以用来表示字符编码的实际位数最多有31位，即上表中 x 所表示的位。除去控制位（每字节开头的10等），这些 x 表示的位与 UNICODE 编码是一一对应的，位高低顺序也相同。</span>
-  
-<span>将 UNICODE 转换为 UTF-8 编码时应先去除高位0，然后根据所剩编码的位数决定所需最小的 UTF-8 编码位数。</span>
-  
-<span>UNICODE 兼容 ASCII，只需要一个字节的 UTF-8 编码（7个二进制位）便可以表示。</span>
+UTF-8 是一种<strong><span style="color: #ff0000;">变长字节编码</span></strong>方式。对于某一个字符的 UTF-8 编码，如果只有一个字节则其最高二进制位为 0；如果是多字节，其第一个字节从最高位开始，连续的二进制位值为 1 的个数决定了其编码的位数，其余各字节均以10开头。UTF-8 在设计上最多可用到6个字节。
 
-###### 示例
+如表：
+
+| 字节数 | UTF-8 编码                                            |
+| :----: | :---------------------------------------------------- |
+| 1字节  | 0xxxxxxx                                              |
+| 2字节  | 110xxxxx 10xxxxxx                                     |
+| 3字节  | 1110xxxx 10xxxxxx 10xxxxxx                            |
+| 4字节  | 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx                   |
+| 5字节  | 111110xx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx          |
+| 6字节  | 1111110x 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx |
+
+因此 UTF-8 中可以用来表示字符编码的实际位数最多有31位，即上表中 x 所表示的位。除去控制位（每字节开头的10等），这些 x 表示的位与 UNICODE 编码是一一对应的，位高低顺序也相同。
+
+将 UNICODE 转换为 UTF-8 编码时应先去除高位 0，然后根据所剩编码的位数决定所需最小的 UTF-8 编码位数。
+
+UNICODE 兼容 ASCII，只需要一个字节的 UTF-8 编码便可以表示。
+
+#### 示例
 
 以“9月”为例，展示如何实现 UTF-8 编码。
 
-  * UTF-8 编码：00111001—39—“9”
-  * UTF-8 编码：11100110 10011100 10001000—E6 9C 88—“月”
+  * UTF-8 编码：00111001——UNICODE：**39**——“**9**”
+  * UTF-8 编码：11100110 10011100 10001000——UNICODE：**E6 9C 88**——“**月**”
 
-###### <span>Unicode 与 UTF-8 转换</span>
+#### Unicode 与 UTF-8 转换
 
-<span>Unicode 符号范围 | UTF-8 编码方式</span>
-  
-<span>     (十六进制)      |    （二进制）</span>
-  
-<span>&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;-+&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;</span>
-  
-<span>0000 0000-0000 007F | 0xxxxxxx</span>
-  
-<span>0000 0080-0000 07FF | 110xxxxx 10xxxxxx</span>
-  
-<span>0000 0800-0000 FFFF | 1110xxxx 10xxxxxx 10xxxxxx</span>
-  
-<span>0001 0000-0010 FFFF | 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx</span>
+| Unicode 符号范围（十六进制） | UTF-8 编码方式（二进制）            |
+| :--------------------------: | :---------------------------------- |
+|     0000 0000-0000 007F      | 0xxxxxxx                            |
+|     0000 0080-0000 07FF      | 110xxxxx 10xxxxxx                   |
+|     0000 0800-0000 FFFF      | 1110xxxx 10xxxxxx 10xxxxxx          |
+|     0001 0000-0010 FFFF      | 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx |
 
 汉字“严”为例，已知“严”的 Unicode是 4E25（100 111000 100101），根据上表，4E25 处在第三行的范围内（07FF-FFFF），因此“严”的 UTF-8 编码需要三个字节，即格式是“1110xxxx 10xxxxxx 10xxxxxx”。然后，从“严”的最后一个二进制位开始，依次从后向前填入格式中的x，多出的位补0。因此“严”的UTF-8编码是“11100100 10111000 10100101”，转换成十六进制就是 E4B8A5。
 
-##### Mysql 中的 utf8
+#### Mysql 中的 utf8
 
-<span>Mysql 从 4.1 版本开始支持 utf8 编码，而标准的 UTF-8 编码在其之后才正式发布。准确地说，utf8 的全名应该叫——utf8mb3（max byte 3），其编码的最大字符长度为 3 字节，而三个字节的 UTF-8 最大能编码的 Unicode 字符是 0xFFFF，也就是 Unicode 中的基本多文平面（BMP）。也就是说，任何不在基本多文平面的 Unicode字符，都无法使用MySQL原有的 utf8 字符集存储。</span>
+Mysql 从 4.1 版本开始支持 utf8 编码，而标准的 UTF-8 编码在其之后才正式发布。准确地说，Mysql 中 utf8 的全名应该叫——utf8mb3（max byte 3），其编码的最大字符长度为 3 字节，而三个字节的 UTF-8 最大能编码的 Unicode 字符是 0xFFFF，也就是 Unicode 中的基本多文平面（BMP）。也就是说，任何不在基本多文平面的 Unicode字符，都无法使用MySQL原有的 utf8 字符集存储。
 
 <span>中文基本汉字+基本汉字补充的 Unicode 编码范围为：4E00-9FCB，共计收录 20940个汉字，而</span>扩展 B 编码范围为 20000-2A6D6，扩展 C 为2A700-2B734，扩展 D为 2B740-2B81D，共计 47082 个汉字，以及其他的兼容扩展等。这些编码范围大于 FFFF 的不常用汉字、<span>我们常见的 Emoji 表情（Emoji 是一种特殊的 Unicode 编码）、任何新增的 Unicode 字符等等</span>，在 Mysql 中并不会完整地存储下来，并导致了整个字段的乱码。
 
-<span>于是在 5.5.3 版本中，Mysql 添加了对 utf8mb4 编码的支持，最大字符长度为四字节，也就是说 utf8mb4 才是我们传统意义上的 UTF-8。然而遗憾的是，在 Mysql 的众多分支版本中，只有 8.0.x 分支中默认开启的是 utfmb4，其他分支依然是 utf8 编码——尤其在 linux 系统的源仓库中。</span>
+<span>于是在 5.5.3 版本中，Mysql 添加了对 utf8mb4 编码的支持，最大字符长度为四字节，也就是说 utf8mb4 才是我们传统意义上的 UTF-8。然而遗憾的是，在 Mysql 的众多分支版本中，只有 8.0.x 分支中默认开启的是 utfmb4，其他分支默认依然是 utf8 编码。</span>
 
 <p class="title-article" style="text-align: center;">
-  <span style="color: #ff0000;"><strong>永远不要在MySQL中使用 utf8，改用 utf8mb4。</strong></span>
+  <span style="color: #ff0000;"><strong>所以，永远不要在MySQL中使用 utf8，改用 utf8mb4。</strong></span>
 </p>
 
-##### MySQL 简史
+## MySQL 简史
 
 为什么 MySQL 开发者会让“utf8”失效?我们或许可以从提交日志中寻找答案。
 
