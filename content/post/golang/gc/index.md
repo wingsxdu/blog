@@ -74,20 +74,17 @@ Java 的 jvm 就使用的分代回收的思路。在面向对象编程语言中�
 3. 第二次标记：第二轮标记将第一步队列中的对象引用的对象置为灰色加入队列，一个对象引用的所有对象都置灰并加入队列后，将这个对象置为黑色（表示扫描完成），**这个过程也会开启STW的**。
 
    <div align="center">{{< figure src="/post/golang/gc/index.assets/mark_sweep_7.png" style="center">}}</div>
-
-   一级一级执行下去，最后灰色队列为空时，整个图剩下的白色内存空间即不可到达的对象，即没有被引用的对象；
-
-   <div align="center">{{< figure src="/post/golang/gc/index.assets/mark_sweep_8.png" style="center">}}</div>
-
+一级一级执行下去，最后灰色队列为空时，整个图剩下的白色内存空间即不可到达的对象，即没有被引用的对象；
+   
+<div align="center">{{< figure src="/post/golang/gc/index.assets/mark_sweep_8.png" style="center">}}</div>
+   
 4. 清除：此时，GC 回收白色对象。
 
    <div align="center">{{< figure src="/post/golang/gc/index.assets/mark_sweep_9.png" style="center">}}</div>
-
-   最后，将所有黑色对象变为白色，并重复以上所有过程。
+最后，将所有黑色对象变为白色，并重复以上所有过程。
 
 
 <div align="center">{{< figure src="/post/golang/gc/index.assets/mark_sweep_10.png" style="center">}}</div>
-
 在传统的标记-清除算法中 STW 操作时，要把所有的线程全部冻结掉，这意味着在 STW 期间用户逻辑是暂停的。
 而 Golang 三色标记法中最后只剩下的黑白两种对象，黑色对象是程序恢复后继续使用的对象，如果不碰触黑色对象，只清除白色的对象，就不会影响程序逻辑。清除操作和用户逻辑可以并发执行，有效缩短了 STW 时间。
 
@@ -98,7 +95,6 @@ Java 的 jvm 就使用的分代回收的思路。在面向对象编程语言中�
 GC 对扫描过后的对象使⽤操作系统写屏障功能来监控这段内存。如果这段内存发⽣引⽤改变，写屏障会给垃圾回收期发送⼀个信号，垃圾回收器捕获到信号后就知道这个对象发⽣改变，然后重新扫描这个对象，看看它的引⽤或者被引⽤是否改变。利⽤状态的重置实现当对象状态发⽣改变的时候，依然可以再次其引用的对象。
 
 <div align="center">{{< figure src="/post/golang/gc/index.assets/mark_sweep_12.png" style="center">}}</div>
-
 #### 辅助GC
 
 从上面的 GC 工作的完整流程可以看出 Golang GC 实际上把单次暂停时间分散掉了，本来程序执⾏可能是“⽤户代码-->⼤段 GC-->⽤户代码”，分散以后实际上变成了“⽤户代码-->⼩段 GC-->⽤户代码-->⼩段 GC-->⽤户代码”。如果 GC 回收的速度跟不上用户代码分配对象的速度呢？
@@ -118,3 +114,9 @@ Go 语⾔如果发现扫描后回收的速度跟不上分配的速度它依然�
 ## Reference 与图片来源
 
 - [图解Golang的GC算法](https://i6448038.github.io/2019/03/04/golang-garbage-collector/)
+
+## 相关文章
+
+- [内存空洞](https://www.wingsxdu.com/post/golang/golang-memory-holes/)
+- [Go 语言 GC 机制 · Analyze](https://www.wingsxdu.com/post/golang/gc)
+- [Goroutine 与 Go 语言并发模型 · Analyze](https://www.wingsxdu.com/post/golang/goroutine)

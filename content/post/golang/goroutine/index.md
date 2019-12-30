@@ -111,15 +111,13 @@ Go 的运行时还包含了其自己的调度器，这个调度器使用了一�
 Go 的调度器内部有三个重要的结构：M、P、G。
 
 <div align="center">{{< figure src="/post/golang/goroutine/index.assets/mpg.jpg">}}</div>
-
 - M：Machine，表示的是操作系统线程，代表着真正执行计算的资源。M 并不保留 G 状态，这是 G 可以跨 M 调度的基础。M 的数量是不定的，在默认情况下调度器能够允许创建 `10000` 个线程，但是其中绝大多数的线程都不会执行用户代码（可能陷入系统调用），最多只会有 `GOMAXPROCS` 个线程 M 能够正常运行。
-- P： Processor，表示逻辑处理器。 对 G 来说，P 相当于 CPU 核，G 只有绑定到 P （在 P 的 local  队列中）才能被调度。对 M 来说，P 提供了相关的执行环境，如内存分配状态、任务队列等， P 的数量决定了系统内最大可并行的 G 的数量（前提物理 CPU 核数 >= P 的数量）。P 的数量可由`GOMAXPROCS`设置，默认等于 CPU 数量，它其实也就代表了真正的并发度，即有多少个goroutine可以同时运行。
+- P： Processor，表示逻辑处理器。 对 G 来说，P 相当于 CPU 核，G 只有绑定到 P （在 P 的 local  队列中）才能被调度。对 M 来说，P 提供了相关的执行环境，如内存分配状态、任务队列等， P 的数量决定了系统内最大可并行的 G 的数量（前提物理 CPU 核数 >= P 的数量）。P 的数量可由`GOMAXPROCS`设置，默认等于 CPU 数量，它其实也就代表了真正的并发度，即有多少个 Goroutine 可以同时运行。
 - G：Goroutine，每个 Goroutine 对应一个`g` 结构体，`g` 存储 Goroutine 的运行堆栈、状态以及任务函数，可重用。G 并非执行体，每个 G 需要绑定到 P 才能被调度执行。
 
 当通过` go `关键字创建一个新的 Goroutine 的时候，它会优先被放入 P 的本地队列。为了运行 Goroutine，M 需要持有一个 P，循环从 P 的本地队列里取出一个 Goroutine 并执行。
 
 <div align="center">{{< figure src="/post/golang/goroutine/index.assets/goroutine2.jpg" style="center">}}</div>
-
 从上图中可以看到，有 2 个物理线程 M，每一个 M 都拥有一个处理器 P，每一个 P 也都有一个正在运行的 Goroutine 和多个等待中的 Goroutine。
 
 在绑定有效的 P 后，进入调度器循环。调度器循环的机制大致是从 Global 队列、P 的 Local 队列以及 Wait 队列中获取 G，切换到 G 的执行栈上并执行 G 的函数，调用 goexit 做清理工作并回到 M，如此反复。M 并不保留 G 状态，这是 G 可以跨 M 调度的基础。
@@ -160,8 +158,6 @@ Go 调度器工作时会维护两种用来保存 G 的任务队列：一种是�
 <div align="center">{{< figure src="/image/goroutine3.jpg" style="center">}}</div>
 对于异步的情况，G 可能在等待一些网络 I/O，M 不会被阻塞，G 的异步请求会被对应的 I/O 接手，G 也会被绑定到对应的 I/O 上。当等待结束后，G 会重新回到 P 上。M 由于没被阻塞，它因此可以继续执行 Local 队列里的其他 G。
 
-
-
 ## Reference 与图片来源
 
 - [Goroutine 并发调度模型深度解析](https://taohuawu.club/high-performance-implementation-of-goroutine-pool)
@@ -173,6 +169,6 @@ Go 调度器工作时会维护两种用来保存 G 的任务队列：一种是�
 
 ## 相关文章
 
-- 
+- [内存空洞](https://www.wingsxdu.com/post/golang/golang-memory-holes/)
 - [Go 语言 GC 机制 · Analyze](https://www.wingsxdu.com/post/golang/gc)
 - [Goroutine 与 Go 语言并发模型 · Analyze](https://www.wingsxdu.com/post/golang/goroutine)

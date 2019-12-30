@@ -19,11 +19,9 @@ draft: false
 计算机在加载和保存数据时，如果内存地址合理地对齐的将会更有效率。例如 2 字节大小的 int16 类型的变量地址应该是偶数，一个 4 字节大小的 rune 类型变量的地址应该是 4 的倍数，一个 8 字节大小的 float64、uint64 或 64-bit 指针类型变量的地址应该是 8 字节对齐的。但是对于再大的地址对齐倍数则是不需要的，即使是 complex128 等较大的数据类型最多也只是 8 字节对齐。
 <!--more-->
 
-## 内存空洞的产生
+## 内存空洞
 
 由于地址对齐这个因素，一个聚合类型（结构体或数组）的大小至少是所有字段或元素大小的总和，或者更大，因为可能存在内存空洞。内存空洞是编译器自动添加的没有被使用的内存空间，用于保证后面每个字段或元素的地址相对于结构或数组的开始地址能够合理地对齐（内存空洞可能会存在一些随机数据，可能会对直接操作内存的处理产生影响）。
-
-## unsafe 包分析内存
 
 #### Go 语言中类型大小
 
@@ -40,7 +38,7 @@ draft: false
 | `chan`                          | 1个机器字                       |
 | `interface`                     | 2个机器字(type,value)           |
 
-#### unsafe.Sizeof, Alignof 和 Offsetof
+#### unsafe 包分析
 
 `unsafe.Sizeof` 函数返回操作数在内存中的字节大小，参数可以是任意类型的表达式，但是它并不会对表达式进行求值。一个 Sizeof 函数调用是一个对应 uintptr 类型的常量表达式，因此返回的结果可以用作数组类型的长度大小，或者用作计算其他的常量。
 
@@ -65,9 +63,10 @@ var x struct {
 }
 ```
 
-下面显示了对x和它的三个字段调用unsafe包相关函数的计算结果：
-
 <div align="center">{{< figure src="/image/holes_in_struct.png">}}</div>
+
+下面显示了对 x 和它的三个字段调用 unsafe 包相关函数的计算结果：
+
 32位系统：
 
 ```go
@@ -86,8 +85,6 @@ Sizeof(x.b) = 2   Alignof(x.b) = 2 Offsetof(x.b) = 2
 Sizeof(x.c) = 24  Alignof(x.c) = 8 Offsetof(x.c) = 8
 ```
 
-
-
 Go语言的规范并没有要求一个字段的声明顺序和内存中的顺序是一致的，所以理论上一个编译器可以随意地重新排列每个字段的内存位置。下面的三个结构体虽然有着相同的字段，但是第一种写法比另外的两个需要多50%的内存。
 
 ```Go
@@ -97,7 +94,7 @@ struct{ float64; int16; bool } // 2 words 3words
 struct{ bool; int16; float64 } // 2 words 3words
 ```
 
-在 [Issue10014](https://github.com/golang/go/issues/10014) 中曾有开发者表示，或许可以引入一种表示法对内存进行排序，如下示例：
+在 [Issue10014](https://github.com/golang/go/issues/10014) 中曾有开发者希望，或许可以引入一种表示法对内存进行排序，如下示例：
 
 ```go
 type S struct {
@@ -108,3 +105,10 @@ type S struct {
 }
 ```
 
+但目前还无法实现，只能在编码阶段多加注意这个问题。
+
+## 相关文章
+
+- [内存空洞](https://www.wingsxdu.com/post/golang/golang-memory-holes/)
+- [Go 语言 GC 机制 · Analyze](https://www.wingsxdu.com/post/golang/gc)
+- [Goroutine 与 Go 语言并发模型 · Analyze](https://www.wingsxdu.com/post/golang/goroutine)
