@@ -3,12 +3,12 @@ author: "beihai"
 title: "Go 语言 GC 机制 · Analyze"
 description: "Golang GC 时会发生什么"
 tags: [
+    "Analyze",
     "Golang",
-    "实现原理",
-    "底层",
 ]
 categories: [
     "Golang",
+    "Analyze",
 ]
 date: 2019-09-27T21:42:49+08:00
 draft: false
@@ -77,7 +77,6 @@ Java 的 jvm 就使用的分代回收的思路。在面向对象编程语言中�
 一级一级执行下去，最后灰色队列为空时，整个图剩下的白色内存空间即不可到达的对象，即没有被引用的对象；
    
 <div align="center">{{< figure src="/post/golang/gc/index.assets/mark_sweep_8.png" style="center">}}</div>
-   
 4. 清除：此时，GC 回收白色对象。
 
    <div align="center">{{< figure src="/post/golang/gc/index.assets/mark_sweep_9.png" style="center">}}</div>
