@@ -193,5 +193,6 @@ Linux 系统中，进程每个时刻都是有状态的，其可能的状态通�
 
 ## 相关文章
 
+- [为什么进程 fork 采用写时复制 · Why](https://www.wingsxdu.com/post/linux/concurrency-oriented-programming/fork-and-cow/)
 - [浅论并发编程中的同步问题 · Analyze](https://www.wingsxdu.com/post/linux/concurrency-oriented-programming/synchronous/)
 - [浅析进程与线程的设计 · Analyze](https://www.wingsxdu.com/post/linux/concurrency-oriented-programming/process-and-thread/)
