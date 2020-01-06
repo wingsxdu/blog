@@ -1,5 +1,5 @@
 ---
-title: "浅析 Redis 数据结构的设计与实现 · Analyze"
+title: "Redis 数据结构的设计与实现 · Analyze"
 author: "beihai"
 description: "浅析 Redis 数据结构"
 summary: "<blockquote><p>并发这个概念由来已久，其主要思想是使多个任务可以在同一个时间段内下执行以便更快地得到结果。最早支持并发编程的语言是汇编语言，不过那时并没有任何的理论基础来支持这种编程方式，一个细微的编程错误就可能使程序变得非常不稳定，而且对程序的测试也几乎是不可能的。随着计算机软硬件技术的发展，如今并发程序的编写早已没有以前那么复杂。做为并发编程中的底层基础，本篇文章将会浅入浅出，简要分析进程与线程的设计原理。</p></blockquote>"
@@ -70,22 +70,11 @@ Redis 针对长度不同的字符串做了优化，选取不同的数据类型�
 
 ![sdshdr-memory](index.assets/sdshdr-memory.png)
 
-上文提到的`sds`就是一个指向 buf[] 的指针，而不是指向`sdshdr`结构体，这样做可以兼容部分 C 语言 API，直接对字符串进行处理。结构体`sdshdr`中的其他成员属性，可以通过指针偏移获取，例如获取当前字符串长度：
+上文提到的`sds`就是一个指向 buf[] 的指针，而不是指向`sdshdr`结构体，这样做可以兼容部分 C 语言 API，直接对字符串进行处理。结构体`sdshdr`中的其他成员属性，可以通过指针偏移获取，例如获取 flags 值：
 
 ```c
-// 获取 sds 当前长度
-static inline size_t sdslen(const sds s) {
-    // s[-1] 指向了 flags 字段
-    unsigned char flags = s[-1];
-    switch(flags&SDS_TYPE_MASK) {
-        case SDS_TYPE_5:
-            return SDS_TYPE_5_LEN(flags);
-        case SDS_TYPE_8:
-            return SDS_HDR(8,s)->len;
-		...
-    }
-    return 0;
-}
+// s[-1] 指向了 flags 字段
+unsigned char flags = s[-1];
 ```
 
 传统的 C 字符串使用长度为 N+1 的字符串数组来表示长度为 N 的字符串，所以为了获取一个长度为 C 字符串的长度，必须遍历整个字符串。但在`SDSHeader`数据结构中，有专门用于保存字符串长度的变量，我们可以通过获取len 属性的值，直接知道字符串长度。其时间复杂度由*O*(*n*) 降至*O*(*1*)。
@@ -138,4 +127,75 @@ SDS 的设计策略为尽可能降低响应时间，降低某些操作的时间�
 | 修改字符串 N 次必然需要执行 N 次内存重分配 | 修改字符串 N 次最多执行 N 次内存重分配 |
 | 只能保存文本数据                           | 二进制安全，可以保存二进制和文本数据   |
 
-## 
+## 链表
+
+链表是一种常见的数据结构，在 Redis 中使用非常广泛，列表对象的底层实现之一就是链表。在慢查询，发布订阅，监视器等功能中也用到了链表。Redis 链表使用双向无环链表，提供了高效的节点重排能力和节点访问方式，并且可以通过增删来灵活的调整链表的长度。链表的相关实现在[adlist.h](https://github.com/antirez/redis/blob/unstable/src/adlist.h)文件中。
+
+#### 数据结构
+
+Redis 中使用`listNode`表示，
+
+```c
+typedef struct listNode {
+    struct listNode *prev; // 前置节点指针
+    struct listNode *next; // 后置节点指针
+    void *value;           // 该节点值指针
+} listNode;
+```
+
+双向链表具有以下特点：
+
+- 双向：链表节点带有 prev 和 next 指针，获取某一个节点的前置节点和后置节点的复杂度都是*O*(*1*)，也可以从两边插入数据；
+- 无环：表头节点的 prev 指针和表尾节点的 next 指针都指向 NULL，对链表的访问以 NULL 结束。
+
+ 同时 Redis 为了方便的操作链表，提供了一个 list 结构来持有链表：
+
+```c
+typedef struct list {
+    listNode *head; // 表头节点
+    listNode *tail; // 表尾节点
+    void *(*dup)(void *ptr); // 节点值复制函数
+    void (*free)(void *ptr); // 节点释放函数
+    int (*match)(void *ptr, void *key); // 节点比较函数
+    unsigned long len; // 链表所包含的节点数量
+} list;
+```
+
+- list 结构体带有表头和表尾指针：通过 head 和 tail 指针，获得链表的表头和表尾节点的复杂度为*O*(*1*)。
+- 链表长度计数器：通过 list 字段 len，获取链表长度的复杂度为*O*(*1*)。
+- 多态：链表节点使用`void *`来保存节点值，可以通过函数 dup，free，match 对节点的值进行操作，所以链表可以保存不同的类型的值。
+
+
+
+![img](index.assets/3733798-5e7204ededeee22e.webp)
+
+
+
+#### 小结
+
+| 操作\时间复杂度                   | 数组 | 单链表 | 双向链表 |
+| --------------------------------- | ---- | ------ | -------- |
+| rpush(从右边添加元素)             | O(1) | O(1)   | O(1)     |
+| lpush(从左边添加元素)             | 0(N) | O(1)   | O(1)     |
+| lpop (从右边删除元素)             | O(1) | O(1)   | O(1)     |
+| rpop (从左边删除元素)             | O(N) | O(1)   | O(1)     |
+| lindex(获取指定索引下标的元素)    | O(1) | O(N)   | O(N)     |
+| len (获取长度)                    | O(N) | O(N)   | O(1)     |
+| linsert(向某个元素前或后插入元素) | O(N) | O(N)   | O(1)     |
+| lrem (删除指定元素)               | O(N) | O(N)   | O(N)     |
+| lset (修改指定索引下标元素)       | O(N) | O(N)   | O(N)     |
+
+我们可以看到在列表对象常用的操作中双向链表的响应速度优势很大。但双向链表因为使用两个额外的空间存储前驱和后继指针，在数据量较小的情况下会造成空间上的浪费，因此用于数据量较大的场景。这是一个空间换时间的思想问题，做为补充，当对象中数据量较小的时候会使用压缩列表。
+
+## 压缩列表
+
+
+
+
+
+
+
+## Reference
+
+- [Redis(5.0.3)源码分析之 sds 对象](http://cbsheng.github.io/posts/redis%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E4%B9%8Bsds%E5%AF%B9%E8%B1%A1/)
+- 
