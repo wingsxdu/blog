@@ -57,11 +57,11 @@ defaultContentLanguage = "zh-cn"           # Default language to use
   weight = 40
   identifier = "categories"
   url = "/categories/"
-[[menu.main]]
-  name = "About"
-  weight = 50             # 直接进入页面 menu 无法高亮先显示
-  identifier = "about"
-  url = "/about/"
+# [[menu.main]]
+#   name = "About"
+#   weight = 50             # 直接进入页面 menu 无法高亮先显示
+#   identifier = "about"
+#   url = "/about/"
 
 [author]                  # essential                     # 必需
   name = "beihai"
