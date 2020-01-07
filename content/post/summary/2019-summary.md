@@ -1,7 +1,7 @@
 ---
 title: "2019 年总结："
 author: "beihai"
-description: "面向并发编程"
+description: "。。。"
 summary: "<blockquote><p></p></blockquote>"
 tags: [
     "总结",

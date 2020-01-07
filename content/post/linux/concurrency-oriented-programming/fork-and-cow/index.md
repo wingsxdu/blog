@@ -18,8 +18,6 @@ categories: [
 date: 2019-12-30T22:07:48+08:00
 draft: false
 ---
-> ***为什么**（Why do this）是一系列对计算机科学领域中的选择与决策进行探究。如果你有想了解的问题、错误指正，可以在文章下面留言。* 
-
 `fork`是目前使用最广泛的进程创建机制，进程通过系统调用函数`fork`能够创建若干个新的进程，前者称为父进程，后者称为子进程。为了减少进程创建的开销，现代操作系统会使用**写时复制**技术，父进程与子进程共享同一内存空间，从而实现数据的“拷贝”，这篇文章将会分析这个问题。
 
 ![fork and cow](index.assets/fork-and-cow.png)
@@ -119,9 +117,9 @@ int main(void) {
 
 ## Reference
 
+- [为什么 Redis 快照使用子进程 · Why's THE Design?](https://draveness.me/whys-the-design-redis-bgsave-fork)
 - [进程地址空间分布](https://blog.csdn.net/wangxiaolong_china/article/details/6844325)
 - [fork 函数详解](https://www.yanbinghu.com/2019/08/11/28423.html)
-- [为什么 Redis 快照使用子进程 · Why's THE Design?](https://draveness.me/whys-the-design-redis-bgsave-fork)
 
 ## 相关文章
 
