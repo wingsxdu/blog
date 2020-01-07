@@ -121,6 +121,7 @@ int main(void) {
 
 - [进程地址空间分布](https://blog.csdn.net/wangxiaolong_china/article/details/6844325)
 - [fork 函数详解](https://www.yanbinghu.com/2019/08/11/28423.html)
+- [为什么 Redis 快照使用子进程 · Why's THE Design?](https://draveness.me/whys-the-design-redis-bgsave-fork)
 
 ## 相关文章
 
