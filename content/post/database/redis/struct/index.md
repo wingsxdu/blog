@@ -21,7 +21,7 @@ draft: true
 
 ## SDS
 
-SDS 是 Redis 中广泛使用的字符串结构，它的全称是 Simple Dynamic String（简单动态字符串）。SDS 字符串可以看做是对 C 字符串的进一步封装，但是内部实现十分巧妙，有效避免了内存溢出、申请销毁开销过大等问题。其相关实现定义在 [sds.h](https://github.com/antirez/redis/blob/unstable/src/sds.h) 文件中。
+SDS 是 Redis 中广泛使用的字符串结构，它的全称是 Simple Dynamic String（简单动态字符串）。SDS 字符串可以看做是对 C 字符串的进一步封装，但是内部实现十分巧妙，有效避免了内存溢出、申请销毁开销过大等问题。其相关实现定义在 [sds.c](https://github.com/antirez/redis/blob/unstable/src/sds.c) 文件中。
 
 #### 数据结构
 
@@ -31,7 +31,7 @@ SDS 是 Redis 中广泛使用的字符串结构，它的全称是 Simple Dynamic
 typedef char *sds;
 ```
 
-因此 SDS 和传统的 C 字符串保持类型兼容，在底层的类型定义都是一个指向 char 类型的指针。但两者之间并不等价，在 SDS 中还定义了一系列 SDSHeader 结构体：
+因此 SDS 和传统的 C 字符串保持类型兼容，在底层的类型定义都是一个指向`char`类型的指针。但两者之间并不等价，在 SDS 中还定义了一系列 SDSHeader 结构体：
 
 ```c
 struct __attribute__ ((__packed__)) sdshdrX { // X 代表 bit 长度
@@ -127,11 +127,11 @@ SDS 的设计策略为尽可能降低响应时间，降低某些操作的时间�
 
 ## 链表
 
-链表是一种常见的数据结构，在 Redis 中使用非常广泛，列表对象的底层实现之一就是链表。Redis 链表使用双向无环链表，提供了高效的节点重排能力和节点访问方式，并且可以通过左/右增删来灵活的调整链表的长度。链表的相关实现在[adlist.h](https://github.com/antirez/redis/blob/unstable/src/adlist.h)文件中。
+链表是一种常见的数据结构，在 Redis 中使用非常广泛，列表对象的底层实现之一就是链表。Redis 链表使用双向无环链表，提供了高效的节点重排能力和节点访问方式，并且可以通过左/右增删来灵活的调整链表的长度。链表的相关实现在[adlist.c](https://github.com/antirez/redis/blob/unstable/src/adlist.c)文件中。
 
 #### 数据结构
 
-Redis 中使用`listNode`表示链表：
+Redis 中使用`listNode`表示链表节点：
 
 ```c
 typedef struct listNode {
@@ -141,33 +141,51 @@ typedef struct listNode {
 } listNode;
 ```
 
-双向链表具有以下特点：
+该双向链表具有以下特点：
 
-- 双向：链表节点带有 prev 和 next 指针，获取某一个节点的前置节点和后置节点的复杂度都是*O*(*1*)；
+- 双向：链表节点带有 prev 和 next 指针，因此可以进行双向遍历；
 - 无环：表头节点的 prev 指针和表尾节点的 next 指针都指向 NULL，对链表的访问以 NULL 结束。
 
- 同时 Redis 为了方便的操作链表，提供了一个 list 结构来持有链表：
+ 同时 Redis 为了方便的操作链表，提供了一个 list 结构体来持有链表节点：
 
 ```c
 typedef struct list {
-    listNode *head; // 表头节点
-    listNode *tail; // 表尾节点
+    listNode *head; // 表头节点指针
+    listNode *tail; // 表尾节点指针
     void *(*dup)(void *ptr); // 节点值复制函数
-    void (*free)(void *ptr); // 节点释放函数
-    int (*match)(void *ptr, void *key); // 节点比较函数
-    unsigned long len; // 链表所包含的节点数量
+    void (*free)(void *ptr); // 节点值释放函数
+    int (*match)(void *ptr, void *key); // 节点值比较函数
+    unsigned long len; // 链表包含的节点数量
 } list;
 ```
 
-- list 结构体带有表头和表尾指针：通过 head 和 tail 指针，获得链表的表头和表尾节点的复杂度为*O*(*1*)。
-- 链表长度计数器：通过 list 字段 len，获取链表长度的复杂度为*O*(*1*)。
-- 多态：链表节点使用`void *`来保存节点值，可以通过函数 dup，free，match 对节点的值进行操作，所以链表可以保存不同的类型的值。
-
-
+- head 和 tail：list 结构体带有表头和表尾指针，获得链表的表头和表尾节点的时间复杂度为*O*(*1*)。
+-  len：链表长度计数器，通过该字段获取链表长度的时间复杂度为。
+- 多态：链表节点使用`void *`来保存节点值，所以链表可以保存不同的类型的值，可以通过函数 dup、free、match 对节点值进行操作，。
 
 ![img](index.assets/3733798-5e7204ededeee22e.webp)
 
 
+
+#### 迭代器
+
+Redis 为双向链表实现了一个迭代器， 利用迭代器可以从两个方向对链表进行迭代：
+
+```c
+typedef struct listIter {
+    // 当前迭代到的节点
+    listNode *next;
+    // 迭代方向
+    int direction;
+} listIter;
+
+// 迭代器方向：从表头向表尾进行迭代
+#define AL_START_HEAD 0
+// 从表尾到表头进行迭代
+#define AL_START_TAIL 1
+```
+
+Redis 通过调用`listGetIterator`函数创建一个链表的迭代器，当迭代器调用`listNext`函数时返回被迭代到的链表节点。
 
 #### 小结
 
@@ -183,13 +201,44 @@ typedef struct list {
 | lrem (删除指定元素)               | O(N) | O(N)   | O(N)     |
 | lset (修改指定索引下标元素)       | O(N) | O(N)   | O(N)     |
 
-我们可以看到在列表对象常用的操作中双向链表的响应速度优势很大。但双向链表因为使用两个额外的空间存储前驱和后继指针，在数据量较小的情况下会造成空间上的浪费，因此用于数据量较大的场景。这是一个空间换时间的思想问题，做为补充，当对象中数据量较小的时候会使用压缩列表。
+通过上表我们可以看到，列表对象常用的操作中双向链表的响应速度优势很大。但双向链表因为使用两个额外的空间存储前置节点与后置节点指针，在数据量较小的情况下会造成空间上的浪费。这是一个空间换时间的思想问题，因此当对象中数据量较小的时候，Redis 内部会使用压缩列表作为补充。
 
 ## 压缩列表
 
+压缩列表（ziplist）是为了尽可能地节约内存而设计的特殊编码双端链表，可以储存字符串值和整数值。其中，整数值被保存为实际的整数（二进制形式），而不是字符串。在压缩列表两端进行 push 或 pop 操作时 T =*O*(*1*)。链表的相关实现在[ziplist.c](https://github.com/antirez/redis/blob/unstable/src/ziplist.c)文件中。
 
+#### 数据结构
 
+通常情况下一个压缩列表的布局如下：
 
+```
+<zlbytes> <zltail> <zllen> <entry> <entry> ... <entry> <zlend>
+```
+
+-  <uint32_t zlbytes> 是一个 32 位无符号整数，保存着`ziplist`使用的字节数量，包含 zlbytes 自己占用的四个字节。 通过这个值可以直接对`ziplist`的内存大小进行调整，无须为了计算内存大小进行遍历操作；
+- <uint32_t zltail> 保存着到达列表中最后一个节点的偏移量，因此对表尾进行 pop 操作时无须遍历整个列表；
+- <uint16_t zllen> 保存着列表中的节点数量，如果节点数量大于 2^16^-2，即 zllen 值为 2^16^-1 时，需要对 ziplist 进行遍历才能知道节点数量；
+- <uint8_t zlend> 是 ziplist 的结束标记，值固定为 255。
+
+`entry`表示一个压缩列表节点，一个节点的完整结构如下：
+
+```c
+<prevlen> <encoding> <entry-data>
+```
+
+- <prevlen> 保存着前置节点长度，其编码方式如下：
+
+  1) 如果前置节点的长度小于 254 字节，只使用 1 个字节来保存这个长度值；
+
+  2) 如果前置节点的长度大于等于 254 字节，将使用 5 个字节来保存这个长度值：其中第 1 个字节的值将被设为 254 ，用于标识这是一个 5 字节长的长度值，之后的 4 个字节则用于保存前置节点的实际长度。
+
+- <encoding> 的编码方式取决于节点存储的值：
+
+  1) 如果节点保存的是字符串值，<encoding> 的前 2 位标识字符串长度类型，后面跟着的内容则是字符串的实际长度；
+
+  2) 如果节点保存的是整数类型，<encoding> 的前2位都将被设置为 1 ,而之后跟着的 2 位则用于标识节点所保存的整数的类型。
+
+  
 
 
 
