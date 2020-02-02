@@ -1,7 +1,8 @@
+---
 title: "Redis 数据结构的设计与实现 · Analyze"
 author: "beihai"
-description: "浅析 Redis 数据结构"
-summary: "<blockquote><p> </p></blockquote>"
+description: "Redis 数据结构的设计与实现"
+summary: "<blockquote><p>Redis 对外提供了六种键值对供开发者使用，而实际上在底层采用了多种基础数据结构来存储信息，并且会在必要的时刻进行类型转换。文章将会逐一介绍这些数据结构，以及它们的独特之处。</p></blockquote>"
 tags: [
     "Analyze",
     "数据库",
@@ -11,9 +12,14 @@ tags: [
 categories: [
     "Analyze",
 	"数据库",
+	"Redis",
 ]
 date: 2020-01-04T22:43:30+08:00
 draft: false
+---
+## 前言
+
+Redis 对外提供了六种键值对供开发者使用，而实际上在底层采用了多种基础数据结构来存储信息，并且会在必要的时刻进行类型转换。文章将会逐一介绍这些数据结构，以及它们的独特之处。
 
 ## SDS
 
@@ -785,8 +791,118 @@ intset *intsetNew(void) {
 
 intset 用于有序、无重复地保存多个整数值，会根据元素的值，自动选择该用什么长度的整数类型来保存元素。当一个位长度更长的整数值添加到 intset 时，需要对 intset 进行升级。而且 intset 是有序的，Redis 使用二分法来实现查找操作，复杂度为*O(lgN)*，查找速度较快。
 
+## Radix tree
+
+Redis 实现了不定长压缩前缀的 radix tree，用于 streams 键的底层数据结构。它是一种基于存储空间优化的前缀树数据结构，实现在[rax.c](https://github.com/antirez/redis/blob/unstable/src/rax.c)中通常来讲, 一个基数树的结构如下所示：
+
+```c
+ *              (f) ""
+ *                \
+ *                (o) "f"
+ *                  \
+ *                  (o) "fo"
+ *                    \
+ *                  [t   b] "foo"
+ *                  /     \
+ *         "foot" (e)     (a) "foob"
+ *                /         \
+ *      "foote" (r)         (r) "fooba"
+ *              /             \
+ *    "footer" []             [] "foobar"
+```
+
+> 然而，当前的代码实现使用了一种非常常见的优化策略，把只有单个字符的连续几个节点压缩成一个节点，这个节点有一个字符串，不再是只存储单个字符，因此上述结构可以优化成如下结构：
+
+```c
+ *                  ["foo"] ""
+ *                     |
+ *                  [t   b] "foo"
+ *                  /     \
+ *        "foot" ("er")    ("ar") "foob"
+ *                 /          \
+ *       "footer" []          [] "foobar"
+```
+
+但是这种优化使得具体实现更加复杂，例如在上面的 radix tree 中添加一个键"first"，则必须对节点进行分割操作，因为"foo"不再是一个单一的节点组成：
+
+```c
+*                    (f) ""
+ *                    /
+ *                 (i o) "f"
+ *                 /   \
+ *    "firs"  ("rst")  (o) "fo"
+ *              /        \
+ *    "first" []       [t   b] "foo"
+ *                     /     \
+ *           "foot" ("er")    ("ar") "foob"
+ *                    /          \
+ *          "footer" []          [] "foobar"
+```
+
+当要删除这个 key 时，还需要把节点合并。
+
+#### 数据结构
+
+一个 rax 节点使用结构体`RaxNode`表示：
+
+```c
+typedef struct raxNode {
+    // 表示这个节点是否包含 key
+    uint32_t iskey:1;     /* Does this node contain a key? */
+    // 是否存储 value 值，如果存储元数据就只有 key，没有value
+    uint32_t isnull:1;    /* Associated value is NULL (don't store it). */
+    // 节点是否压缩
+    uint32_t iscompr:1;   /* Node is compressed. */
+    // 该节点存储的字符个数
+    uint32_t size:29;     /* Number of children, or compressed string len. */
+    // 存储子节点的信息
+    unsigned char data[];
+} raxNode;
+```
+
+raxNode 的数据有两种存储布局：
+
+- 非压缩模式下，节点中会保存size个指向子节点的指针，size 个字符之间互相没有路径联系，数据存储布局是：`[header iscompr=0][abc][a-ptr][b-ptr][c-ptr](value-ptr?)`；
+- 压缩模式下，只会有一个子节点，只会保存一个指向子节点的指针，size 个字符是压缩字符片段，数据存储布局是：`[header iscompr=1][xyz][z-ptr](value-ptr?)`。
+
+`rax` 是一个树的结构，记录树根，元素数量以及节点数量：
+
+```c
+typedef struct rax {
+    raxNode *head;
+    uint64_t numele;
+    uint64_t numnodes;
+} rax;
+```
+
+插入一个新元素是，可能会生成多个 raxNode 节点，因此 numele >= numnodes。在radix tree中，如果连续的节点都是只有一个子节点，则这些节点可以被压缩成一个压缩节点。节点合并需要满足一定的条件：
+
+- iskey=1 的节点不能合并；
+- 子节点只能有一个字符；
+- 父节点只有一个子节点（如果父节点是压缩前缀的节点，那么只有一个子节点，满足条件。如果父节点是非压缩前缀的节点，那么只能有一个字符路径才能满足条件）。
+
+`raxStack` 是一个存储指针的栈结构，用于在遍历时辅助记录父节点的信息。 `stack` 是指向栈底的指针，开始时指向 `static_items[]` ，拥有 32 个存储空间，其设计是为了减少堆内存的请求次数。 如果存储空间不足，程序将申请新的空间以容纳新的元素，此时 `stack` 将指向新的存储空间。
+
+```c
+typedef struct raxStack {
+    // 指向栈底的指针
+    void **stack; /* Points to static_items or an heap allocated array. */
+    size_t items, maxitems; /* Number of items contained and total space. */
+    /* Up to RAXSTACK_STACK_ITEMS items we avoid to allocate on the heap
+     * and use this static array of pointers instead. */
+    void *static_items[RAX_STACK_STATIC_ITEMS];
+    // 如果 push 失败或发生 OOM 错误，该值为 True(1)
+    int oom; /* True if pushing into this stack failed for OOM at some point. */
+} raxStack;
+```
+
+## 总结
+
+从宏观上看，Redis 的数据结构整体倾向于两个方面：**节约内存与减少响应时间**。在源码中也存在大篇幅的类型判断与转换，但显然这些操作也是值得的，做为一款内存型数据库，每一个字节的使用都是寸土寸金，而 Redis 面对的使用场景也需要很快的响应速度。Redis 尽可能地在时间与空间上达到平衡，一些数据结构的实现也很巧妙，具有很强的学习意义，可以强化对数据结构的理解。
+
 ## Reference
 
+- [Redis · 引擎特性 · radix tree 源码解析](http://mysql.taobao.org/monthly/2019/04/03/)
 - [Redis内部数据结构详解(5)——quicklistb](http://zhangtielei.com/posts/blog-redis-quicklist.html)
 - [Redis 源码分析-quicklist](https://caticat.github.io/2018/05/09/redis-source-quicklist/)
 - [Redis(5.0.3)源码分析之 sds 对象](http://cbsheng.github.io/posts/redis%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E4%B9%8Bsds%E5%AF%B9%E8%B1%A1/)
