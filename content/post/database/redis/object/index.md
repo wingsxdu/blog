@@ -315,9 +315,18 @@ void bitfieldCommand(client *c)
 
 #### 列表对象
 
-在redis3.2.9之后，quicklist 取代了 ziplist 和 linkedlist，成为了列表对象的底层实现。quicklist 是一个双向链表，链表的每个节点都是一个 ziplist，可以通过修改`list-max-ziplist-size`配置来确定一个 quicklist 节点上的 ziplist 的长度。
+在 Redis3.2.9 之后，quicklist 取代了 ziplist 和 linkedlist，成为了列表对象的底层实现。quicklist 是一个双向链表，链表的每个节点都是一个 ziplist，可以通过修改`list-max-ziplist-size`配置来确定一个 quicklist 节点上的 ziplist 的长度。
 
-创建一个新的列表对象：
+由于列表对象只有一种编码方式，因此只是简单调用了`quicklistCreate`()函数创建一个 quicklist 编码的对象，[t_list.c](https://github.com/antirez/redis/blob/unstable/src/t_list.c)相关实现中也没有太多的类型判断与转换：
+
+```c
+robj *createQuicklistObject(void) {
+    quicklist *l = quicklistCreate();
+    robj *o = createObject(OBJ_LIST,l);
+    o->encoding = OBJ_ENCODING_QUICKLIST;
+    return o;
+}
+```
 
 列表对象相关命令的实现在 [t_list.c](https://github.com/antirez/redis/blob/unstable/src/t_list.c)文件中，实现函数整理如下：
 
@@ -356,7 +365,66 @@ void blpopCommand(client *c)
 void brpopCommand(client *c)
 // BRPOPLPUSH 命令，是命令 RPOPLPUSH 的阻塞版本
 void brpoplpushCommand(client *c)
+```
 
+#### 哈希对象
+
+哈希表的编码方式可能是`OBJ_ENCODING_ZIPLIST`或`OBJ_ENCODING_HT`，但在源码中并没有以`OBJ_ENCODING_HT`为编码方式新建哈希对象的的相关代码，这是因为一个新建的哈希对象都是以 ZIPLIST 为底层数据结构的，只有当 ZIPLIST 的大小满足配置条件时，才会进行编码方式转换。
+
+相关的配置项有两个：
+
+```c
+hash-max-zipmap-entries 512 #键值对的最大数量
+hash-max-zipmap-value 64 #value 占用的最大字节数
+```
+
+哈希对象也存在一个迭代器，用于值迭代
+
+```c
+typedef struct {
+    // 被迭代的哈希对象
+    robj *subject;
+    // 哈希对象的编码
+    int encoding;
+    // 域指针和值指针，在迭代 ZIPLIST 编码的哈希对象时使用
+    unsigned char *fptr, *vptr;
+    // 字典迭代器和指向当前迭代字典节点的指针，在迭代 HT 编码的哈希对象时使用
+    dictIterator *di;
+    dictEntry *de;
+} hashTypeIterator;
+```
+
+列表对象相关命令的实现在 [t_hash.c](https://github.com/antirez/redis/blob/unstable/src/t_list.c)文件中，实现函数整理如下：
+
+```c
+// HSET 命令，设置哈希对象中指定字段的值
+void hsetCommand(client *c)
+// HSETNX 命令，只有哈希集中不存在指定的字段时，才设置字段的值
+void hsetnxCommand(client *c)
+// HINCR 命令，增加哈希对象中指定字段的值
+void hincrbyCommand(client *c)
+// HINCRBYFLOAT 命令，指定字段的增加的值为 float 类型
+void hincrbyfloatCommand(client *c)
+// HGET 命令，返回哈希对象中指定字段关联的值
+void hgetCommand(client *c)
+// HMGET 命令，如果哈希对象中不存在指定字段，返回 nil
+void hmgetCommand(client *c)
+// HDEL 命令，删除哈希对象中的指定字段
+void hdelCommand(client *c)
+// HLEN 命令，返回哈希对象中的字段数量
+void hlenCommand(client *c)
+// HSTRLEN 命令，返回哈希对象中的指定字段值的字符串长度，如果 hash 或者 field 不存在，返回 0
+void hstrlenCommand(client *c)
+// HKEYS 命令，返回哈希对象中所有字段的名称
+void hkeysCommand(client *c)
+// HVALS 命令，返回哈希对象中所有字段的值
+void hvalsCommand(client *c)
+// HGETALL 命令，返回哈希对象中所有字段名称及其值
+void hgetallCommand(client *c)
+// HEXISTS 命令，判断哈希对象中某字段是否存在
+void hexistsCommand(client *c)
+// HSCAN 命令，基于游标的迭代器
+void hscanCommand(client *c)
 ```
 
 
