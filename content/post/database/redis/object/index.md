@@ -429,9 +429,9 @@ void hscanCommand(client *c)
 
 #### 集合对象
 
-集合对象的编码方式可以是`OBJ_ENCODING_INTSET`或`OBJ_ENCODING_HT`，
+集合对象的编码方式可以是`OBJ_ENCODING_INTSET`或`OBJ_ENCODING_HT`，如果集合中的所有元素都是整型数据，那么集合对象将会采用 INTSET，否则使用 HT 编码。因此，对一个 INTSET 编码的集合对象插入字符串数据会触发类型转换，在使用时需要注意。
 
-
+除此以外，和哈希表类似，当集合对象中的元素个数超过配置的`set-max-intset-entries 512`时也会触发类型转换。
 
 集合对象的一些命令的实现比较复杂，因此文中将会分为几个类别进行分析。
 
