@@ -1,7 +1,7 @@
 ---
-title: "Redis Object 的实现 · Analyze"
+title: "Redis 对象的实现 · Analyze"
 author: "beihai"
-summary: "<blockquote><p> </p></blockquote>"
+summary: "<blockquote><p>Redis 内部实现了一组比较全面的数据结构类型，但并没有直接使用这些数据结构来实现键值对数据库，而是构建了一个对象系统，利用对象系统将这些数据结构进一步封装。对象系统的设计不但可以针对不同的使用场景，为一种键值对设置不同的底层数据结构，还简化了键值对的回收、共享等操作。这篇文章将简要分析 Redis 对象系统的实现。</p></blockquote>"
 tags: [
     "Analyze",
     "数据库",
@@ -16,6 +16,10 @@ categories: [
 date: 2020-02-02T13:34:56+08:00
 draft: false
 ---
+
+> 对 Redis 数据库的源码阅读，当前版本为 Redis6 RC1
+
+Redis 内部实现了一组比较全面的数据结构类型，但并没有直接使用这些数据结构来实现键值对数据库，而是构建了一个对象系统，利用对象系统将这些数据结构进一步封装。对象系统的设计不但可以针对不同的使用场景，为一种键值对设置不同的底层数据结构，还简化了键值对的回收、共享等操作。这篇文章将简要分析 Redis 对象系统的实现。
 
 ## Redis 对象
 
@@ -79,22 +83,10 @@ Redis 通过`encoding`字段来标记对象所使用的编码方式，而不是�
 | :--------- | :------------------------------------------------------- |
 | OBJ_STRING | OBJ_ENCODING_INT 、OBJ_ENCODING_EMBSTR、OBJ_ENCODING_RAW |
 | OBJ_LIST   | OBJ_ENCODING_QUICKLIST                                   |
+| OBJ_HASH   | OBJ_ENCODING_ZIPLIST、OBJ_ENCODING_HT                    |
 | OBJ_SET    | OBJ_ENCODING_INTSET、OBJ_ENCODING_HT                     |
 | OBJ_ZSET   | OBJ_ENCODING_ZIPLIST、OBJ_ENCODING_SKIPLIST              |
-| OBJ_HASH   | OBJ_ENCODING_ZIPLIST、OBJ_ENCODING_HT                    |
-
-| 类型       | 编码                   | 对象                           |
-| :--------- | ---------------------- | :----------------------------- |
-| OBJ_STRING | OBJ_ENCODING_INT       | 使用整数值实现的字符串对象     |
-| OBJ_STRING | OBJ_ENCODING_EMBSTR    | 使用 embstr 实现的字符串对象   |
-| OBJ_STRING | OBJ_ENCODING_RAW       | 使用 sds 实现的字符串对象      |
-| OBJ_LIST   | OBJ_ENCODING_QUICKLIST | 使用quicklist实现的列表对象    |
-| OBJ_HASH   | OBJ_ENCODING_ZIPLIST   | 使用压缩列表实现的哈希对象     |
-| OBJ_HASH   | OBJ_ENCODING_HT        | 使用字典实现的哈希对象         |
-| OBJ_SET    | OBJ_ENCODING_HT        | 使用哈希实现的集合对象         |
-| OBJ_SET    | OBJ_ENCODING_INSET     | 使用整数集合实现的集合对象     |
-| OBJ_ZSET   | OBJ_ENCODING_ZIPLIST   | 使用压缩列表实现的有序集合对象 |
-| OBJ_ZSET   | OBJ_ENCODING_SKIPLIST  | 使用跳表实现的有序集合对象     |
+| OBJ_STREAM | OBJ_ENCODING_STREAM                                      |
 
 #### 空转时长
 
@@ -431,7 +423,7 @@ void hscanCommand(client *c)
 
 集合对象的编码方式可以是`OBJ_ENCODING_INTSET`或`OBJ_ENCODING_HT`，如果集合中的所有元素都是整型数据，那么集合对象将会采用 INTSET，否则使用 HT 编码。因此，对一个 INTSET 编码的集合对象插入字符串数据会触发类型转换，在使用时需要注意。
 
-除此以外，和哈希表类似，当集合对象中的元素个数超过配置的`set-max-intset-entries 512`时也会触发类型转换。
+除此以外，和哈希表类似，当集合对象中的元素个数超过配置的`set-max-intset-entries 512`时也会触发类型转换。相关代码实现在[t_set.c](https://github.com/antirez/redis/blob/unstable/src/t_set.c)中。
 
 集合对象的一些命令的实现比较复杂，因此文中将会分为几个类别进行分析。
 
@@ -519,9 +511,20 @@ void sdiffstoreCommand(client *c)
 
 #### 有序集合对象
 
+有序集合是给每个元素设置一个分值（score）作为排序依据的数据结构，常用于一些排行榜类场景。有序集合的编码方式可以是`OBJ_ENCODING_ZIPLIST`或`OBJ_ENCODING_SKIPLIST`，**需要注意的是第二种编码实际上使用了两种数据结构： dict 与 skiplist**，而不是只使用 skiplist 做为底层实现。
 
+当有序集合元素大小符合以下配置条件时，内部将使用 ziplist，否则将使用第二种编码方式：
 
+```
+zset-max-ziplist-entries 128
+zset-max-ziplist-value 64
+```
 
+使用 ziplist 来实现在序集合时，只需要在 ziplist 数据结构的基础上做好排序与去重就可以了。使用 skiplist 来实现有序集合也很容易理解，Redis 中的跳跃表就是为了有序集合对象而实现的，跳跃表的相关 API 实现也和有序集合实现在同一个文件[t_zset.c](https://github.com/antirez/redis/blob/unstable/src/t_zset.c)中。
+
+`OBJ_ENCODING_SKIPLIST`编码使用两种数据结构，是因为 skiplist 按分数来索引，查找时间复杂度为*O(lgN)*；而 dict 按数据索引，查找时间复杂度为*O(1)*。如果没有字典，想根据数据查分数，就必须对跳跃表进行遍历。这两种底层数据结构只作为索引使用，数据被封装在SDS中，由跳跃表与字典共同持有。而数据的分数则由跳跃表结点直接持有（double 类型数据），由字典间接持有。
+
+![zsetObject_SKIPLIST](index.assets/668722-20180910184516846-849522279.png)
 
 
 
@@ -529,12 +532,11 @@ void sdiffstoreCommand(client *c)
 
 ## 总结
 
-
-
-
+Redis 的对象系统实现了命令多态，根据不同的编码调用不同的底层函数，但也付出了一定的代价，在源码中**存在大量的类型判断与断言**。好在 Redis 是个较为轻量的数据库，源码量并不大，阅读之后也在可接受的范围内。在整体设计并不复杂的情况下，这种暴力而巧妙的实现方式也具有学习性。
 
 ## Reference
 
+- [Redis Value Type之间的关系](https://www.cnblogs.com/neooelric/p/9621736.html)
 - [Redis Commands](https://redis.io/commands)
 - Redis 源码注释
 - 《Redis 设计与实现》
