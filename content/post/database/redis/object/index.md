@@ -79,9 +79,9 @@ Redis 通过`encoding`字段来标记对象所使用的编码方式，而不是�
 | :--------- | :------------------------------------------------------- |
 | OBJ_STRING | OBJ_ENCODING_INT 、OBJ_ENCODING_EMBSTR、OBJ_ENCODING_RAW |
 | OBJ_LIST   | OBJ_ENCODING_QUICKLIST                                   |
-| OBJ_SET    | OBJ_ENCODING_INTSET ,OBJ_ENCODING_HT                     |
-| OBJ_ZSET   | OBJ_ENCODING_ZIPLIST ,OBJ_ENCODING_SKIPLIST              |
-| OBJ_HASH   | OBJ_ENCODING_ZIPLIST ,OBJ_ENCODING_HT                    |
+| OBJ_SET    | OBJ_ENCODING_INTSET、OBJ_ENCODING_HT                     |
+| OBJ_ZSET   | OBJ_ENCODING_ZIPLIST、OBJ_ENCODING_SKIPLIST              |
+| OBJ_HASH   | OBJ_ENCODING_ZIPLIST、OBJ_ENCODING_HT                    |
 
 | 类型       | 编码                   | 对象                           |
 | :--------- | ---------------------- | :----------------------------- |
@@ -427,10 +427,114 @@ void hexistsCommand(client *c)
 void hscanCommand(client *c)
 ```
 
+#### 集合对象
+
+集合对象的编码方式可以是`OBJ_ENCODING_INTSET`或`OBJ_ENCODING_HT`，
+
+
+
+集合对象的一些命令的实现比较复杂，因此文中将会分为几个类别进行分析。
+
+常用命令：
+
+```c
+// SADD 命令，向集合中添加一个或多个新元素
+void saddCommand(client *c)
+// SREM 命令，移除指定的集合元素
+void sremCommand(client *c)
+// SMOVE 命令，将源集合中的指定元素移至目标集合
+void smoveCommand(client *c)
+// SISMEMBER 命令，检查元素是否存在于集合中
+void sismemberCommand(client *c)
+// SCARD 命令，返回集合的元素数量
+void scardCommand(client *c)
+// SSCAN 命令，，基于游标的迭代器
+void sscanCommand(client *c)
+```
+
+有两个特殊命令`SPOP`和`SRANDMEMBER`可能含有参数 count 值，表示需要获得的元素数量，count 参数有单独的实现函数，如下：
+
+```c
+// SPOP 命令，从集合中随机移除一个元素
+void spopCommand(client *c)
+// SPOP key [count] 命令，从集合中随机移除 count 个元素
+void spopWithCountCommand(client *c)
+// SRANDMEMBER 命令，随机返回集合中的一个元素
+void srandmemberCommand(client *c)
+// SRANDMEMBER key [count] 命令，随机返回集合中的 count 个元素
+void srandmemberWithCountCommand(client *c)
+```
+
+`SPOP key [count]` 命令的实现可能有四种情况：
+
+1. count 为 0 ，返回一个空集合；
+2. count 大小大于集合的基数，那么直接返回整个集合，并删除集合；
+3. 先计算集合删除 count 个元素后的剩余元素数量 remaining，如果 remaining×5 的结果仍大于 count 值，那么需要循环 count 次, 每次随机 pop 出一个元素；
+4. 如果计算结果小于等于 count，那么将循环 remining 次, 每次随机 pop 出一个元素，将 pop 出来的元素赋值给新的集合, 最后用新的集合覆盖原来的集合。
+
+`SRANDMEMBER key [count]` 命令的实现可能有五种情况：
+
+1. count 为 0 ，直接返回；
+2. count 为负数，表示结果集可以带有重复元素，因此直接从集合中随机取出并返回 N 个元素；
+3. count 大小大于集合的基数，那么直接返回整个集合；
+4. count 参数乘以`SRANDMEMBER_SUB_STRATEGY_MUL=3`的积比集合的基数大，在这种情况下，程序创建一个集合的副本，并从集合中随机删除元素，直到集合的基数等于 count 参数指定的数量为止。使用这种做法的原因是，**当 count 的数量接近于集合的基数时，从集合中随机取出 count 个参数的方法是非常低效的**；
+5. 如果 count 参数要比集合基数小很多，那么直接从集合中随机地取出元素，并将它添加到结果集合中，直到结果集的基数等于 count，这个过程并不会添加重复的元素。
+
+可以看出程序对 count 的可能情况考虑得比较充分，并且做了相应的性能优化。
+
+对集合进行交集运算的命令实际由函数`sinterGenericCommand()`执行，交集运算算法的执行流程如下：
+
+1. 按基数大小对集合按从小到大的顺序进行排序，以提升算法的效率；
+2. 从基数最小的集合中取出元素，并将它和其他集合进行比对，如果有至少一个集合不包含这个元素，那么这个元素不属于交集；
+3. 重复第二步，直至遍历完基数最小的集合。
+
+这个算法的时间复杂度为 *O(N×M)*，其中 N 为计数最小的集合的基数，而 M 则为其他集合的数量。
+
+```c
+// SINTER 命令，返回指定集合间的成员交集
+void sinterCommand(client *c)
+// SINTERSTORE 命令，计算指定集合间的成员交集，并将结果保存至目标集合中
+void sinterstoreCommand(client *c)
+```
+
+对集合进行并差集运算的四个命令都是调用`sunionDiffGenericCommand()`函数来实现的。
+
+如果执行的是并集计算，那么只需要遍历所有集合，将元素添加到结果集里中（**无论执行的命令是否需要将结果保存，程序都会创建一个结果集用于保存中间数据**）。
+
+如果执行的是差集运算，该过程实现了两种算法，程序通过考察输入来决定使用那个算法。
+
+- 算法一：程序遍历 sets[0] 集合中的所有元素，并将这个元素和其他集合的所有元素进行对比，只有这个元素不存在于其他所有集合时，才将这个元素添加到结果集。因此算法一执行最多 N×M 步，其中 N 为第一个集合的基数，而 M 则为其他集合的数量，复杂度为 *O(N×M)* 。
+- 算法二：程序将 sets[0] 的所有元素都添加到结果集中，然后遍历其他所有集合，将相同的元素从结果集中删除。该算法复杂度为 *O(N)* ，N 为所有集合的基数之和。
+
+```c
+// SUNION 命令，返回给定的多个集合的并集
+void sunionCommand(client *c)
+// SUNIONSTORE 命令，计算给定的多个集合的并集，并将结果存储在目标集合里
+void sunionstoreCommand(client *c)
+// SDIFF 命令，返回给定的多个集合的差集
+void sdiffCommand(client *c)
+// SDIFFSTORE 命令，计算给定的多个集合的差集，并将结果存储在目标集合里
+void sdiffstoreCommand(client *c)
+```
+
+#### 有序集合对象
+
+
+
+
+
+
+
+
+
+## 总结
+
+
+
 
 
 ## Reference
 
-- 
+- [Redis Commands](https://redis.io/commands)
 - Redis 源码注释
 - 《Redis 设计与实现》
