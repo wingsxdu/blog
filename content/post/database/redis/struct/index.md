@@ -793,7 +793,7 @@ intset 用于有序、无重复地保存多个整数值，会根据元素的值�
 
 ## Radix tree
 
-Redis 实现了不定长压缩前缀的 radix tree，用于 streams 键的底层数据结构。它是一种基于存储空间优化的前缀树数据结构，实现在[rax.c](https://github.com/antirez/redis/blob/unstable/src/rax.c)中通常来讲, 一个基数树的结构如下所示：
+Redis 在 5.0 版本中实现了不定长压缩前缀的 radix tree，用于 streams 键的底层数据结构。它是一种基于存储空间优化的前缀树数据结构，实现在[rax.c](https://github.com/antirez/redis/blob/unstable/src/rax.c)中通常来讲, 一个基数树的结构如下所示：
 
 ```c
  *              (f) ""
@@ -896,12 +896,66 @@ typedef struct raxStack {
 } raxStack;
 ```
 
+## 紧凑列表
+
+Redis 5.0 又引入了一个新的数据结构：紧凑列表（listpack），它是对压缩列表的改进，在结构上更加精简，也更加节约内存，实现在[listpack.c](https://github.com/antirez/redis/blob/unstable/src/listpack.c)源文件中。
+
+#### 数据结构
+
+紧凑列表的内存布局如下：
+
+```c
+<total_bytes> <size> <entry> <entry> ... <entry> <end>
+```
+
+- `<uint32 total_bytes>`是一个 32 位无符号整数，保存着紧凑列表使用的字节数量，包含 zlbytes 自己占用的四个字节。 通过这个值可以直接对`ziplist`的内存大小进行调整，无须为了计算内存大小进行遍历操作；
+- `<uint16 size>`保存着元素数量；
+- `<end>`是结束标记，和压缩链表一样值为 255。
+
+如果单独看节点结构，每个节点由以下部分组成：
+
+```c
+<encoding-type> <entry-data> <entry-len>
+```
+
+- `<encoding-type>` 保存数据的编码方式，编码方式与数据类型的对应关系如下：
+
+| 编码方式                              | 说明                       |
+| :------------------------------------ | :------------------------- |
+| 0\|xxxxxxx                            | 0 - 127                    |
+| 110\|xxxxx yyyyyyyy                   | 13 位有符号整数            |
+| 1111\|0001 <entry-data>               | 16 位有符号整数            |
+| 1111\|0010 <entry-data>               | 24 位有符号整数            |
+| 1111\|0011 <entry-data>               | 32 位有符号整数            |
+| 1111\|0100 <entry-data>               | 64 位有符号整数            |
+| 10\|xxxxxx <entry-data>               | 长度不超过 63 的字符串     |
+| 1110\|xxxx yyyyyyyy <entry-data>      | 长度不超过 4095 的字符串   |
+| 1111\|0000 <4 bytes len> <entry-data> | 长度大于等于 4095 的字符串 |
+
+- `<entry-data>` 保存的数据，可能与 encoding 字段合并表示；
+- `<entry-len>` 保存了占用的字节数，该字段是变长的，且以大端方式存储，通过字节的最高位是否为 1 来决定编码的长度，对应关系如下表：
+
+| 编码方式                                         | 数据大小                |
+| :----------------------------------------------- | :---------------------- |
+| 0\|xxxxxxx                                       | 0 - 127                 |
+| 1xxxxxxx\|0xxxxxxx                               | 128 - 16383             |
+| 1xxxxxxx\|1xxxxxxx\|0xxxxxxx                     | 16384 - 2097151         |
+| 1xxxxxxx\|1xxxxxxx\|1xxxxxxx\|0xxxxxxx           | 2097152 - 268435455     |
+| 1xxxxxxx\|1xxxxxxx\|1xxxxxxx\|1xxxxxxx\|0xxxxxxx | 268435456 - 34359738367 |
+
+通常情况下在从左向右遍历时，我们已经可以计算出 entry 节点的大小。但从右向左迭代时，需要从`<entry-len>`属性中获取偏移量，以指向下一个节点。
+
+#### 小结
+
+相较于压缩列表，紧凑列表的元素与元素之间是完全独立的，并不会产生连锁更新情况，但是每次在中间插入或更新节点仍然会触发`realloc`进行内存分配。虽然目前仅在 Streams 类型对象中使用，但较于压缩列表已经有了很好的改进。
+
 ## 总结
 
 从宏观上看，Redis 的数据结构整体倾向于两个方面：**节约内存与减少响应时间**。在源码中也存在大篇幅的类型判断与转换，但显然这些操作也是值得的，做为一款内存型数据库，每一个字节的使用都是寸土寸金，而 Redis 面对的使用场景也需要很快的响应速度。Redis 尽可能地在时间与空间上达到平衡，一些数据结构的实现也很巧妙，具有很强的学习意义，可以强化对数据结构的理解。
 
 ## Reference
 
+- [Redis listpack](https://www.dazhuanlan.com/2019/12/07/5deb3a18d5220/)
 - [Redis · 引擎特性 · radix tree 源码解析](http://mysql.taobao.org/monthly/2019/04/03/)
 - [Redis内部数据结构详解(5)——quicklistb](http://zhangtielei.com/posts/blog-redis-quicklist.html)
 - [Redis 源码分析-quicklist](https://caticat.github.io/2018/05/09/redis-source-quicklist/)
