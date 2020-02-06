@@ -320,9 +320,22 @@ robj *createQuicklistObject(void) {
 }
 ```
 
-列表对象也实现了一个对象迭代器，但由于当前列表对象的编码方式只有一种，
+列表对象也实现了一个对象迭代器，但由于目前列表对象的编码方式只有一种，这个迭代器只是对 quicklist 迭代器的封装。
 
-列表对象相关命令的实现在 [t_list.c](https://github.com/antirez/redis/blob/unstable/src/t_list.c)文件中，实现函数整理如下：
+```c
+typedef struct {
+    // 列表对象
+    robj *subject;
+    // 列表对象编码
+    unsigned char encoding;
+    // 迭代器方向
+    unsigned char direction; /* Iteration direction */
+    // quicklist 迭代器指针
+    quicklistIter *iter;
+} listTypeIterator;
+```
+
+列表对象的实现并不复杂，相关命令的实现在 [t_list.c](https://github.com/antirez/redis/blob/unstable/src/t_list.c)文件中，实现函数整理如下：
 
 ```c
 // LPUSH 命令，将所有指定的值插入到列表的头部
