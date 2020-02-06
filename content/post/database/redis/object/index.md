@@ -17,7 +17,7 @@ date: 2020-02-02T13:34:56+08:00
 draft: false
 ---
 
-> 对 Redis 数据库的源码阅读，当前版本为 Redis6 RC1
+> 对 Redis 数据库的源码阅读，当前版本为 Redis 6.0 RC1。注释项目地址：[github.com](https://github.com/wingsxdu/redis)
 
 Redis 内部实现了一组比较全面的数据结构类型，但并没有直接使用这些数据结构来实现键值对数据库，而是构建了一个对象系统，利用对象系统将这些数据结构进一步封装。对象系统的设计不但可以针对不同的使用场景，为一种键值对设置不同的底层数据结构，还简化了键值对的回收、共享等操作。这篇文章将简要分析 Redis 对象系统的实现。
 
@@ -309,7 +309,7 @@ void bitfieldCommand(client *c)
 
 在 Redis3.2.9 之后，quicklist 取代了 ziplist 和 linkedlist，成为了列表对象的底层实现。quicklist 是一个双向链表，链表的每个节点都是一个 ziplist，可以通过修改`list-max-ziplist-size`配置来确定一个 quicklist 节点上的 ziplist 的长度。
 
-由于列表对象只有一种编码方式，因此只是简单调用了`quicklistCreate`()函数创建一个 quicklist 编码的对象，[t_list.c](https://github.com/antirez/redis/blob/unstable/src/t_list.c)相关实现中也没有太多的类型判断与转换：
+由于列表对象只有一种编码方式，因此只是简单调用了`quicklistCreate()`函数创建一个 quicklist 编码的对象，[t_list.c](https://github.com/antirez/redis/blob/unstable/src/t_list.c)相关实现中也没有太多的类型判断与转换：
 
 ```c
 robj *createQuicklistObject(void) {
@@ -319,6 +319,8 @@ robj *createQuicklistObject(void) {
     return o;
 }
 ```
+
+列表对象也实现了一个对象迭代器，但由于当前列表对象的编码方式只有一种，
 
 列表对象相关命令的实现在 [t_list.c](https://github.com/antirez/redis/blob/unstable/src/t_list.c)文件中，实现函数整理如下：
 
@@ -515,7 +517,7 @@ void sdiffstoreCommand(client *c)
 
 当有序集合元素大小符合以下配置条件时，内部将使用 ziplist，否则将使用第二种编码方式：
 
-```
+```c
 zset-max-ziplist-entries 128
 zset-max-ziplist-value 64
 ```
@@ -526,9 +528,137 @@ zset-max-ziplist-value 64
 
 ![zsetObject_SKIPLIST](index.assets/668722-20180910184516846-849522279.png)
 
+Redis 内部也实现了一个多态的集合迭代器，可以迭代集合或有序集合对象：
 
+```c
+typedef struct {
+    // 被迭代的对象
+    robj *subject;
+    // 对象的类型
+    int type; /* Set, sorted set */
+    // 编码
+    int encoding;
+    // 权重
+    double weight;
 
+    union {
+        /* Set iterators. */
+        // 集合迭代器
+        union _iterset {
+            // intset 迭代器
+            struct {
+                // 被迭代的 intset
+                intset *is;
+                // 当前节点索引
+                int ii;
+            } is;
+            // 字典迭代器
+            struct {
+                // 被迭代的字典
+                dict *dict;
+                // 字典迭代器
+                dictIterator *di;
+                // 当前字典节点
+                dictEntry *de;
+            } ht;
+        } set;
 
+        /* Sorted set iterators. */
+        // 有序集合迭代器
+        union _iterzset {
+            // ziplist 迭代器
+            struct {
+                // 被迭代的 ziplist
+                unsigned char *zl;
+                // 当前迭代到的成员指针和分值指针
+                unsigned char *eptr, *sptr;
+            } zl;
+            // zset 迭代器
+            struct {
+                // 被迭代的 zset
+                zset *zs;
+                // 当前跳跃表节点
+                zskiplistNode *node;
+            } sl;
+        } zset;
+    } iter;
+} zsetopsrc;
+```
+
+类似地，Redis 也为该迭代器实现了保存当前迭代节点值的数据结构：
+
+```c
+typedef struct {
+    // 标记数据有效性
+    int flags;
+    // 私有缓冲区
+    unsigned char _buf[32]; /* Private buffer. */
+    // 可以用于保存元素的几个类型
+    // sds 对象
+    sds ele;
+    // 字符串
+    unsigned char *estr;
+    //字符串长度
+    unsigned int elen;
+    //整型数据
+    long long ell;
+    // 分值
+    double score;
+} zsetopval;
+```
+
+这部分结构都与上面的对象类型类似。
+
+有序集合的命令实现函数如下：
+
+```c
+// ZADD 命令，向有序集合中添加元素
+void zaddCommand(client *c)
+// ZINCRBY 命令，增加有序集合元素的分值，支持 int 或 double
+void zincrbyCommand(client *c)
+// ZREM 命令，删除有序集合中的指定元素
+void zremCommand(client *c)
+// ZREMRANGEBYRANK 命令，从有序集合中删除指定排名区间的元素，闭区间
+void zremrangebyrankCommand(client *c)
+// ZREMRANGEBYSCORE 命令，从有序集合中删除指定分值区间的元素，闭区间
+void zremrangebyscoreCommand(client *c)
+// ZREMRANGEBYSCORE 命令，从有序集合中删除指定字典序区间的元素，要求成员分数必须相同
+void zremrangebylexCommand(client *c)
+// ZUNIONSTORE 命令，计算给定有序集合间的并集，并将结果放在目标集合中
+void zunionstoreCommand(client *c)
+// ZINTERSTORE 命令，计算给定有序集合间的交集，并将结果放在目标集合中
+void zinterstoreCommand(client *c)
+// ZRANGE 命令，返回有序集合中指定范围的元素，按分数从低到高排列
+void zrangeCommand(client *c)
+// ZREVRANGE 命令，返回有序集合中指定范围的元素，按分数从高到低排列
+void zrevrangeCommand(client *c)
+// ZRANGEBYSCORE 命令，返回有序集合中指定分数范围的元素（闭区间），按分数从低到高排列
+void zrangebyscoreCommand(client *c)
+// ZREVRANGEBYSCORE 命令，返回有序集合中指定分数范围的元素（闭区间），按分数从高到低排列
+void zrevrangebyscoreCommand(client *c)
+// ZCOUNT 命令，返回有序集合中分值在[min,max]之间的元素数量
+void zcountCommand(client *c)
+// ZLEXCOUNT 命令，返回有序集合中成员名称在 [min，max] 之间的成员数量
+void zlexcountCommand(client *c)
+// ZRANGEBYLEX 命令，返回指定成员区间内的成员，按成员字典正序排序, 要求成员分数必须相同
+void zrangebylexCommand(client *c)
+// ZREVRANGEBYLEX 命令，返回指定成员区间内的成员，按成员字典倒序排序, 要求成员分数必须相同
+void zrevrangebylexCommand(client *c)
+// ZCARD 命令，返回有序集合中的元素个数
+void zcardCommand(client *c)
+// ZSCORE 命令，返回有序集合中指定元素的分数
+void zscoreCommand(client *c)
+// ZSCAN 命令，，基于游标的迭代器
+void zscanCommand(client *c)
+// ZPOPMIN 命令，删除并返回有序集合中的最多 count 个具有最低分的元素
+void zpopminCommand(client *c)
+// ZMAXPOP 命令，删除并返回有序集合中的最多 count 个具有最高分的元素
+void zpopmaxCommand(client *c)
+// BZPOPMIN 命令，是 ZPOPMIN 命令的阻塞版本，可设置阻塞时间
+void bzpopminCommand(client *c)
+// BZPOPMAX 命令，是 ZPOPMAX 命令的阻塞版本，可设置阻塞时间
+void bzpopmaxCommand(client *c)
+```
 
 ## 总结
 
