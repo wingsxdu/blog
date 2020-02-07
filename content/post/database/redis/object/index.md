@@ -673,7 +673,149 @@ void bzpopminCommand(client *c)
 void bzpopmaxCommand(client *c)
 ```
 
+#### Streams 对象
 
+Streams 是 Redis 5.0 引入的数据类型，官方把它定义为：**以更抽象的方式建模日志的数据结构**。Redis 的Streams 主要是一个append only 的数据结构，将新数据插入到旧数据的后面。
+
+一个 Streams 对象的数据结构如下：
+
+```c
+typedef struct streamID {
+    // unix 时间戳
+    uint64_t ms;        /* Unix time in milliseconds. */
+    // 序列号
+    uint64_t seq;       /* Sequence number. */
+} streamID;
+
+typedef struct stream {
+    // radix tree 存储信息
+    rax *rax;               /* The radix tree holding the stream. */
+    // 元素数量
+    uint64_t length;        /* Number of elements inside this stream. */
+    // 最新一个元素的 ID
+    streamID last_id;       /* Zero if there are yet no items. */
+    // 消费组
+    rax *cgroups;           /* Consumer groups dictionary: name -> streamCG */
+} stream;
+```
+
+Streams 对象由两部分数据结构组成，一部分是 radix tree，用作存储所有的`streamID`。由于`streamID`是一个时间戳+序列号组成的字符串，因此使用 radix tree 会更加节约内存；另一部分是紧凑列表，radix tree 内的每个`streamID`下对应的子键值对都存储在这个结构中。
+
+
+
+
+
+
+
+迭代器：
+
+```c
+
+typedef struct streamIterator {
+    stream *stream;         /* The stream we are iterating. */
+    streamID master_id;     /* ID of the master entry at listpack head. */
+    uint64_t master_fields_count;       /* Master entries # of fields. */
+    unsigned char *master_fields_start; /* Master entries start in listpack. */
+    unsigned char *master_fields_ptr;   /* Master field to emit next. */
+    int entry_flags;                    /* Flags of entry we are emitting. */
+    int rev;                /* True if iterating end to start (reverse). */
+    uint64_t start_key[2];  /* Start key as 128 bit big endian. */
+    uint64_t end_key[2];    /* End key as 128 bit big endian. */
+    raxIterator ri;         /* Rax iterator. */
+    unsigned char *lp;      /* Current listpack. */
+    unsigned char *lp_ele;  /* Current listpack cursor. */
+    unsigned char *lp_flags; /* Current entry flags pointer. */
+    /* Buffers used to hold the string of lpGet() when the element is
+     * integer encoded, so that there is no string representation of the
+     * element inside the listpack itself. */
+    unsigned char field_buf[LP_INTBUF_SIZE];
+    unsigned char value_buf[LP_INTBUF_SIZE];
+} streamIterator;
+```
+
+消费者模式相关数据结构：
+
+```c
+// 消费组
+typedef struct streamCG {
+    // 该组的上次交付（未确认）ID
+    streamID last_id;       /* Last delivered (not acknowledged) ID for this
+                               group. Consumers that will just ask for more
+                               messages will served with IDs > than this. */
+    // 存储已经发送给客户端，但是还没有收到 XACK 的元素
+    // Pending entries list，待处理条目列表
+    rax *pel;               /* Pending entries list. This is a radix tree that
+                               has every message delivered to consumers (without
+                               the NOACK option) that was yet not acknowledged
+                               as processed. The key of the radix tree is the
+                               ID as a 64 bit big endian number, while the
+                               associated value is a streamNACK structure.*/
+    // 消费组包含的消费者元素
+    rax *consumers;         /* A radix tree representing the consumers by name
+                               and their associated representation in the form
+                               of streamConsumer structures. */
+} streamCG;
+
+/* A specific consumer in a consumer group.  */
+// 消费者
+typedef struct streamConsumer {
+    // 活跃时间
+    mstime_t seen_time;         /* Last time this consumer was active. */
+    // 消费者名称
+    sds name;                   /* Consumer name. This is how the consumer
+                                   will be identified in the consumer group
+                                   protocol. Case sensitive. */
+    // 待 ACK 的消息列表，和 streamCG 指向的是同一个
+    rax *pel;                   /* Consumer specific pending entries list: all
+                                   the pending messages delivered to this
+                                   consumer not yet acknowledged. Keys are
+                                   big endian message IDs, while values are
+                                   the same streamNACK structure referenced
+                                   in the "pel" of the conumser group structure
+                                   itself, so the value is shared. */
+} streamConsumer;
+
+/* Pending (yet not acknowledged) message in a consumer group. */
+// 消费者组中的待处理（尚未确认）消息
+typedef struct streamNACK {
+    // 上次传递此消息的时间
+    mstime_t delivery_time;     /* Last time this message was delivered. */
+    // 此消息被传递的次数
+    uint64_t delivery_count;    /* Number of times this message was delivered.*/
+    // 此消息在上次传递中传递给的消费者
+    streamConsumer *consumer;   /* The consumer this message was delivered to
+                                   in the last delivery. */
+} streamNACK;
+```
+
+命令列表：
+
+```c
+// XADD 命令，向 Streams 追加新元素
+void xaddCommand(client *c)
+// XLEN 命令，返回 Streams 中的元素数量
+void xlenCommand(client *c)
+// XDEL 命令，从 Streams 中删除指定的元素
+void xdelCommand(client *c)
+// MAXLEN 命令，修剪 Streams 中的元素至指定数量
+void xtrimCommand(client *c)
+// XINFO 命令，获取 Streams 或其消费组的信息
+void xinfoCommand(client *c)
+// XRANGE 命令，返回 Streams 中符合指定 ID 范围的元素，正序排列
+void xrangeCommand(client *c)
+// XREVRANGE 命令，返回 Streams 中符合指定 ID 范围的元素，倒叙排列
+void xrevrangeCommand(client *c)
+// XREAD 命令，返回 Streams 中尚未被读取过的，且比指定 ID 大的元素
+void xreadCommand(client *c)
+// XGROUP 命令，用来管理消费者组，创建、销毁等
+void xgroupCommand(client *c)
+// XACK 命令，从 Streams 消费者组的待处理条目列表中删除一条或多条消息
+void xackCommand(client *c)
+// XPENDING 命令，返回 Streams 中消费者组的待处理消息
+void xpendingCommand(client *c)
+// XCLAIM 命令，改变 Streams 待处理消息的消费者所有权
+void xclaimCommand(client *c)
+```
 
 ## 总结
 
@@ -686,7 +828,9 @@ Redis 的对象系统实现了命令多态，根据不同的编码调用不同�
 - 每种对象类型可能对应多种编码方式，根据使用场景进行类型转换；
 - 如果操作不当导致类型转换会造成性能损失，在使用时需要格外注意。
 
-个人认为**多数情况下的抉择并不是好与不好，只是适合与不适合**，Redis 的取舍之间也是为了更好地适应应用场景，对此还需要更深入地理解与分析Reference
+个人认为**多数情况下的抉择并不是好与不好，只是适合与不适合**，Redis 的取舍之间也是为了更好地适应应用场景，对此还需要更深入地理解与分析
+
+## Reference
 
 - [Redis Value Type之间的关系](https://www.cnblogs.com/neooelric/p/9621736.html)
 - [Redis Commands](https://redis.io/commands)
