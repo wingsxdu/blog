@@ -505,8 +505,6 @@ typedef struct zskiplist {
 
 zskiplist 的头结点不是一个有效的节点，它有**ZSKIPLIST_MAXLEVEL = 32**层，每层的 forward 指针指向该层跳跃表的第一个节点，若没有则为 null。
 
-![skiplist](index.assets/9069665-9de54bca1d99c950.png)
-
 #### 随即层数算法
 
 跳跃表节点的层高由随机数函数`zslRandomLevel()`决定：
