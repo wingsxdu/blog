@@ -165,10 +165,6 @@ typedef struct list {
 -  len：链表长度计数器，通过该字段获取链表长度的时间复杂度为。
 - 多态：链表节点使用`void *`来保存节点值，所以链表可以保存不同的类型的值，可以通过函数 dup、free、match 对节点值进行操作，。
 
-![img](index.assets/3733798-5e7204ededeee22e.webp)
-
-
-
 #### 迭代器
 
 Redis 为双向链表实现了一个迭代器， 利用迭代器可以从两个方向对链表进行迭代：
@@ -213,9 +209,7 @@ Redis 通过调用`listGetIterator`函数创建一个链表的迭代器，当迭
 
 通常情况下一个压缩列表的布局如下：
 
-```c
-<zlbytes> <zltail> <zllen> <entry> <entry> ... <entry> <zlend>
-```
+![ziplist](index.assets/ziplist.png)
 
 - `<uint32_t zlbytes>`是一个 32 位无符号整数，保存着`ziplist`使用的字节数量，包含 zlbytes 自己占用的四个字节。 通过这个值可以直接对`ziplist`的内存大小进行调整，无须为了计算内存大小进行遍历操作；
 - `<uint32_t zltail>`保存着到达列表中最后一个节点的偏移量，因此对表尾进行 pop 操作时进行指针运算即可，而无须遍历整个压缩列表；
@@ -382,7 +376,28 @@ typedef struct quicklist {
 
 可以看出 quicklist 的头节点和尾节点总是不被压缩的，以便在表的两端进行快速存取。
 
-由于 ziplist 储存时是连续的内存块，需要将其每个 entry 节点的信息读取到该结构体中，以便操作。因此在 quicklist 中定义了相关结构体：
+由此， 我们就可以知道 quicklist 的整体结构：
+
+![quicklist](index.assets/quicklist.png)
+
+quicklist 迭代器结构：
+
+```c
+typedef struct quicklistIter {
+    // 迭代的 quicklist
+    const quicklist *quicklist;
+    // 当前迭代到的节点
+    quicklistNode *current;
+    // 当前迭代的数据节点起始指针
+    unsigned char *zi;
+    // 当前迭代的 ziplist 的偏移
+    long offset; /* offset in current ziplist */
+    // 方向
+    int direction;
+} quicklistIter;
+```
+
+由于压缩列表储存时是连续的内存块，当需要访问某个节点时，用一个结构体记录该节点的相关信息，以便操作：
 
 ```c
 typedef struct quicklistEntry {
@@ -401,27 +416,6 @@ typedef struct quicklistEntry {
     // 所在节点在 ziplist 的偏移
     int offset;
 } quicklistEntry;
-```
-
-由此， 我们就可以知道 quicklist 的整体结构：
-
-![quicklist](index.assets/quicklist.jpg)
-
-quicklist 迭代器结构：
-
-```c
-typedef struct quicklistIter {
-    // 迭代的 quicklist
-    const quicklist *quicklist;
-    // 当前迭代到的节点
-    quicklistNode *current;
-    // 当前迭代的数据节点起始指针
-    unsigned char *zi;
-    // 当前迭代的 ziplist 的偏移
-    long offset; /* offset in current ziplist */
-    // 方向
-    int direction;
-} quicklistIter;
 ```
 
 #### 插入 entry 节点
@@ -603,7 +597,7 @@ typedef struct dictEntry {
 
 所以一个大小为 4 的哈希表结构示例如图所示：
 
-![image-20200201164956299](index.assets/image-20200201164956299.png)
+![hashtable](index.assets/hashtable.png)
 
 而一个字典的数据结构如下：
 
@@ -654,7 +648,7 @@ typedef struct dictType {
 
 例如将键值对 K2 与 V2 插入到哈希表中，并且哈希函数计算出来的索引值与 K1 键索引值相同，那么 K1 与 K2 将产生键冲突。利用`next`指针将 K1 与 K2 形成单向链表，就可以解决这个问题。
 
-![image-20200201194226310](index.assets/image-20200201194226310.png)
+![hash-collision](index.assets/hash-collision.png)
 
 因为 `dictEntry` 节点组成的链表没有指向链表表尾的指针，为了速度考虑，程序总是将新节点添加到链表的表头位置, 排在已有节点前面, 操作的复杂度为 O(1).
 
@@ -706,9 +700,9 @@ zipmap 实现在[zipmap.c](https://github.com/antirez/redis/blob/unstable/src/zi
 
 zipmap 的数据结构如下图所示：
 
-[![Redis的压缩字典](index.assets/redis_data_structure_8.png)](https://nullcc.github.io/assets/images/post_imgs/redis_data_structure_8.png)Redis的压缩字典
+![zipmap](index.assets/zipmap.png)
 
-以下是带有 "foo" => "bar" 和 "hello" => "world" 两个键值对的 zipmap 的内存结构：
+例如以下是带有 "foo" => "bar" 和 "hello" => "world" 两个键值对的 zipmap 的内存结构：
 
 ```c
 <zmlen><len>"foo"<len><free>"bar"<len>"hello"<len><free>"world"<end>
@@ -795,49 +789,17 @@ intset 用于有序、无重复地保存多个整数值，会根据元素的值�
 
 Redis 在 5.0 版本中实现了不定长压缩前缀的 radix tree，用于 streams 键的底层数据结构。它是一种基于存储空间优化的前缀树数据结构，实现在[rax.c](https://github.com/antirez/redis/blob/unstable/src/rax.c)中通常来讲, 一个基数树的结构如下所示：
 
-```c
- *              (f) ""
- *                \
- *                (o) "f"
- *                  \
- *                  (o) "fo"
- *                    \
- *                  [t   b] "foo"
- *                  /     \
- *         "foot" (e)     (a) "foob"
- *                /         \
- *      "foote" (r)         (r) "fooba"
- *              /             \
- *    "footer" []             [] "foobar"
-```
+![radix-tree](index.assets/radix-tree.png)
 
 > 然而，当前的代码实现使用了一种非常常见的优化策略，把只有单个字符的连续几个节点压缩成一个节点，这个节点有一个字符串，不再是只存储单个字符，因此上述结构可以优化成如下结构：
+>
+> 
 
-```c
- *                  ["foo"] ""
- *                     |
- *                  [t   b] "foo"
- *                  /     \
- *        "foot" ("er")    ("ar") "foob"
- *                 /          \
- *       "footer" []          [] "foobar"
-```
+![new-radix-tree](index.assets/new-radix-tree.png)
 
 但是这种优化使得具体实现更加复杂，例如在上面的 radix tree 中添加一个键"first"，则必须对节点进行分割操作，因为"foo"不再是一个单一的节点组成：
 
-```c
-*                    (f) ""
- *                    /
- *                 (i o) "f"
- *                 /   \
- *    "firs"  ("rst")  (o) "fo"
- *              /        \
- *    "first" []       [t   b] "foo"
- *                     /     \
- *           "foot" ("er")    ("ar") "foob"
- *                    /          \
- *          "footer" []          [] "foobar"
-```
+![radix-tree-add](index.assets/radix-tree-add.png)
 
 当要删除这个 key 时，还需要把节点合并。
 
@@ -904,9 +866,7 @@ Redis 5.0 又引入了一个新的数据结构：紧凑列表（listpack），�
 
 紧凑列表的内存布局如下：
 
-```c
-<total_bytes> <size> <entry> <entry> ... <entry> <end>
-```
+![listpack](index.assets/listpack.png)
 
 - `<uint32 total_bytes>`是一个 32 位无符号整数，保存着紧凑列表使用的字节数量，包含 zlbytes 自己占用的四个字节。 通过这个值可以直接对`ziplist`的内存大小进行调整，无须为了计算内存大小进行遍历操作；
 - `<uint16 size>`保存着元素数量；

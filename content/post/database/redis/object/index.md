@@ -539,8 +539,6 @@ zset-max-ziplist-value 64
 
 `OBJ_ENCODING_SKIPLIST`编码使用两种数据结构，是因为 skiplist 按分数来索引，查找时间复杂度为*O(lgN)*；而 dict 按数据索引，查找时间复杂度为*O(1)*。如果没有字典，想根据数据查分数，就必须对跳跃表进行遍历。这两种底层数据结构只作为索引使用，数据被封装在SDS中，由跳跃表与字典共同持有。而数据的分数则由跳跃表结点直接持有（double 类型数据），由字典间接持有。
 
-![zsetObject_SKIPLIST](index.assets/668722-20180910184516846-849522279.png)
-
 Redis 内部也实现了一个多态的集合迭代器，可以迭代集合或有序集合对象：
 
 ```c
@@ -701,16 +699,9 @@ typedef struct stream {
 
 Streams 对象由两部分数据结构组成，一部分是 radix tree，用作存储所有的`streamID`。由于`streamID`是一个时间戳+序列号组成的字符串，因此使用 radix tree 会更加节约内存；另一部分是紧凑列表，radix tree 内的每个`streamID`下对应的子键值对都存储在这个结构中。
 
-
-
-
-
-
-
 迭代器：
 
 ```c
-
 typedef struct streamIterator {
     stream *stream;         /* The stream we are iterating. */
     streamID master_id;     /* ID of the master entry at listpack head. */
