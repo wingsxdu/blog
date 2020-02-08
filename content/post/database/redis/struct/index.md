@@ -790,8 +790,6 @@ Redis 在 5.0 版本中实现了不定长压缩前缀的 radix tree，用于 str
 ![radix-tree](index.assets/radix-tree.png)
 
 > 然而，当前的代码实现使用了一种非常常见的优化策略，把只有单个字符的连续几个节点压缩成一个节点，这个节点有一个字符串，不再是只存储单个字符，因此上述结构可以优化成如下结构：
->
-> 
 
 ![new-radix-tree](index.assets/new-radix-tree.png)
 
