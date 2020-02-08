@@ -25,7 +25,7 @@ Redis 内部实现了一组比较全面的数据结构类型，但并没有直�
 
 #### 对象的数据结构
 
-Redis 中的每个对象都由一个结构体`redisObject`表示，定义在 [server.h](https://github.com/antirez/redis/blob/unstable/src/server.h)中：
+Redis 中的每个对象都由一个结构体`redisObject`表示，定义在[server.h](https://github.com/antirez/redis/blob/unstable/src/server.h)中：
 
 ```c
 #define LRU_BITS 24
