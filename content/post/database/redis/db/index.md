@@ -1,7 +1,7 @@
 ---
 title: "Redis 数据库的实现 · Analyze"
 author: "beihai"
-summary: "<blockquote><p>Redis 对外提供了六种键值对供开发者使用，而实际上在底层采用了多种基础数据结构来存储信息，并且会在必要的时刻进行类型转换。文章将会逐一介绍这些数据结构，以及它们的独特之处。</p></blockquote>"
+summary: "<blockquote><p>在了解 Redis 的底层数据结构之后，Redis 是如何将这些碎片化的数据以键值对的形式存储在数据库中，并执行内存回收操作，Redis 数据库的实现又存在哪些特殊之处？这篇文章将会分析 Redis 数据库的实现。</p></blockquote>"
 tags: [
     "Analyze",
     "数据库",
@@ -16,7 +16,9 @@ date: 2020-02-08T19:30:30+08:00
 draft: false
 ---
 
-在了解 Redis 的底层数据结构之后，Redis 是如何将这些碎片化的数据以键值对的形式存储在数据库中，并进行销毁、等操作。
+> 对 Redis 数据库的源码阅读，当前版本为 Redis 6.0 RC1。注释项目地址：[github.com](https://github.com/wingsxdu/redis)
+
+在了解 Redis 的底层数据结构之后，Redis 是如何将这些碎片化的数据以键值对的形式存储在数据库中，并执行内存回收操作，Redis 数据库的实现又存在哪些特殊之处？这篇文章将会分析 Redis 数据库的实现。
 
 ## 数据结构
 
@@ -474,7 +476,7 @@ BLPOP、BRPOP 和 BRPOPLPUSH 三个命令都可能造成客户端被阻塞，只
 
 #### 唤醒
 
-当将新元素添加到列表键时，程序会检查这个键是否存在于前面提到的 redisDb.blocking_keys 字典中， 如果存在， 说明至少有一个客户端因为这个键而被阻塞，程序会为这个键创建一个 readyList 结构， 并将它添加到  redisServer.ready_keys 链表中。
+当将新元素添加到列表键时，程序会检查这个键是否存在于前面提到的 redisDb.blocking_keys 字典中， 如果存在， 说明至少有一个客户端因为这个键而被阻塞，程序会为这个键创建一个`readyList`结构， 并将它添加到  redisServer.ready_keys 链表中。
 
 当 Redis 的主进程将新元素添加到列表中后， 会继续调用 `handleClientsBlockedOnLists()` 函数， 这个函数执行以下操作：
 
@@ -486,10 +488,6 @@ BLPOP、BRPOP 和 BRPOPLPUSH 三个命令都可能造成客户端被阻塞，只
 6. 继续执行步骤 1 ，直到 `ready_keys` 链表里的所有 `readyList` 结构都被处理完为止。
 
 除此之外客户端的定时程序`clientsCron()`也会调用`clientsCronHandleTimeout()`函数，检查是否有处于阻塞状态的客户端已经等待超时，如果有，则清除阻塞状态。避免客户端一直阻塞下去。
-
-## 事务
-
-
 
 ## Reference
 
