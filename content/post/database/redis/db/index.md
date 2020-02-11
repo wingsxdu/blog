@@ -64,6 +64,8 @@ typedef struct redisDb {
 
 ![img](index.assets/v2-83572059d2a3aeae2d5f2a69860e5d57_hd.jpg)
 
+> 图源《Redis 设计与实现》
+
 所以一个 Redis 数据库本质上是一张巨大的哈希表，对数据库的增删改查操作也是对哈希表的增删改查操作。
 
 #### 数据库组
