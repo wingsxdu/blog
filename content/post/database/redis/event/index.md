@@ -266,7 +266,7 @@ Redis 的时间事件分为以下两类：
 3. 检查事件类型，如果是周期事件则刷新该事件下一次的执行事件，否则从列表中删除事件。
 
 ```c
-		aeGetTime(&now_sec, &now_ms);
+        aeGetTime(&now_sec, &now_ms);
         // 如果当前时间等于或等于事件的执行时间，那么说明事件已到达，执行这个事件
         if (now_sec > te->when_sec ||
             (now_sec == te->when_sec && now_ms >= te->when_ms))
