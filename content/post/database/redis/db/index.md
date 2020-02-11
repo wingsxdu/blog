@@ -6,6 +6,8 @@ tags: [
     "Analyze",
     "数据库",
     "Redis",
+    "内存回收",
+    "列表阻塞",
 ]
 categories: [
     "Analyze",
@@ -495,3 +497,4 @@ BLPOP、BRPOP 和 BRPOPLPUSH 三个命令都可能造成客户端被阻塞，只
 - [Redis Commands](https://redis.io/commands)
 - Redis 源码注释
 - 《Redis 设计与实现》
+
