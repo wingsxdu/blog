@@ -134,6 +134,4 @@ slowlog 的实现逻辑不难理解，如果超时就在链表表头加入新元
 
 ## Reference
 
-- [Redis Protocol specification](https://redis.io/topics/protocol)
-- [通信协议](http://redisdoc.com/topic/protocol.html#id8)
 - 《Redis 设计与实现》
