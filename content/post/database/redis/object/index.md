@@ -17,7 +17,7 @@ date: 2020-02-02T13:34:56+08:00
 draft: false
 ---
 
-> 对 Redis 数据库的源码阅读，当前版本为 Redis 6.0 RC1。注释项目地址：[github.com](https://github.com/wingsxdu/redis)
+> 对 Redis 数据库的源码阅读，当前版本为 Redis 6.0 RC1，参考书籍《Redis 设计与实现》及其注释。项目地址：[github.com/wingsxdu](https://github.com/wingsxdu/redis)
 
 Redis 内部实现了一组比较全面的数据结构类型，但并没有直接使用这些数据结构来实现键值对数据库，而是构建了一个对象系统，利用对象系统将这些数据结构进一步封装。对象系统的设计不但可以针对不同的使用场景，为一种键值对设置不同的底层数据结构，还简化了键值对的回收、共享等操作。这篇文章将简要分析 Redis 对象系统的实现。
 

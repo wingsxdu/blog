@@ -16,7 +16,7 @@ date: 2020-02-11T15:10:37+08:00
 draft: false
 ---
 
-> 对 Redis 数据库的源码阅读，当前版本为 Redis 6.0 RC1。注释项目地址：[github.com](https://github.com/wingsxdu/redis)
+> 对 Redis 数据库的源码阅读，当前版本为 Redis 6.0 RC1，参考书籍《Redis 设计与实现》及其注释。项目地址：[github.com/wingsxdu](https://github.com/wingsxdu/redis)
 
 Redis 采用事件驱动机制来处理大量的 I/O 操作，并实现了自己的事件驱动库，基于 Reactor 模式开发了自己的网络事件处理器，使用 I/O 多路复用程序监听多个 Socket，以处理大量的事件。
 

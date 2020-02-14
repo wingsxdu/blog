@@ -16,7 +16,7 @@ draft: false
 
 ---
 
-> 对 Redis 数据库的源码阅读，当前版本为 Redis 6.0 RC1。注释项目地址：[github.com](https://github.com/wingsxdu/redis)
+> 对 Redis 数据库的源码阅读，当前版本为 Redis 6.0 RC1，参考书籍《Redis 设计与实现》及其注释。项目地址：[github.com/wingsxdu](https://github.com/wingsxdu/redis)
 
 Redis 内部一个有趣的小算法，将`long long` 类型转换为 `string` 类型数据。这个算法的原理十分巧妙，在一些编程语言中的类型转换也采用了类似的实现方式。
 

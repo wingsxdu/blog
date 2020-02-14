@@ -18,7 +18,7 @@ date: 2020-02-08T19:30:30+08:00
 draft: false
 ---
 
-> 对 Redis 数据库的源码阅读，当前版本为 Redis 6.0 RC1。注释项目地址：[github.com](https://github.com/wingsxdu/redis)
+> 对 Redis 数据库的源码阅读，当前版本为 Redis 6.0 RC1，参考书籍《Redis 设计与实现》及其注释。项目地址：[github.com/wingsxdu](https://github.com/wingsxdu/redis)
 
 在了解 Redis 的底层数据结构之后，Redis 是如何将这些碎片化的数据以键值对的形式存储在数据库中，并执行内存回收操作，Redis 数据库的实现又存在哪些特殊之处？这篇文章将会分析 Redis 数据库的实现。
 

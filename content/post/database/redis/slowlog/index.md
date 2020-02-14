@@ -16,7 +16,7 @@ draft: false
 
 ---
 
-> 对 Redis 数据库的源码阅读，当前版本为 Redis 6.0 RC1。注释项目地址：[github.com](https://github.com/wingsxdu/redis)
+> 对 Redis 数据库的源码阅读，当前版本为 Redis 6.0 RC1，参考书籍《Redis 设计与实现》及其注释。项目地址：[github.com/wingsxdu](https://github.com/wingsxdu/redis)
 
 Redis 的慢查询日志功能用来记录执行时间超过给定时长的命令请求，我们可以利用这个功能分析和优化查询速度。本篇文章将会对 Redis 的慢查询日志功能的实现原理进行分析。
 
