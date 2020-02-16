@@ -32,6 +32,8 @@ Redis 是内存数据库，将数据保存在内存中，以换取更快的读�
 
 传统的 UNIX 或 Linux 系统在内核中设有多个缓冲区，分为高速缓存或页面高速缓存，大多数磁盘 I/O 都通过缓冲进行。当将数据写入文件时，内核通常先将该数据复制到一个缓冲区中，如果该缓冲区尚未写满，那么并不会将其排入输出队列，而是等待缓冲区写满或者当空闲内存不足内核需要重用该缓冲区以便存放其他磁盘块数据时，再将该缓冲排入输出队列。当这个缓冲区到达输出队列的队首时，才进行实际的 I/O 操作。这种输出方式被称为延迟写（delayed write）。
 
+![delayed-write](index.assets/delayed-write.png)
+
 #### 延迟写
 
 当我们调用`write()`函数写出数据时，函数将数据写入到内核的缓冲区中后（仅仅是写到缓冲区），函数便立即返回。由于操作系统的设计，对于调用者来说，数据已经写入文件了，能够被其它进程读到，可是并不意味着它们已经被写到了外部永久存储介质上，即使调用`close()`函数关闭文件后也可能如此，因为缓冲区的数据可能还在等待输出。
@@ -59,6 +61,8 @@ Reids 作者 antirez 在 [Redis persistence demystified](http://antirez.com/post
 5. 磁盘控制器将数据写到物理介质中
 
 通过上一小结的概括，可以了解到`write()`系统调用可以控制第 3 步，`fsync`系统调用可以控制第 4 步，但第 5 步则取决于磁盘硬件，我们已经无法操控。
+
+![Redis-persistence](index.assets/Redis-persistence.png)
 
 如果我们考虑的故障只涉及到数据库软件层面而不涉及到操作系统内核（如数据库进程被 kill 或崩溃），步骤 3 成功返回后就可以认为写操作是安全的。在`write()`系统调用返回后，数据被传输到内核，即使数据库进程崩溃，内核也会将数据写到磁盘。如果考虑到突然停电或者更加灾难性的情况，所有缓存都已经失效，那么只有第 5 步骤完成后才可以认为写操作是安全的。
 
@@ -201,7 +205,7 @@ int serverCron(struct aeEventLoop *eventLoop, long long id, void *clientData) {
 
 ## AOF 日志
 
-AOF 是一种 Append Only File 的持久化方案，以追加独立日志的方式记录每次修改数据库命令，例如执行以下命令：
+AOF 是一种 Append Only File 的持久化方案，以追加独立日志的方式记录每次修改数据库命令， AOF 文件是以 Redis RESP 通信协议的格式保存的，以便进行 AOF 数据恢复。例如执行以下命令：
 
 ```shell
 redis 127.0.0.1:6379> set key1 Hello
@@ -221,7 +225,7 @@ $ cat appendonly.aof
 *2$6SELECT$10*3$3set$4key1$5Hello*3$6append$4key1$7 World!*2$3del$4key1
 ```
 
-可以看出 AOF 文件是以 Redis RESP 通信协议的格式保存的，以便进行 AOF 数据恢复。而且最后一个删除命令并没有被记录，避免不必要的 I/O 写操作影响性能。
+可以看出最后一个删除命令并没有被记录，避免不必要的 I/O 写操作影响性能。
 
 #### 数据结构
 
@@ -230,44 +234,15 @@ $ cat appendonly.aof
 ```c
 struct redisServer {
     /* AOF persistence */
-    // 是否开启
-    int aof_enabled;                /* AOF configuration */
-    // AOF 状态（开启/关闭/可写）
     int aof_state;                  /* AOF_(ON|OFF|WAIT_REWRITE) */
-    // 所使用的 fsync 策略（每个写入/每秒/从不）
     int aof_fsync;                  /* Kind of fsync() policy */
     int aof_no_fsync_on_rewrite;    /* Don't fsync if a rewrite is in prog. */
     int aof_rewrite_perc;           /* Rewrite AOF if % growth is > M and... */
     off_t aof_rewrite_min_size;     /* the AOF file is at least N bytes. */
-    // 最后一次执行 BGREWRITEAOF 时， AOF 文件的大小
-    off_t aof_rewrite_base_size;    /* AOF size on latest startup or rewrite. */
-    // AOF 文件的当前字节大小
-    off_t aof_current_size;         /* AOF current size. */
     off_t aof_fsync_offset;         /* AOF offset which is already synced to disk. */
-    int aof_flush_sleep;            /* Micros to sleep before flush. (used by tests) */
-    int aof_rewrite_scheduled;      /* Rewrite once BGSAVE terminates. */
-    // 负责进行 AOF 重写的子进程 ID
     pid_t aof_child_pid;            /* PID if rewriting process */
-    // AOF 重写缓存链表，链接着多个缓存块
-    list *aof_rewrite_buf_blocks;   /* Hold changes during an AOF rewrite. */
-    // AOF 缓冲区
     sds aof_buf;      /* AOF buffer, written before entering the event loop */
-    // AOF 文件的描述符
     int aof_fd;       /* File descriptor of currently selected AOF file */
-    // AOF 的当前目标数据库
-    int aof_selected_db; /* Currently selected DB in AOF */
-    // 推迟 write 操作的时间
-    time_t aof_flush_postponed_start; /* UNIX time of postponed AOF flush */
-    // 最后一直执行 fsync 的时间
-    time_t aof_last_fsync;            /* UNIX time of last fsync() */
-    // 最后一次 AOF 重写用时
-    time_t aof_rewrite_time_last;   /* Time used by last AOF rewrite run. */
-    // AOF 重写的开始时间
-    time_t aof_rewrite_time_start;  /* Current AOF rewrite start time. */
-    // 最后一次执行 BGREWRITEAOF 的结果
-    int aof_lastbgrewrite_status;   /* C_OK or C_ERR */
-    // 记录 AOF 的 write 操作被推迟了多少次
-    unsigned long aof_delayed_fsync;  /* delayed AOF fsync() counter */
     // 指示是否需要每写入一定量的数据，就主动执行一次 fsync()
     int aof_rewrite_incremental_fsync;/* fsync incrementally while aof rewriting? */
     int rdb_save_incremental_fsync;   /* fsync incrementally while rdb saving? */
