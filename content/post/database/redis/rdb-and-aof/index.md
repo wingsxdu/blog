@@ -109,7 +109,6 @@ int rdbSave(char *filename, rdbSaveInfo *rsi) {
     rioInitWithFile(&rdb,fp);
     // 开始备份
     startSaving(RDBFLAGS_NONE);
-
     
     if (server.rdb_save_incremental_fsync)
         rioSetAutoSync(&rdb,REDIS_AUTOSYNC_BYTES);
@@ -118,8 +117,6 @@ int rdbSave(char *filename, rdbSaveInfo *rsi) {
         errno = error;
         goto werr;
     }
-
-    /* Make sure data will not remain on the OS's output buffers */
     if (fflush(fp) == EOF) goto werr;
     if (fsync(fileno(fp)) == -1) goto werr;
     if (fclose(fp) == EOF) goto werr;
@@ -229,7 +226,7 @@ $ cat appendonly.aof
 
 #### 数据结构
 
-与 AOF 相关的变量也很多，这里也选择了一些比较重要的：
+与 AOF 相关的变量也很多，这里也选择了一些主要的：
 
 ```c
 struct redisServer {
@@ -253,7 +250,7 @@ AOF 功能提供了三种`aof_fsync`策略，以不同的时间频率执行日�
 
 - **always**：Redis 在每个事件循环中都会调用`write()`系统调用将 AOF 缓冲区中的所有内容写入到内核缓存，并且立即调用`fsync()`系统调用同步 AOF 文件。always 的效率是三种策略中最差的一个，但也是最安全的，当发生故障停机时，AOF 持久化也只会丢失最近一个事件循环中的命令数据。
 - **everysec**：Redis 在每个事件循环中都会调用`write()`系统调用将 AOF 缓冲区中的所有内容写入到内核缓存，每隔一秒调用`fsync()`系统调用对 AOF 文件进行一次同步。该过程在子线程中执行，效率较高，最多只会丢失最近一秒的数据；
-- **no**：Redis 在每个事件循环中都会调用`write()`系统调用将 AOF 缓冲区中的所有内容写入到内核缓存，而 AOF 文件的同步由操作系统控制。这种模式下速度最快，但是同步的时间间隔较长，出现故障时可能会丢失较多数据。
+- **no**：Redis 在每个事件循环中都会调用`write()`系统调用将 AOF 缓冲区中的所有内容写入到内核缓存，而 AOF 文件的同步由操作系统控制。这种模式下速度与 RDB 方式相差无几，但是同步的时间间隔较长，出现故障时可能会丢失较多数据。
 
  Redis 提供的三种文件同步策略中，系统调用函数`fsync()`的使用周期越频繁，读写效率就越差，但是相应的安全性也越高，发生宕机时丢失的数据越少。
 
@@ -266,6 +263,8 @@ AOF 功能提供了三种`aof_fsync`策略，以不同的时间频率执行日�
 - 过期的数据不再写入 AOF 文件；
 - 无效的命令不再写入 AOF 文件；
 - 多条命令可以合并为单个。比如：`sadd myset v1, sadd myset v2, sadd myset v3`可以合并为`sadd myset v1 v2 v3`。
+
+![aof-rewrite](index.assets/aof-rewrite.png)
 
 开启 AOF 重写功能可以通过执行`BGREWRITEAOF`手动触发执行，也可以设置下面两个配置项，让程序自动决定触发时机：
 
@@ -310,9 +309,9 @@ int rewriteAppendOnlyFileBackground(void) {
 - RDB 在调用`write()`后会立即调用`fsync()`将数据写入磁盘缓冲，而 AOF 会根据`aof_fsync`策略在不同的时机将数据写入磁盘；
 - RDB 是一个紧凑压缩的二进制文件，代表 Redis 在某个时间点上的数据备份，适合全量复制场景，比如每 6 小时执行`BGSAVE`备份，并把 RDB 文件拷贝到远程机器或者文件系统中，用于灾难恢复；
 - Redis 加载 RDB 恢复数据远远快于 AOF 的方式；
-- RDB 方式数据无法做到实时持久化，AOF 方式能否做到实时持久化，视`aof_fsync`策略而定。
+- RDB 方式数据无法做到实时持久化，AOF 方式能否做到实时持久化，需要将`aof_fsync`策略设置为 always。
 
-Redis 的持久化方案在性能与速度之间做了一定的取舍，通过使用子进程策略，提高了非实时持久化的性能。虽然在执行真正的实时持久化有损失一定的性能，但 Redis 通常用于数据缓冲场景，很少直接用到实时持久化，仅仅是一个备用选择。
+Redis 的持久化方案在性能与速度之间做了一定的取舍，使用子进程提高了非实时持久化的性能。虽然在**执行真正的实时持久化**有损失一定的性能，Redis 最常见的场景是做数据缓冲，可能是做为一个备用选择。
 
 ## Reference
 
