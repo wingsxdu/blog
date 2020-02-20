@@ -1,45 +1,39 @@
 ---
-title: About Author
+title: 关于博主
 author: beihai
 type: page
 date: 2018-11-21T20:12:15+00:00
 weight: 20
 ---
 
-[转至中文版](https://www.wingsxdu.com/zh-cn/about)
+Gopher，软件开发者，电子产品爱好者；
 
-Gopher, Software Developer, Digital Product Enthusiasts
+不务正业的某西北 211 在校学生；
 
-A northwest China 211 college current student, not Computer Science.
 
-Born in 1998 in mainland China, decided to **self study programming** from 2018.
+热爱阅读，喜欢音乐、电影与艺术表演。
 
-Did **Back-end**, **Database** and **Blockchain** developments with **Golang**, now learning docker&k8s.
+#### 个人经历
 
-I am keen on **reading** and like music, film, artistic performance.
+前华创俱乐部、院科协、学生会成员，因不喜学生社团”TALK IS CHEAP“的水气氛于大一退部
 
-------
+于 2018 年中开始自学编程，帮创业的同学写写代码
 
-#### Person Experience
+2019 年与名义上的导师研究区块链，参加比赛
 
-Former member of hwclub, student union,and leave all because of talk big.
+ 个人项目托管在：[Github](https://github.com/wingsxdu)
 
-Self study programming when I was a freshman at college, then write codes for my schoolmate's start-up, in 2019 research Blockchan with nominal mentor.
+##### 技术栈
 
-Defeatist of China's education, but not a pessimist.
+- Golang 服务端：gin、echo、gorm、grpc 等；
+- 数据库：Redis、Mysql；
+- 对区块链有一定了解；
+- 996经验丰富 🙂
 
- Personal projects are hosted on: [Github](https://github.com/wingsxdu)
+##### 阅读
 
-#### Technology Stack
-
-- Golang Back-end&Database: gin、echo、gorm、grpc .eg
-- know a little bit about Blockchain
-- can write nativa app and web
-- experienced in 996 🙂
-
-#### Reading
-
-- *The Three-Body Problem*
-- *To Live*
--  *World of Plainness*
--  *Huawei: Leadership, Culture and Connectivity*
+- 《三体》
+- 《活着》
+- 《平凡的世界》
+- 《下一个倒下的会不会是华为》
+- 《五分钟商学院》
