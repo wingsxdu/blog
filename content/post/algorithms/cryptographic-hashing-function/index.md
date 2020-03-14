@@ -27,7 +27,7 @@ draft: false
 - 唯一性：在不改动散列数值的前提下，修改消息内容是不可行的；
 - 抗碰撞性：对于两个不同的消息，它不能给与相同的散列数值。
 
-> 其中不可碰撞性是指以当前的算法与算力水平，哈希碰撞的开销超出人类可以接受的水平。以 SHA-256 为例，其哈希数值可能性约有 10<sup>77</sup> 种，而目前人类估计的宇宙原子总数约 10<sup>80</sup>。 虽然有[生日攻击](https://juejin.im/post/5ce6b828f265da1bba58dd9e#heading-1)等密码学攻击手段存在，散列碰撞的概率会大幅提升，但仍然是一个巨大的数字。
+> 其中不可碰撞性是指以当前的算法与算力水平，哈希碰撞的开销超出人类可以接受的水平。以 SHA-256 为例，其哈希数值可能性约有 10<sup>77</sup> 种，而目前人类估计的宇宙原子总数约 10<sup>80</sup>。 虽然有概率论[生日悖论](https://wiki.mbalib.com/wiki/%E7%94%9F%E6%97%A5%E6%82%96%E8%AE%BA)问题存在，N 位长度的哈希表可能发生碰撞测试次数不是2<sup>N</sup>次而是只有2<sup>N/2</sup>次，但仍然是一个巨大的数字。
 
 常见的加密哈希函数有 MD5、SHA-1、SHA-2（包含 SHA-224、SHA-256、SHA-512 等），虽然种类繁多，但除了生成摘要的长度 、循环体内容等有一些差异外，算法的基本结构是一致的。下面以 SHA-256 为例，详细介绍加密哈希算法的执行步骤。
 
@@ -73,13 +73,13 @@ a2bfe8a1 a81a664b c24b8b70 c76c51a3 d192e819 d6990624 f40e3585 106aa070
 
 #### 主循环
 
-在进行消息摘要计算之前，需要将消息分解成 512bit 大小的块，分成块的数量也是算法需要循环的次数。每个块又将分解为 16 个 32bit 大端存储的字，记为w[0], …, w[15]。在计算过程中需要 64 个“字”，前 16 个字直接由消息的第 i 个块分解得到，其余的 48 个字由下面迭代公式得到：
+在进行消息摘要计算之前，需要将消息分解成 512bit 大小的块，分成块的数量也是算法需要循环的次数。每个块又将分解为 16 个 32bit 大端存储的字，记为w[0], …, w[15]。由于在计算过程中需要 64 个“字”，前 16 个字直接由消息的第 i 个块分解得到，其余的 48 个字由下面的迭代公式得到：
 
 ```
 W[t] = Q1(W[t-2]) + W[t-7] + Q0(W[t-15]) + W[t-16]
 ```
 
-在计算过程中用到了六个运算函数：
+在摘要计算过程中用到了六个运算函数：
 
 ```
 Ch(x,y,z) = ((x & y) ^ ((~x) & z))
@@ -132,12 +132,16 @@ H7 = 1f83d9ab + 948d25b6 = b410ff61
 H8 = 5be0cd19 + 961f4894 = f20015ad
 ```
 
+上述流程可用下面的简图表示。可以看出，摘要算法通过“分组”（block）进行操作，对消息不断进行压缩，最终生成密文。
+
+![hashing](index.assets/hashing.png)
+
 ## 总结
 
-随着时间的推移，加密哈希算法逐渐被攻破，已经不具有不可碰撞性，即`MD5(m1) == MD5(m2)`：
+随着攻击算法的不断改进与计算能力的增强，加密哈希算法逐渐被“破解”，例如 MD5 和 SHA-1 已经被证明不具有不可碰撞性，即`MD5(m1) == MD5(m2)`：
 
 1. 2004 年，王小云教授证明 MD5 可以产生碰撞：[Collisions for Hash Functions](https://eprint.iacr.org/2004/199.pdf)；
-2. 2005 年，王小云教授改进算法在 2<sup>63</sup> 时间复杂度内找到 SHA-1 碰撞：[New Cryptanalytic Results Against SHA-1](http://www.schneier.com/blog/archives/2005/08/new_cryptanalyt.html)；
+2. 2005 年，王小云教授改进攻击算法，在 2<sup>63</sup> 时间复杂度内找到 SHA-1 碰撞：[New Cryptanalytic Results Against SHA-1](http://www.schneier.com/blog/archives/2005/08/new_cryptanalyt.html)；
 3. 2017 年，Google 公司创建了两个有着相同的 SHA-1 值但内容不同的 PDF 文件，代表 SHA-1 算法已被正式攻破：[Google: Announcing the first SHA1 collision](https://security.googleblog.com/2017/02/announcing-first-sha1-collision.html) 。
 
 为什么不可碰撞性对加密哈希算法如此重要？从 SHA-256 算法的实现步骤可以看出，加密哈希的逆向计算几乎是不可能的，暴力破解法的成本也太高，因此对加密哈希算法所谓的“攻击”实际是利用哈希碰撞为突破口进行数据伪造。以常见的保存用户密码为例，如果是明文存储，一旦发生数据泄露，那么所有的账户都会被盗用，因此常用下面一些方法进行 Hash 加密：
@@ -155,6 +159,7 @@ H8 = 5be0cd19 + 961f4894 = f20015ad
 - [散列函数](https://zh.wikipedia.org/wiki/%E6%95%A3%E5%88%97%E5%87%BD%E6%95%B8)
 - [密码散列函数](https://zh.wikipedia.org/wiki/%E5%AF%86%E7%A2%BC%E9%9B%9C%E6%B9%8A%E5%87%BD%E6%95%B8)
 - [Birthday attack](https://en.wikipedia.org/wiki/Birthday_attack)
+- [生日悖论](https://wiki.mbalib.com/wiki/%E7%94%9F%E6%97%A5%E6%82%96%E8%AE%BA)
 - [Descriptions of SHA-256, SHA-384, and SHA-512](http://www.iwar.org.uk/comsec/resources/cipher/sha256-384-512.pdf)
 - [加密算法原理分析(MD5、SHA-256)](https://juejin.im/post/5ce6b828f265da1bba58dd9e#heading-1)
 - [彩虹表（rainbow table）](https://www.jianshu.com/p/732d9d960411)
