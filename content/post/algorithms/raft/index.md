@@ -230,6 +230,8 @@ Raft 算法将共识问题分解成数个相对独立的字问题，总体流程
 
 这种将复杂问题分解化的设计思想很好地描述了 Raft 是如何解决分布式系统中的一致性问题，并提出了一定的解决方案，帮助开发者更好地将其应用到工程中。
 
+> 文中主要内容与部分图片来自论文[In Search of an Understandable Consensus Algorithm](https://web.stanford.edu/~ouster/cgi-bin/papers/raft-atc14)与[寻找一种易于理解的一致性算法（扩展版）](https://github.com/maemual/raft-zh_cn/blob/master/raft-zh_cn.md)，存在错误之处可以留言指正。
+
 ## Reference
 
 - [CAP theorem](https://zh.wikipedia.org/wiki/CAP%E5%AE%9A%E7%90%86)
