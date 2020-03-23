@@ -33,21 +33,20 @@ Go 语言目前已经拥有了成熟的 HTTP 处理包，这使得编写稳健�
 - [测试与错误处理]()
 - [部署维护]()
 
-## 环境配置{#环境配置}
+## 环境配置
 
-### Go 安装{##Go 安装}
+### Go 安装
 
-Go 有多种安装方式，其中三种最常见的安装方式：
+Go 有多种安装方式，其中三种最常的安装包，支持多种系统，推荐这种安装方式。
 
-- Go 标准包安装：[Go 官方](https://golang.org/) 提供了方便的安装包，支持多种系统，推荐这种安装方式。
 - Go 源码安装：对于经常使用 Unix 类系统的用户，从源码安装可以自己定制。
 - 第三方工具安装：目前有很多方便的第三方软件包工具，例如 Linux 的 apt-get 和 wget 、Mac 的 homebrew 等。这种安装方式适合熟悉命令行操作的开发者。
 
 安装 Go 时最好一并安装 Git，一些 go 命令依赖于 Git
 
-### GOPATH 与 Go mod{##GOPATH 与 Go mod}
+### GOPATH 与 Go mod
 
-#### GOPATH {###GOPATH}
+#### GOPATH
 
 $GOPATH 是 go 命令依赖一个重要的环境变量，默认为 `/user/go` 目录，约定有三个子目录：
 
@@ -55,7 +54,7 @@ $GOPATH 是 go 命令依赖一个重要的环境变量，默认为 `/user/go` �
 - pkg：编译后生成的文件（比如：.a）
 - bin：编译后生成的可执行文件（为了方便，可以把此目录加入到 $PATH 变量中）
 
-#### Go mod{###Go mod}
+#### Go mod
 
 在 go 1.11 版本之前，所有的工程文件需放在 src 目录下，在 1.11 后启用新的包依赖管理工具 go mod 后即可在任意目录建立工程。启用方式：
 
@@ -124,13 +123,13 @@ github.com/gin-gonic/gin v1.1.1 v1.1.2 v1.1.3 v1.1.4 v1.3.0 v1.4.0
 $ go get github.com/gin-gonic/gin@v1.3 #更改版本为 1.3
 ```
 
-### 框架{##框架}
+### 框架
 
 我们刚刚用 Gin 框架作为例子简单演示了 go mod 的使用。与其他语言不同的是，Go 语言的框架更类似于一类工具包，对一些常用方法进行封装，开发者可根据需要自行组合定制。
 
 除 Gin 外，比较热门的还有 Echo、Beego 等十余种 Web 框架，也可以应用原生的 http 包进行 web 开发。本系列文章主要应用 [Gin](https://gin-gonic.com/) 与 [Echo](https://echo.labstack.com)。除此之外，也会介绍一些纯 go 语言编写的 orm 引擎、数据库驱动等 。
 
-### 开发工具{##开发工具}
+### 开发工具
 
 几乎所有编辑器都支持 Golang ，但还是列下了几种常用的编辑器
 
@@ -138,7 +137,7 @@ $ go get github.com/gin-gonic/gin@v1.3 #更改版本为 1.3
 - [Visual Studio Code](https://code.visualstudio.com/)：目前使用最多的开源文本编辑器
 - [LiteIDE](https://github.com/visualfc/liteide)： 专门为 Go 语言开发的跨平台轻量级 IDE 
 
-## 总结{#总结}
+## 总结
 
 本文简要介绍了 Go 语言的安装及其开发环境搭建，对新的包管理方式进行了示例演示。在后面的文章中会按照开发流程，进行更深入的了解。
 

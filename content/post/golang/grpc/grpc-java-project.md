@@ -12,13 +12,13 @@ categories: [
     "Grpc",
 ]
 ---
-##### 续上篇介绍
+#### 续上篇介绍
 
 <a href="https://www.wingsxdu.com/?p=1216" target="_blank" rel="noopener noreferrer">Java GRPC proto 编译</a>
 
 现在我们拿到了编译的 Java 文件，其中 User.java 为 rpc 通信，文件名同 .proto 文件名称；CreateAccountGrpc.java 为定义的服务名称，定义几个服务就会编译出几个 Grpc.java 文件
 
-##### 工程中使用
+#### 工程中使用
 
 在 src 目录下新建 package grpc.user，将proto 编译得到的 java类文件都复制到目录下
 

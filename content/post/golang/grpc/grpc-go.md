@@ -12,7 +12,7 @@ categories: [
     "Grpc",
 ]
 ---
-##### 1.1RPC简介
+## 1.1RPC简介
 
 <span>RPC，全称 Remote Procedure Call——远程过程调用，主要用于分布式系统中程序间的通信，基于 TCP 或 UDP 传输协议实现。RPC 属于 IPC（进程间通信）的分支，除 RPC 外还有共享内存、channel 等。</span>
 
@@ -20,7 +20,7 @@ categories: [
 
 GRPC 官网：<https://grpc.io/>
 
-##### 1.2  Protobuf 简介
+## 1.2  Protobuf 简介
 
 **Google Protocol Buffer(简称 Protobuf)是一种轻便高效的结构化数据存储格式，平台无关、语言无关、可扩展，可用于通讯协议和数据存储等领域。**
 
@@ -30,11 +30,7 @@ GRPC 官网：<https://grpc.io/>
 
 中文文档：<a href="http://doc.oschina.net/grpc?t=56831" target="_blank" rel="noopener noreferrer">http://doc.oschina.net/grpc?t=56831</a>
 
-##### 1.2 环境配置
-
-工作环境：ubuntu 16.04
-
-###### protobuf 安装
+#### 1.3 protobuf 安装
 
 官方教程：<https://github.com/protocolbuffers/protobuf/blob/master/src/README.md>
 
@@ -53,7 +49,7 @@ $ sudo ldconfig # refresh shared library cache.
 
 安装完成后输入：protoc &#8211;version 查看版本信息
 
-###### Go语言 Protobuf 编译
+#### Go语言 Protobuf 编译
 
 Go语言版 grpc下载：
 
@@ -66,9 +62,9 @@ Go语言 proto 编译环境：
 <pre class="pure-highlightjs"><code class="null">$ go get -u github.com/golang/protobuf/protoc-gen-go</code></pre>
 同理&#8230;使用了很多 golang.org/ 包，镜像下载参考：[Go 下载包 golang.org/x/][1]
 
-##### 1.3实战使用
+## 1.4 实战使用
 
-###### 定义 proto
+#### 定义 proto
 
 新建 user.proto 文件
 
@@ -92,7 +88,7 @@ message CreateRequestResponse{
 编译 Go 源码，生成user.pb.go（将package user改为 hello)
 
 <pre class="pure-highlightjs"><code class="null">$ protoc --go_out=plugins=grpc:. hello.proto</code></pre>
-###### Go 客户端
+#### Go 客户端
 
 新建userClient.go
 
@@ -114,7 +110,7 @@ func CreateAccount(uid string, service string) (value string, err error){
 }
 ```
 
-###### Go服务端
+#### Go服务端
 
 新建userServer.go
 
@@ -138,6 +134,6 @@ func main(){
 }
 ```
 
-###### 调用
+#### 调用
 
 开启 server 端保持监听端口1330状态，调用<code class="null">CreateAccount()</code>函数传值即可。

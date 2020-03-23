@@ -11,11 +11,11 @@ categories: [
 ]
 
 ---
-##### 前言
+## 前言
 
 <span>在Go语言的发展史中，2018年注定是一个重要的时间点，因为在8月正式发布了Go1.11。Go1.11语言部分虽然没有变化，但是带来了3个重量级的更新：一是</span>`amd64`<span>平台完全支持</span>`AVX512`<span>高性能的指令集；二是Go1.11开始支持模块化的特性；三是Go语言开始WebAssembly平台。这几个改进将成为后Go1时代最大的亮点。而模块是管理任何大型工程必备的工具，但是Go语言发布十年来一直缺乏官方的模块化工具。模块化的特性将彻底解决大型Go语言工程的管理问题，至此Go1除了缺少泛型等特性已经近乎完美。从Go1.13开始（2019年8月），模块化将成为默认的特性，彻底告别<code>GOPATH</code>时代；</span>
 
-##### 使用
+## 使用
 
 golang 1.11版本开启服务：<code class="null">set GO111MODULE=on</code>，高于此版本不用开启
 
@@ -35,6 +35,6 @@ golang 1.11版本开启服务：<code class="null">set GO111MODULE=on</code>，�
   3. <span>环境变量GOPATH不再用于解析imports包路径，即原有的GOPATH/src/下的包，通过import是找不到了。</span>
   4. 旧版 go get 取包过程类似：git clone + go install , 开启Go Module功能后 go get 只有 git clone(download)过程了。老的go get取完主包后，会对其repo下的submodule进行循环拉取。新的go get不再支持submodule子模块拉取。
 
-##### 版本问题
+## 版本问题
 
 在执行编译指令 go build/run 或 go mod tidy 后会根据 import 的包自动索引，但是部分包的 import 路径已经改变，如：echo 的 <code class="null">import </code><code class="null">"github.com/labstack/echo/"</code>索引的包最高为 v3 版本，<code class="null">import </code><code class="null">"github.com/labstack/echo/v4"</code>为echo 的v4版本。
