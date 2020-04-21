@@ -1,5 +1,5 @@
 ---
-bolttitle: "BoltDB 实现原理 · Analyze"
+title: "BoltDB 实现原理 · Analyze"
 author: "beihai"
 summary: "<blockquote><p>BoltDB 是使用 Go 语言实现的嵌入式 K/V 数据库，其目标是为不需要完整数据库服务（如 Postgres 或 MySQL）的项目提供一个简单、快速、可靠的嵌入数据库。BoltDB 已在 Etcd、Bitcoin 等项目中作为底层数据库实现。这篇文章对 BoltDB 的设计原理进行简要分析。</p></blockquote>"
 tags: [
@@ -9,12 +9,11 @@ tags: [
 	"Etcd"
 ]
 categories: [
-    "Analyze",
+    "Analyze",o'n'g
 	"数据库",
 ]
 date: 2020-04-17T13:04:35+08:00
 draft: false
-
 ---
 
 > BoltDB 是使用 Go 语言实现的嵌入式 K/V 数据库，其目标是为不需要完整数据库服务（如 Postgres 或 MySQL）的项目提供一个简单、快速、可靠的嵌入数据库。BoltDB 已在 Etcd、Bitcoin 等项目中作为底层数据库实现。这篇文章对 BoltDB 的设计原理进行简要分析。
@@ -93,9 +92,9 @@ type leafPageElement struct {
 
 `leafPageElement`用于存储真实的键值对数据，因此增加了`vsize`字段，以快速获取查询的键值对信息。`flags`字段的含义会在 **Bucket** 一节中介绍。
 
-通过对`Element`的分析，`branchPage`与`leafPage`的内存布局如下图所示：
+通过对`Element`的分析可以得出`branchPage`与`leafPage`的内存布局如下图所示：
 
-![img](index.assets/9246898-0a761d47189dae73.webp)
+![page-layout](index.assets/page-layout.png)
 
 将 `Element` 和键值对分开存储减少了查找的时间，因为`Element`结构体的大小是固定的，我们可以在 *O(1)* 时间复杂度内获取所有的`Element` ，若是以 `[Element header][key value][...]` 格式存储，需要按顺序遍历查找。
 
@@ -245,17 +244,9 @@ db.Update(func(tx *bolt.Tx) error {
 
 `subBucket`本身也是一个完整的 B+ Tree，其名称做为 key，一个`bucket`结构体做为 value，索引到子 Bucket 根节点所在的页面。BoltDB 持有一个 `rootBucket`，存储着数据库中所有 B+ Tree 的根节点，我们创建的每一个 `Bucket` 都是 `rootBucket` 的 `subBucket`。
 
-![image](index.assets/subbucketTree.png)
+![subbucket](index.assets/subbucket-1587453186580.png)
 
-从上图可以看出，父 Bucket 中只保存了`subBucket`的 `bucket`字段，每个 `subBucket` 都会占用额外的 page 存储数据，通常情况下嵌套的子 Bucket 不会拥有大量的数据，这造成了空间的浪费。BoltDB 使用`inlineBucket`解决这个问题，将较小的子 Bucket 的值放在父 bucket 的叶子节点中，从而减少 page 的使用数量。
-
-
-
-为保证程序的稳定运行，BoltDB 对`inlineBucket`做出了一些限制要求：
-
-1. `inlineBucket`的大小不能超过 pageSize 的 1/4；
-2. `inlineBucket`只能含有一个叶子节点；
-3. `inlineBucket`的`bucket.root`字段值为 0，用于表明身份。
+从上图可以看出，父 Bucket 中只保存了`subBucket`的 `bucket`字段，每个 `subBucket` 都会占用额外的 page 存储数据，通常情况下嵌套的子 Bucket 不会拥有大量的数据，这造成了空间的浪费。BoltDB 使用`inlineBucket`解决这个问题，将较小的子 Bucket 的值直接存储在父 bucket 的叶子节点中，从而减少 page 的使用数量。
 
 `inlineBucket`是对`subBucket` 的优化，我们可以通过下面这段代码推理出，其本质是在`subBucket` 的值后面追加一个完整的 page 结构，并以字节数组的形式写入文件。
 
@@ -284,24 +275,21 @@ func (b *Bucket) inlineable() bool {
 	return true
 }
 
-func (b *Bucket) spill() error {
-	for name, child := range b.buckets {
-		if child.inlineable() {
-			child.free()
-			value = child.write()
-		} else {
-        ...
-
-}
 ```
+
+为保证程序的稳定运行，BoltDB 对`inlineBucket`做出了一些限制要求：
+
+1. `inlineBucket`的大小不能超过 pageSize 的 1/4；
+2. `inlineBucket`只能含有一个叶子节点；
+3. `inlineBucket`的`bucket.root`字段值为 0，用以表明结构类型。
 
 ## 事务
 
 BoltDB 支持 ACID 事务，并采用了使用读写锁机制，支持多个读操作与一个写操作并发执行，让应用程序可以更简单的处理复杂操作。每个事务都有一个 `txid`，其中`db.meta.txid` 保存了最大的已提交的写事务 id。BoltDB 对写事务和读事务执行不同的 id 分配策略：
 
-- 读事务： `txid == db.meta.txid`；
+- 读事务：`txid == db.meta.txid`；
 - 写事务：`txid == db.meta.txid + 1`；
-- 当写事务成功提交时，会更新了`db.meta.txid`为当前事务 id.。
+- 当写事务成功提交时，会更新了`db.meta.txid`为当前写事务 id.。
 
 #### MVCC
 
@@ -367,7 +355,7 @@ BoltDB 这种设计思路，是为了实现多版本并发控制，加速事务�
 
 ## 总结
 
-BoltDB 是一个精简的数据库实现模型，使用`mmap`实现了数据的零拷贝，利用 B+ Tree 进行索引，依赖写时复制和`meta`副本来实现 MVCC，对于理解数据库系统的相关概念很有帮助。
+BoltDB 是一个精简的数据库实现模型，使用`mmap`实现了数据的零拷贝，利用 B+ Tree 进行索引，对理解数据库系统的相关概念很有帮助。BoltDB 的写事务实现比较巧妙，利用`meta`副本、COW 和 freelist 机制实现并发控制，提供了一种解决问题的思路，但是随机写的性能较差，适合读事务密集的场景。
 
 **B+ Tree 相关阅读**：[Concepts of B+ Tree and Extensions – B+ and B Tree index files in DBMS](https://www.tutorialcup.com/dbms/b-tree.htm)
 
