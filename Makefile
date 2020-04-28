@@ -14,7 +14,6 @@ push:
 		$(GIT_Push)
 pull:
 		git pull
-		rm -rf public
 		$(HUGO) 
 update:
 		git submodule foreach 'git checkout -f' 
