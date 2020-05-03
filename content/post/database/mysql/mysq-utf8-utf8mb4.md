@@ -1,16 +1,16 @@
 ---
-title: UTF-8 编码与 mysql 中的 utf8、utf8mb4
+title: UTF-8 编码与 MySQL 中的 utf8、utf8mb4
 author: beihai
 type: post
 date: 2019-08-19T15:10:43+00:00
 tags: [
-    "Mysql",
+    "MySQL",
     "UTF8",
     "实现原理",
     "底层",
 ]
 categories: [
-    "Mysql",
+    "MySQL",
     "字符编码",
 ]
 ---
