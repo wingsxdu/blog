@@ -10,6 +10,7 @@ tags: [
     "底层",
 ]
 categories: [
+    "数据库",
     "MySQL",
     "字符编码",
 ]

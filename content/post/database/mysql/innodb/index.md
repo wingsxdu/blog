@@ -62,6 +62,8 @@ page （在一些资料中被称为 block）则是表空间数据存储的基本
 |   32KB    |    64     |     2MB     |
 |   64KB    |    64     |     4MB     |
 
+从上表可以看出，一个区最小为 1 MB，且最少拥有 64 个页。
+
 #### 数据页结构
 
 页是 InnoDB 存储引擎管理数据的最小磁盘单位，常见的页类型有：数据（索引）页，Undo 页，Inode 页，系统页，BloB 页等等，其中数据页（B+ Tree Node）存放着表中行的实际数据，数据页包括七个部分，文件头部，页头部，最大最小记录，用户记录，空闲空间，数据目录，文件尾部。 简单的来说，数据页分两部分，一部分存储数据行记录，按照行的大小通过指针连接起来，另外一部分存储数据页的目录，用来加速查找。
@@ -141,7 +143,7 @@ CREATE TABLE test (
 
 ##### 辅助索引
 
-辅助索引中叶子节点并不包含行记录的数据，而是记录着对应行数据的聚集索引（即主键）。当通过辅助索引来寻找数据时，InnoDB 存储引擎会遍历辅助索引获得行数据的主键，最后在聚集索引中使用主键获取对应的行记录
+辅助索引中叶子节点并不包含行记录的数据，而是记录着对应行数据的聚集索引（即主键）。当通过辅助索引来寻找数据时，InnoDB 存储引擎会遍历辅助索引获得行数据的主键，最后在聚集索引中使用主键获取对应的行记录。
 
 辅助索引的存在并不影响数据在聚集索引中的组织，因此每张表上可以有多个辅助索引，在上面的 test 表中，索引`idx_name`与`idx_a_b`都是辅助索引
 
@@ -164,12 +166,6 @@ SELECT * FROM test WHERE a=1 AND b=2 AND c=3;
 
 在第二条与第三条语句中，查询优化器会判断这条 SQL 语句以什么样的顺序执行效率最高，所以最后所查询的结果是一样的。
 
-#### 自适应哈希索引
-
-自适应哈希索引是 InnoDB 缓冲池的一部分，InnoDB 存储引擎会监控表上二级索引的查找，如果发现某二级索引被频繁访问，通过建立哈希索引可以带来速度的提升。自适应哈希索引经哈希函数映射到一个哈希表中，因此对于字典类型的查找非常快速，而对于其他查找类型，如范围查找，是无法使用哈希索引的。
-
-InnoDB 存储引擎使用哈希算法来对字典进行查找，其冲突机制采用链表方式，哈希函数采用除法散列方式。由于自适应哈希索引是由 InnoDB 存储引擎自己控制的，DBA 本身并不能对其进行干预，但是可以通过参数`innodb_adaptive_hash_index`来禁用或启动此特性，默认为开启。
-
 #### 全文检索
 
 全文检索是将存储于数据库中的整本书或整篇文章中的任意内容信息查找出来的技术。它可以根据需要获得全文中有关章、节、段、句、词等信息，也可以进行各种统计和分析。例如在下面的 SQL 语句中，我们可以查询博客内容包含单词`MySQL`的文章：
@@ -182,8 +178,8 @@ SELECT * FROM blog WHERE content LIKE '%MySQL%';
 
 全文检索通常使用倒排索引来实现。倒排索引在辅助表中存储了单词与单词自身在一个或多个文档中所在位置之间的映射，通俗地说，**倒排索引用来记录有哪些文档包含了某个单词**。这通常利用关联数组实现，其拥有两种表现形式：
 
-- **inverted file index**，其表现形式为{单词，单词所在文档的 ID}；
-- **full inverted index**，其表现形式为{单词，(单词所在文档的 ID，在具体文档中的位置)}。
+- **inverted file index**，其表现形式为{word，word 所在文档的 ID}；
+- **full inverted index**，其表现形式为{word，(word 所在文档的 ID，在具体文档中的位置)}。
 
 例如，有下面这样的一张表：
 
@@ -204,11 +200,49 @@ SELECT * FROM blog WHERE content LIKE '%MySQL%';
 
 从上表中可以看出，full inverted index 还存储了单词所在的位置信息，如`student`这个单词的索引为（1:7），即文档 1 的第 7 个单词为 student。相比之下，full inverted index 占用更多的空间，但是能更好地定位数据，并扩充一些其他的搜索特性。
 
-InnoDB 从 1.2.x 版本开始支持全文检索，并采用 full inverted index 的方式。在 InnoDB 存储引擎中，将（DocumentId，Position）视为一个*ilist*。由于 InnoDB 存储引擎在`ilist`字段中存放了 Position 信息，因此可以进行临近搜索。
+InnoDB 从 1.2.x 版本开始支持全文检索，并采用 full inverted index 的方式。在 InnoDB 存储引擎中，将（DocumentId，Position）视为一个*ilist*。由于 InnoDB 存储引擎在*ilist*字段中存放了 Position 信息，因此可以进行临近搜索。
 
 为了提高全文检索的并行性能，InnoDB 存储引擎会将倒排索引的 word 存放到 6 张辅助表中，每张表根据 word 的 Latin 编码进行分区，保存在磁盘上。除此之外还引入了全文检索索引缓存（FTS Index Cache），FTS Index Cache 是一个红黑树结构，其根据（word，ilist）进行排序，以加速查询操作。
 
-索引设计是数据库中十分复杂的部分，这一小节也只是简要概括了 InnoDB 索引的内部机制，如果有不正确或疑问的内容可以在文章下面留言。
+#### 自适应哈希索引
+
+自适应哈希索引是 InnoDB 缓冲池的一部分，InnoDB 存储引擎会监控表上二级索引的查找，如果发现某二级索引被频繁访问，通过建立哈希索引可以带来速度的提升。自适应哈希索引经哈希函数映射到一个哈希表中，因此对于字典类型的查找非常快速，而对于其他查找类型，如范围查找，是无法使用哈希索引的。
+
+InnoDB 存储引擎使用哈希算法来对字典进行查找，其冲突机制采用链表方式，哈希函数采用除法散列。由于自适应哈希索引是由 InnoDB 存储引擎自己控制的，DBA 本身并不能对其进行干预，但是可以通过参数`innodb_adaptive_hash_index`来禁用或启动此特性，默认为开启。
+
+*索引设计是数据库中十分复杂的部分，这一小节也只是简要概括了 InnoDB 索引的内部机制，如果有不正确或疑问的内容可以在文章下面留言。*
+
+## 内存缓冲区
+
+InnoDB 存储引擎是基于磁盘存储的，并将其中的记录按照页的方式进行管理。由于 CPU 速度与磁盘速度之间的鸿沟，基于磁盘的数据库系统通常使用内存缓冲区技术来提高数据库的整体性能。
+
+#### Page Cache
+
+InnoDB 会将读取过的页缓存在内存中，并使用最近最少使用 （LRU） 算法将缓冲池作为列表进行管理，以增加缓存命中率。
+
+InnoDB 对 LRU 算法进行了一定的改进，执行*中点插入策略*，默认前 5/8 为`young list`，存储经常被使用的热点页，后 3/8 为`old list`。新读入的 page 默认被加在`old list`的头部，如果在运行过程中`old list`的数据被访问到了，那么这个页就会被移动到`young list`的头部。
+
+![Buffer-Pool-List](Buffer-Pool-List.png)
+
+每当 InnoDB 缓存新的数据页时，会优先从`Free List`中查找空余的缓存区域，如果不存在，那么就需要从`LRU List`淘汰一定的尾部节点。不管数据页位于`young list`还是`old list`，如果没有被访问到，那么最终都会被移动到`LRU List`的尾部作为牺牲者*
+
+#### Change Buffer
+
+Change Buffer 用于记录数据的修改，因为 InnoDB 的辅助索引不同于聚集索引的顺序插入，如果每次修改二级索引都直接写入磁盘，则会有大量频繁的随机 IO。
+
+InnoDB 从 1.0.x 版本开始引入了 Change Buffer，主要目的是将对**非唯一辅助索引**页的操作缓存下来，如果辅助索引页已经在缓冲区了，则直接修改即可；如果不在，则先将修改保存到 Change Buffer。Change Buffer 的数据在对应辅助索引页读取到缓冲区时合并到真正的辅助索引页中，以此减少辅助索引的随机 IO，并达到操作合并的效果。
+
+![change-buffer](change-buffer.png)
+
+在 MySQL 5.5 之前 Change Buffer 其实叫 Insert Buffer，最初只支持 insert 操作的缓存，随着支持操作类型的增加，改名为 Change Buffer，现在 InnoDB 存储引擎可以对 INSERT、DELETE、UPDATE 都进行缓冲，对应着：Insert Buffer、Delete Buffer、Purge buffer。
+
+#### Double Write Buffer
+
+当发生数据库宕机时，可能存储引擎正在写入某个页到表中，而这个页只写了一部分，比如 16KB 的页，只写了前 4KB，之后就发生了宕机。虽然可以通过日志进行数据恢复，但是如果这个页本身已经发生了损坏，再对其进行重做是没有意义的。因此 InnoDB 引入 Double Write Buffer 解决数据页半写的问题。
+
+Double Write Buffer 大小默认为 2M，即 128 个数据页。其中分为两部分，一部分留给 batch write，提供批量刷新脏页的操作，另一部分是 single page write，留给用户线程发起的单页刷脏操作。
+
+在对缓冲池的脏页进行刷新时，脏页并不是直接写磁盘，而是会通过`memcpy()`函数将脏页先复制到内存中的 Double Write Buffer，如果 Double Write Buffer 写满了，那么就会调用`fsync()`系统调用，一次性将其中的数据写入到磁盘中，因为这个过程是顺序写入，开销几乎可以忽略。在确保写入成功后，再使用异步 IO 把各个数据页写回自己的表空间中。
 
 ## 锁
 
@@ -230,7 +264,7 @@ S 锁和 S 锁是兼容的，X 锁和其它锁都不兼容，举个例子，事�
 
 我们可以用读写锁的概念来理解 InnoDB 的行级锁，其中共享锁代表了读操作，排他锁代表了写操作，所以我们可以对行数据进行**并行读**，但是只能**串行写**，以此来保证 MySQL 内部不会发生资源竞争现象。
 
-共享锁还是互斥锁都只能对某一个数据行进行加锁，为了支持在不同粒度上进行加锁操作，InnoDB 存储引擎支持一种额外的锁方式，称之为意向锁，由 InnoDB 自动添加，且都是表级别的锁：
+共享锁与排他锁都只能对某一个数据行进行加锁，为了支持在不同粒度上进行加锁操作，InnoDB 存储引擎支持一种额外的锁方式，称之为意向锁，由 InnoDB 自动添加，且都是表级别的锁：
 
 - **意向共享锁（IS）**：事务想要获得一张表中某几行的共享锁，必须获得该表的 IS 锁；
 - **意向排他锁（IX）**：事务想要获得一张表中某几行的排他锁，必须获得该表的 IX 锁。
@@ -260,13 +294,13 @@ S 锁和 S 锁是兼容的，X 锁和其它锁都不兼容，举个例子，事�
 
 - **Gap Lock**（间隙锁）：该锁会锁定一个范围，但是不括记录本身；
 
-  当使用类似 `SELECT * FROM table WHERE age BETWEEN 20 AND 30 FOR UPDATE;` 的 SQL 语句时，就会阻止其他事务向表中插入 `age = 15` 的记录，因为整个范围都被间隙锁锁定了。虽然间隙锁中也分为共享锁和排他锁，不过它们之间并不会产生冲突，也就是不同的事务可以同时持有一段相同范围的共享锁和排他锁，它的作用是**多个事务向同一范围中添加新的记录**，以避免幻读问题。
+  当使用类似 `SELECT * FROM table WHERE age BETWEEN 20 AND 30 FOR UPDATE;` 的范围查询 SQL 语句时，就会阻止其他事务向表中插入 `age = 15` 的记录，因为整个范围都被间隙锁锁定了。虽然间隙锁中也分为共享锁和排他锁，不过它们之间并不会产生冲突，也就是不同的事务可以同时持有一段相同范围的共享锁和排他锁，它的作用是**多个事务向同一范围中添加新的记录**，以避免幻读问题。
 
 - **Next-key Lock**：该锁是 Record Locks 和 Gap Locks 的组合，即锁定一个范围并且锁定该记录本身。举个例子，如果一个索引有 1, 3, 5 三个值，则该索引锁定的区间为 `(-∞,1], (1,3], (3,5], (5,+ ∞)`。
 
-  > 虽然叫 Next-Key Lock，但它锁定的并不是是当前值和后面的范围，实际上Next-Key Lock 锁定的是当前值和前面的范围。
+  > 虽然叫 Next-Key Lock，但它锁定的并不是是当前值和后面的范围，实际上锁定的是当前值和前面的范围。
 
-  当我们更新一条记录，比如 `SELECT * FROM table WHERE index = 3 FOR UPDATE;`，InnoDB 不仅会在范围 `(1, 3]` 上加 Next-Key Lock，还会在这条记录后面的范围 `(3, 5]` 加间隙锁，所以 `(1, 5]` 范围内的记录都会被锁定。InnoDB 使用 Next-key Lock 与 Gap Lock 解决幻读问题。需要注意的是，如果索引有唯一属性，则 InnnoDB 会自动将 Next-key Lock 降级为 Record Locks。
+  当我们更新一条记录，比如 `SELECT * FROM table WHERE index = 3 FOR UPDATE;`，InnoDB 不仅会在范围 `(1, 3]` 上加 Next-Key Lock，还会在这条记录后面的范围 `(3, 5]` 加间隙锁，所以 `(1, 5]` 范围内的记录都会被锁定。InnoDB 使用 Next-key Lock 与 Gap Lock 解决幻读问题。需要注意的是，如果索引有唯一属性，则 InnnoDB 会自动将 Next-key Lock 降级为 Record Lock。
 
 #### 一致性非锁定读
 
@@ -274,7 +308,7 @@ S 锁和 S 锁是兼容的，X 锁和其它锁都不兼容，举个例子，事�
 
 ![consistent-non-locking-read](consistent-non-locking-read.png)
 
-因为不需要等待访问的行上 X 锁的释放，**一致性非锁定读极大地提高了数据库的并发读性能**。从上图可以看出，快照数据其实就是当前行数据之前的历史版本，每行记录可能有多个版本，该实现是通过`undo log segments`来完成。在不同事务隔离级别下，读取的方式会有所不同：
+因为不需要等待访问的行上 X 锁的释放，**一致性非锁定读极大地提高了数据库的并发读性能**。从上图可以看出，快照数据其实就是当前行数据之前的历史版本，每行记录可能有多个版本，该实现是通过`Undo Log Segments`来完成。在不同事务隔离级别下，读取的方式会有所不同：
 
 - 当事务隔离级别为 **REPEATABLE READ** 时，同一个事务中的一致性读都是读取的是该事务下第一次查询所建立的快照；
 - 当事务隔离级别为 **READ COMMITTED** 时，同一事务下的一致性读都会建立和读取此查询自己的最新的快照。
@@ -285,9 +319,9 @@ S 锁和 S 锁是兼容的，X 锁和其它锁都不兼容，举个例子，事�
 
 等待图会在数据库中保存*锁的信息链表*与*事务等待链表*，通过上述链表可以构造出一张图，若在这张图中存在回路，就代表存在死锁，事务间在相互等待对方释放资源。
 
-![wait-for-graph](wait-for-graph.png)
+![wait-for-graph](Wait-For-Graph.png)
 
-等待图是一种较为主动的死锁检测机制，在每个事务请求锁并发生等待时都会判断是否存在回路。在上图中，事务 1 需要事务 2 释放资源才能继续执行，而事务 2 需要事务 3 释放资源...最终形成了死锁回路，这时会自动回滚一个事务来解开死锁竞争，通常来说 InnoDB 存储引擎选择回滚 undo 量最小的事务。
+等待图是一种较为主动的死锁检测机制，在每个事务请求锁并发生等待时都会判断是否存在回路。在上图中，事务 1 需要事务 2 释放资源才能继续执行，而事务 2 需要事务 3 释放资源...最终形成了死锁回路，这时会自动回滚一个事务来解开死锁竞争，通常来说 InnoDB 存储引擎选择回滚 Undo 量最小的事务。
 
 ## 事务
 
@@ -337,7 +371,7 @@ create table test(id int primary key);
 insert into test(id) values(1);
 ```
 
-##### READ UNCOMMITTED
+##### READ UNCOMMITTED——脏读
 
 该隔离级别的事务会读到其它未提交事务的数据，此现象也称之为**脏读**，其现象如下所示：
 
@@ -357,9 +391,9 @@ select * from test; -- 此时看到一条 ID 为 2 的记录
 
 client2 最后一步读取到了 client1 中未提交的事务（没有 commit 动作），即产生了**脏读**，此隔离级别下数据库的并发是最好的。
 
-##### READ COMMITTED
+##### READ COMMITTED——不可重复读
 
-一个事务可以读取另一个已提交的事务，多次读取会造成不一样的结果，此现象称为**不可重复读**：
+如果一个事务可以读取另一个已提交的事务，那么多次读取会造成不一样的结果，此现象称为**不可重复读**：
 
 ```sql
 # 在 client1 中执行：
@@ -381,9 +415,9 @@ select * from test; -- 此时看到一条 ID 为 2 的记录
 
 client2 在开启了一个事务之后，在第一次读取 test 表（此时 client1 的事务还未提交）时 id 为 `1`，在第二次读取 test 表（此时 client1 的事务已经提交）时 id 已经变为 `2`，说明在此隔离级别下已经读取到已提交的事务。
 
-##### REPEATABLE READ
+##### REPEATABLE READ——幻读
 
-在同一个事务里，SELECT 的结果是事务开始时时间点的状态，因此，同样的 SELECT  操作读到的结果会是一致的，但是会有**幻读**现象。
+在同一个事务里，SELECT 的结果是事务开始时时间点的状态，因此，同样的 SELECT  操作读到的结果会是一致的，但是会有**幻读**现象：
 
 ```sql
 # 在 client1 中执行：
@@ -404,11 +438,11 @@ select * from test; --此时查询还是无记录
 insert into test(id) values(1); -- 此时报主键冲突的错误
 ```
 
-通过这一步可以证明，在该隔离级别下已经读取不到别的已提交的事务，但是如果此时接着在 client2 插入一条数据，就会发生主键冲突的错误，好像之前的查询是幻觉一样。
+通过上面的代码可以证明，在该隔离级别下已经读取不到其它事务已提交的事务，但是如果此时接着在 client2 插入一条数据，就会发生主键冲突的错误，好像之前的查询是幻觉一样。
 
-`REPEATABLE-READ`是 InnoDB 存储引擎默认支持的隔离级别，从上面的描述可以看出，`REPEATABLE READ` 和 `READ UNCOMMITED` 其实是矛盾的，如果保证了前者就看不到已经提交的事务，如果保证了后者，就会导致两次查询的结果不同。InnoDB 选择在`REPEATABLE READ`隔离级别中使用上文中的`next-key lock`机制来避免幻读这个问题。
+`REPEATABLE-READ`是 InnoDB 存储引擎默认支持的隔离级别，从上面的描述可以看出，`REPEATABLE READ` 和 `READ UNCOMMITED` 其实是矛盾的，如果保证了前者就看不到已经提交的事务，如果保证了后者，就会导致两次查询的结果不同。InnoDB 选择在`REPEATABLE READ`隔离级别中使用上文提及的的`next-key lock`机制来避免幻读这个问题。
 
-### SERIALIZABLE
+##### SERIALIZABLE——串行化
 
 在该隔离级别下事务都是串行顺序执行的，从而避免了上述出现的脏读、不可重读复读和幻读问题：
 
@@ -426,7 +460,7 @@ select * from test; -- 此时会一直卡住
 commit;
 ```
 
-一旦事务提交，client2 会立马返回 id 为 1 的记录，否则会一直卡住，直到请求超时。MySQL 数据库的 InnoDB 引擎会给读操作隐式加一把读共享锁来实现串行化级别的事务隔离，但由于每条 SELECT 语句都会加锁，所以该隔离级别的数据库并发能力最弱。
+一旦事务提交，client2 会立马返回 id 为 1 的记录，否则会一直卡住，直到请求超时。MySQL 数据库的 InnoDB 引擎会给读操作隐式加一把读共享锁来实现串行化级别的事务隔离，但由于每条 SELECT 语句都会加锁，所以该隔离级别的数据库并发能力也最弱。
 
 上述四种隔离级别的隔离性越来越高，但是对应的并发性能也越来越低，MySQL 选择了`REPEATABLE READ`隔离级别，并使用`next-key lock`机制来避免幻读问题，也是一种折中的解决方案。
 
@@ -439,6 +473,8 @@ commit;
 - [File Space Management](https://dev.mysql.com/doc/refman/8.0/en/innodb-file-space.html)
 - [InnoDB Row Formats](https://dev.mysql.com/doc/refman/8.0/en/innodb-row-format.html)
 - [MySQL · 引擎特性 · InnoDB 数据页解析](http://mysql.taobao.org/monthly/2018/04/03/)
+- [MySQL · 引擎特性 · InnoDB Buffer Pool](http://mysql.taobao.org/monthly/2017/05/01/)
+- [Buffer Pool](https://dev.mysql.com/doc/refman/8.0/en/innodb-buffer-pool.html)
 - [InnoDB Locking](https://dev.mysql.com/doc/refman/8.0/en/innodb-locking.html)
 - [MySQL 中的锁](https://www.ibm.com/developerworks/cn/opensource/os-mysql-transaction-isolation-levels-and-locks/index.html)
 - [MySQL 事务隔离级别和锁](https://www.ibm.com/developerworks/cn/opensource/os-mysql-transaction-isolation-levels-and-locks/index.html)

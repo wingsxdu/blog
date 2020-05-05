@@ -1,15 +1,15 @@
 ---
-title: "Redis ll2string 算法 · Analyze"
+title: "Redis ll2string 算法"
 author: "beihai"
 summary: "<blockquote><p>Redis 内部一个有趣的小算法，将`long long` 类型转换为 `string` 类型数据。这个算法的原理十分巧妙，在一些编程语言中也有类似的实现方式。</p></blockquote>"
 tags: [
-    "Analyze",
     "类型转换",
     "Redis",
 ]
 categories: [
     "Analyze",
 	"Redis",
+	"算法",
 ]
 date: 2020-02-06T17:53:43+08:00
 draft: false
