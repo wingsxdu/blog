@@ -10,7 +10,7 @@ tags: [
 categories: [
     "Analyze",
 	"Redis",
-	"数据库"，
+	"数据库",
 ]
 date: 2020-02-12T15:00:09+08:00
 draft: false
