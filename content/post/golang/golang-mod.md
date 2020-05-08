@@ -3,9 +3,6 @@ title: Go mod 模块化管理
 author: beihai
 type: post
 date: 2019-07-23T08:21:35+00:00
-tags: [
-    "Golang",
-]
 categories: [
     "Golang",
 ]

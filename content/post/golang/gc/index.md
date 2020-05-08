@@ -3,7 +3,6 @@ author: "beihai"
 title: "Go 语言 GC 机制 · Analyze"
 description: "Golang GC 时会发生什么"
 tags: [
-    "Analyze",
     "Golang",
 ]
 categories: [

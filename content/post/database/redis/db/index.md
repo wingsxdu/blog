@@ -3,11 +3,7 @@ title: "Redis 数据库的实现 · Analyze"
 author: "beihai"
 summary: "<blockquote><p>在了解 Redis 的底层数据结构之后，Redis 是如何将这些碎片化的数据以键值对的形式存储在数据库中，并执行内存回收操作，Redis 数据库的实现又存在哪些特殊之处？这篇文章将会分析 Redis 数据库的实现。</p></blockquote>"
 tags: [
-    "Analyze",
-    "数据库",
     "Redis",
-    "内存回收",
-    "列表阻塞",
 ]
 categories: [
     "Analyze",

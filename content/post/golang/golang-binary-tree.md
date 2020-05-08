@@ -3,10 +3,6 @@ title: go 二叉搜索树实现快速数组匹配
 author: beihai
 type: post
 date: 2018-12-11T10:16:22+00:00
-tags: [
-    "Golang",
-    "算法",
-]
 categories: [
     "Golang",
 	"算法",

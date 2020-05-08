@@ -7,7 +7,7 @@ theme = "jane"
 hasCJKLanguage = true     # has chinese/japanese/korean ? # 自动检测是否包含 中文\日文\韩文
 paginate = 10              # Number of articles displayed on the homepage  # 首页每页显示的文章数
 rssLimit = 20             # Limit Entry Count to Rss file # 限制 Rss 文章输出数量
-disqusShortname = "beihai"      # disqus_shortname
+disqusShortname = ""      # disqus_shortname
 googleAnalytics = "UA-148836314-1"      # UA-XXXXXXXX-X
 copyright = ""            # default: author.name ↓        # 默认为下面配置的author.name ↓
 enableGitInfo = true
@@ -19,6 +19,7 @@ PygmentsCodeFences = true # Enable syntax highlighting with GitHub flavoured cod
 PygmentsUseClasses = true # Use CSS classes to format highlighted code
 PygmentsCodefencesGuessSyntax = true
 PygmentsOptions = "linenos=table"
+
 
 # language support en / zh-cn / other... translations present in i18n/
 defaultContentLanguage = "zh-cn"           # Default language to use
@@ -34,6 +35,16 @@ defaultContentLanguage = "zh-cn"           # Default language to use
   [markup.tableOfContents]
     endLevel = 6
     startLevel = 1
+
+[related]
+  threshold = 10 
+  includeNewer = true
+  toLower = false
+
+  [[related.indices]]
+    name = "tags"
+    weight =80
+
 
 [[menu.main]]
   name = "Home"
@@ -73,7 +84,7 @@ defaultContentLanguage = "zh-cn"           # Default language to use
   # site info (optional)                                  # 站点信息（可选，不需要的可以直接注释掉）
   logoTitle = "beihai"        # default: the title value    # 默认值: 上面设置的title值
   keywords = ["Golang", "Go", "Back-End", "后端", "分布式"]
-  description = "追求 源于热爱"
+  description = "beihai blog"
 
   archive-paginate = 1000
   # The date format to use; for a list of valid formats, see https://gohugo.io/functions/format/
@@ -100,6 +111,7 @@ defaultContentLanguage = "zh-cn"           # Default language to use
   baidu_push = true        # baidu push                  # 百度
   baidu_analytics = "d9caa672b116c39e151b0da7c758ad88"      # Baidu Analytics
   baidu_verification = ""   # Baidu Verification
+  # https://support.google.com/webmasters/answer/79812?hl=zh-Hans
   google_verification = ""  # Google_Verification         # 谷歌
 
   # Link custom CSS and JS assets
@@ -122,7 +134,7 @@ defaultContentLanguage = "zh-cn"           # Default language to use
     photoswipeSKIN = '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" crossorigin="anonymous">'
 
   [params.utteranc]         # utteranc is a comment system based on GitHub issues. see https://utteranc.es
-    enable = false
+    enable = true
     repo = "wingsxdu/blog"    # The repo to store comments
     issueTerm = "pathname"
     theme = "github-light"

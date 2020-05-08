@@ -5,9 +5,6 @@ description: "面向并发编程"
 summary: "<blockquote><p>Go 语言最吸引人的地方是它内建的并发支持。Go 语言并发体系的理论是 C.A.R Hoare 在 1978 年提出的 CSP 模型。在并发编程中，目前的绝大多数语言，都是通过加锁等线程同步方案来解决数据共享问题，而 Go 语言另辟蹊径，它将共享的值通过 Channel 传递。在任意给定的时刻，最好只有一个Goroutine 能够拥有该资源。数据竞争从设计层面上就被杜绝了。</p></blockquote>"
 tags: [
     "Golang",
-    "底层",
-    "Analyze",
-    "Goroutine",
 ]
 categories: [
     "Golang",

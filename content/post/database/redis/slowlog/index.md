@@ -3,14 +3,15 @@ title: "Redis 慢查询日志 · Analyze"
 author: "beihai"
 summary: "<blockquote><p>Redis 的慢查询日志功能用来记录执行时间超过给定时长的命令请求，我们可以利用这个功能分析和优化查询速度。本篇文章将会对 Redis 的慢查询日志功能的实现原理进行分析。</p></blockquote>"
 tags: [
-    "Analyze",
-    "通信协议",
     "Redis",
 ]
 categories: [
     "Analyze",
 	"Redis",
 	"数据库",
+]
+keywords: [
+    "Redis",
 ]
 date: 2020-02-13T17:16:59+08:00
 draft: false

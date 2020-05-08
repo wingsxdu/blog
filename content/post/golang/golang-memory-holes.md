@@ -4,8 +4,6 @@ author: "beihai"
 description: "Should we pay attention to the memory layout in struct?"
 tags: [
     "Golang",
-    "一些猜想",
-    "底层",
     "编码规范",
 ]
 categories: [

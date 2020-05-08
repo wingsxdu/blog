@@ -3,11 +3,6 @@ title: GO 1.13版本改进
 author: beihai
 type: post
 date: 2019-09-09T03:45:17+00:00
-tags: [
-    "Golang",
-    "译文",
-    "版本变更",
-]
 categories: [
     "Golang",
     "译文",

@@ -3,9 +3,6 @@ title: Go 全局变量作用域于变量覆盖问题
 author: beihai
 type: post
 date: 2019-07-23T10:55:16+00:00
-tags: [
-    "Golang",
-]
 categories: [
     "Golang",
 ]

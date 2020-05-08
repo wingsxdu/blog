@@ -4,15 +4,12 @@ author: beihai
 type: post
 date: 2019-08-19T15:10:43+00:00
 tags: [
-    "MySQL",
-    "UTF8",
-    "实现原理",
-    "底层",
+  	"MySQL",
+  	"UTF8",
 ]
 categories: [
-    "数据库",
-    "MySQL",
-    "字符编码",
+  	"MySQL",
+	  "数据库",
 ]
 ---
 ## UTF-8编码

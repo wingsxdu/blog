@@ -3,13 +3,12 @@ title: MySQL 与 InnoDB 存储引擎总结
 author: beihai
 summary: "<blockquote><p>MySQL 是目前广泛使用的关系型数据库，了解 MySQL 内部的运行机制与体系结构，可以帮助我们更好地解决使用过程中遇到的问题。因此笔者阅读了一些 MySQL InnoDB 存储引擎相关的书籍与资料，并在这篇文章进行总结记录。"
 tags: [
-	"数据库",
-    "MySQL",
-    "InnoDB",
-]
+  	"MySQL",
+  	"InnoDB",
+]	
 categories: [
-    "MySQL",
-	"数据库",
+  	"MySQL",
+	  "数据库",
 ]
 date: 2020-05-05T17:15:03+08:00
 draft: false

@@ -3,14 +3,15 @@ title: "Redis 如何在“单线程”下实现高性能 · Why"
 author: "beihai"
 summary: "<blockquote><p>Redis 一直以高性能著称，然而 Redis 却是以单线程运行的，这通常与人们的认知相悖。那么 Redis 采用了哪些机制来保证巨大的处理量需求？如何在“单线程”下实现高性能，这是这篇文章主要探讨的问题。</p></blockquote>"
 tags: [
-    "Why",
-    "数据库",
     "Redis",
 ]
 categories: [
     "Why",
 	"数据库",
 	"Redis",
+]
+keywords: [
+    "Redis",
 ]
 date: 2020-02-26T22:51:33+08:00
 draft: false

@@ -4,15 +4,15 @@ author: "beihai"
 description: "Redis 数据结构的设计与实现"
 summary: "<blockquote><p>Redis 对外提供了六种键值对供开发者使用，而实际上在底层采用了多种基础数据结构来存储信息，并且会在必要的时刻进行类型转换。文章将会逐一介绍这些数据结构，以及它们的独特之处。</p></blockquote>"
 tags: [
-    "Analyze",
-    "数据库",
-    "数据结构",
     "Redis",
 ]
 categories: [
     "Analyze",
 	"数据库",
 	"Redis",
+]
+keywords: [
+    "Redis",
 ]
 date: 2020-01-04T22:43:30+08:00
 draft: false

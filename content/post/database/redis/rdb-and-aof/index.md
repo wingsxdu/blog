@@ -3,14 +3,15 @@ title: "Redis RDB 与 AOF 持久化 · Analyze"
 author: "beihai"
 summary: "<blockquote><p>Redis 是内存数据库，将数据保存在内存中，以换取更快的读取速度。但由于内存是易失性存储器，一旦进程退出或者硬件设备出现故障，Redis 存储的数据可能就会丢失。为了解决数据持久化问题，Redis 提供了 RDB 快照与 AOF 写操作记录两种方案，这篇文章就这两种分案的实现方式进行分析。</p></blockquote>"
 tags: [
-    "Analyze",
-    "通信协议",
     "Redis",
 ]
 categories: [
     "Analyze",
 	"Redis",
 	"数据库",
+]
+keywords: [
+    "Redis",
 ]
 date: 2020-02-15T11:00:09+08:00
 draft: false

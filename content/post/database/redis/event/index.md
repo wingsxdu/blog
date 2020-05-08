@@ -3,14 +3,15 @@ title: "Redis 事件的实现 · Analyze"
 author: "beihai"
 summary: "<blockquote><p>Redis 采用事件驱动机制来处理大量的 I/O 操作，并实现了自己的事件驱动库，基于 Reactor 模式开发了自己的网络事件处理器，使用 I/O 多路复用程序监听多个 Socket，以处理大量的事件。</p></blockquote>"
 tags: [
-    "Analyze",
-    "数据库",
     "Redis",
 ]
 categories: [
     "Analyze",
 	"数据库",
 	"Redis",
+]
+keywords: [
+    "Redis",
 ]
 date: 2020-02-11T15:10:37+08:00
 draft: false

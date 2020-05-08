@@ -3,9 +3,7 @@ title: "加密哈希算法的实现原理"
 author: "beihai"
 summary: "<blockquote><p>哈希算法（Hash function）又称散列算法，是一种从任何数据中创建小的数字“指纹”的方法。哈希算法只需满足把一个散列对象映射到另一个区间的需求，因此根据使用场景的不同，可将哈希算法分为加密哈希与非加密哈希。</p></blockquote>"
 tags: [
-    "SHA256",
-    "Hash",
-    "加密哈希",
+    "加密算法",
 ]
 categories: [
     "Hash",
