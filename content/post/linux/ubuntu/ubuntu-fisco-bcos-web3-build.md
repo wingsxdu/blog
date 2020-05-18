@@ -13,7 +13,7 @@ categories: [
     "Linux",
     "Java",
 ]
-
+draft: true
 ---
 Java 应用的开发环境太繁琐了， 记一下搭建流程。（简化版）
 
