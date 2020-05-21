@@ -242,7 +242,7 @@ db.Update(func(tx *bolt.Tx) error {
 
 `subBucket`本身也是一个完整的 B+ Tree，其名称做为 key，一个`bucket`结构体做为 value，索引到子 Bucket 根节点所在的页面。BoltDB 持有一个 `rootBucket`，存储着数据库中所有 B+ Tree 的根节点，我们创建的每一个 `Bucket` 都是 `rootBucket` 的 `subBucket`。
 
-![subbucket](index.assets/subbucket-1587453186580.png)
+![subbucket](index.assets/subbucket.png)
 
 从上图可以看出，父 Bucket 中只保存了`subBucket`的 `bucket`字段，每个 `subBucket` 都会占用额外的 page 存储数据，通常情况下嵌套的子 Bucket 不会拥有大量的数据，这造成了空间的浪费。BoltDB 使用`inlineBucket`解决这个问题，将较小的子 Bucket 的值直接存储在父 bucket 的叶子节点中，从而减少 page 的使用数量。
 

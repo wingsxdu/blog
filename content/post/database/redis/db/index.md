@@ -112,7 +112,7 @@ Redis 对过期键的删除有两种策略：
 2. **惰性删除**：当 key 被调用时检查键值对是否过期，但是会造成内存中存储大量的过期键值对，内存不友好，但是极大的减轻CPU 的负担。
 3. **定期删除**：Redis 定时扫描数据库，删除其中的过期键，删除键的数量由 Redis 当前的状态决定。
 
-###### 惰性删除
+##### 惰性删除
 
 惰性删除策略是由 [db.c](https://github.com/antirez/redis/blob/unstable/src/db.c)源文件中的`expireIfNeeded()`函数实现的，Redis 每次访问键之前，都会执行这个函数，检查键是否过期，如果过期那么执行删除策略。
 
@@ -142,7 +142,7 @@ int expireIfNeeded(redisDb *db, robj *key) {
 }
 ```
 
-###### 定期删除
+##### 定期删除
 
 定期删除策略由 [expire.c](https://github.com/antirez/redis/blob/unstable/src/db.c)源文件中的`activeExpireCycle(int type)`函数执行，这个函数会定期扫描删除数据库中已经过期的键。当带有过期时间的键比较少时，这个函数运行得比较保守，如果带有过期时间的键比较多，那么函数会以更积极的方式来删除过期键，尽可能地释放被过期键占用的内存。
 
@@ -178,7 +178,7 @@ void databasesCron(void) {
 
 总结定期删除的流程：首先创建定时执行程序，这个程序每秒执行`server.hz`次数，每次都会调用数据库定时处理程序，执行`activeExpireCycle()`函数，扫描并删除数据库中已经过期的键。这个函数有**慢循环和快循环**两种工作模式，根据场景进行切换。
 
-###### 为什么不用定时删除？
+##### 为什么不用定时删除？
 
 定时删除策略，是在设置键的过期时间的同时，创建一个定时器，当定时器时间到达时执行删除操作。定时删除能保证内存中数据的最大新鲜度，因为它保证键在过期后立即被删除，其所占用的内存也会随之释放。但是**立即删除对 CPU 是最不友好的**，因为计时与删除操作会占用 CPU 时间，如果恰巧此时 CPU 很忙，比如正在做排序运算，会给 CPU 造成额外的压力。而令两种删除策略会根据 CPU 的状态决定工作量的多少，如果当前删除程序占用了过多的 CPU 资源也会终止执行，已避免延误对主要任务的处理。
 
@@ -201,7 +201,7 @@ void databasesCron(void) {
 
 Redis 会在必要的时刻执行`freeMemoryIfNeeded()`函数，尝试进行内存淘汰。淘汰过程采用了近似 LRU 算法和LFU 算法。
 
-###### 近似 LRU 算法
+##### 近似 LRU 算法
 
 Redis 中的 LRU 算法并不是真正的 LRU（Least Recently Used），Redis 对象中增加了一个额外的`lru`字段：一个24 bit 长度的时间戳，记录该对象最后一次被访问的。
 
@@ -224,7 +224,7 @@ Redis 在执行 LRU 算法时，会从对应的键空间中随机取出`maxmemor
 #define LRU_CLOCK_RESOLUTION 1000 /* LRU clock resolution in ms */
 ```
 
-###### LFU 算法
+##### LFU 算法
 
 为了解决近似 LRU 算法在使用过程中出现的精度问题，Redis 4.0 又引入了 LFU（Least Frequently Used）算法。例如下面这种情况，虽然 A 的 LRU 最久，但 A 的使用频率要频繁得多，合理的淘汰策略应该是淘汰B。
 
@@ -288,7 +288,7 @@ struct redisServer{
 }
 ```
 
-###### 惰性删除中的 lazyfree
+##### 惰性删除中的 lazyfree
 
 以惰性删除为例，如果开启了 lazyfree，那么过期键的删除操作将由`dbAsyncDelete()`函数执行
 
@@ -344,7 +344,7 @@ void emptyDbAsync(redisDb *db) {
 }
 ```
 
-###### BIO_LAZY_FREE 进程
+##### BIO_LAZY_FREE 进程
 
 Redis 虽然是一个单进程程序，但在后台也会创建一些子进程用于处理其他任务，其中被称为`BIO_LAZY_FREE`的子进程用于执行 lazyfree 删除机制。
 
