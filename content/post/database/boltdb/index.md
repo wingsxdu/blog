@@ -4,7 +4,7 @@ author: "beihai"
 summary: "<blockquote><p>BoltDB 是使用 Go 语言实现的嵌入式 K/V 数据库，其目标是为不需要完整数据库服务（如 Postgres 或 MySQL）的项目提供一个简单、快速、可靠的嵌入数据库。BoltDB 已在 Etcd、Bitcoin 等项目中作为底层数据库实现。这篇文章对 BoltDB 的设计原理进行简要分析。</p></blockquote>"
 tags: [
     "BoltDB",
-	"Etcd",
+	"etcd",
 ]
 categories: [
     "Analyze",
@@ -353,7 +353,7 @@ BoltDB 这种设计思路，是为了实现多版本并发控制，加速事务�
 
 ## 总结
 
-BoltDB 是一个精简的数据库实现模型，使用`mmap`实现了数据的零拷贝，利用 B+ Tree 进行索引，对理解数据库系统的相关概念很有帮助。BoltDB 的写事务实现比较巧妙，利用`meta`副本、COW 和 freelist 机制实现并发控制，提供了一种解决问题的思路，但是随机写的性能较差，适合读事务密集的场景。
+BoltDB 是一个精简的数据库实现模型，使用`mmap`将磁盘的 page 映射到内存的 page，实现了数据的零拷贝，利用 B+ Tree 进行索引，对理解数据库系统的相关概念很有帮助。BoltDB 的写事务实现比较巧妙，利用`meta`副本和`freelist`机制实现并发控制，提供了一种解决问题的思路。操作系统通过 COW (copy-on-write) 技术进行 page 管理，通过 COW 技术，系统可实现无锁的读写并发，但是无法实现无锁的写写并发，这就注定了这类数据库读性能很高，但是随机写的性能较差，，因此非常适合于 “读多写少”的场景。
 
 **B+ Tree 相关阅读**：[Concepts of B+ Tree and Extensions – B+ and B Tree index files in DBMS](https://www.tutorialcup.com/dbms/b-tree.htm)
 
