@@ -4,11 +4,11 @@ author: "beihai"
 summary: "<blockquote><p>BoltDB 是使用 Go 语言实现的嵌入式 K/V 数据库，其目标是为不需要完整数据库服务（如 Postgres 或 MySQL）的项目提供一个简单、快速、可靠的嵌入数据库。BoltDB 已在 Etcd、Bitcoin 等项目中作为底层数据库实现。这篇文章对 BoltDB 的设计原理进行简要分析。</p></blockquote>"
 tags: [
     "BoltDB",
-	"etcd",
+    "etcd",
 ]
 categories: [
     "Analyze",
-	"数据库",
+    "数据库",
 ]
 date: 2020-04-17T13:04:35+08:00
 draft: false
@@ -51,19 +51,19 @@ BoltDB 的数据文件被组织为多个 page，数据库初始化时，会预�
 
 ```go
 const (
-	branchPageFlag = 0x01 	// 分支节点
-	leafPageFlag = 0x02 	// 叶子节点
-	metaPageFlag = 0x04 	// meta 页
-	freelistPageFlag = 0x10 // freelist 页，存放无数据的空 page id
+    branchPageFlag = 0x01   // 分支节点
+    leafPageFlag = 0x02     // 叶子节点
+    metaPageFlag = 0x04     // meta 页
+    freelistPageFlag = 0x10 // freelist 页，存放无数据的空 page id
 )
 
 type pgid uint64
 
 type page struct {
-	id pgid 		// 页 id
-	flags uint16 	// 此页中保存的具体数据类型，即上面四个 Flag
-	count uint16 	// 数据计数
-	overflow uint32 // 是否有后序页，如果有，overflow 表示后续页的数量
+    id pgid         // 页 id
+    flags uint16    // 此页中保存的具体数据类型，即上面四个 Flag
+    count uint16    // 数据计数
+    overflow uint32 // 是否有后序页，如果有，overflow 表示后续页的数量
 }
 ```
 
@@ -73,16 +73,16 @@ BoltDB 会为每个`page`分配一个唯一标识 id，并通过 id 查找对应
 
 ```go
 type branchPageElement struct {
-	pos uint32   // Element 对应 key 存储位置相对于当前 Element 的偏移量
-	ksize uint32 // Element 对应 key 的大小，以 byte 为单位
-	pgid pgid    // Element 指向的子节点所在 page id
+    pos uint32   // Element 对应 key 存储位置相对于当前 Element 的偏移量
+    ksize uint32 // Element 对应 key 的大小，以 byte 为单位
+    pgid pgid    // Element 指向的子节点所在 page id
 }
 
 type leafPageElement struct {
-	flags uint32 // 当前 Element 是否代表一个 Bucket，如果是则其值为 1，如果不是则其值为 0;
-	pos uint32   // Element 对应的键值对存储位置相对于当前 Element 的偏移量
-	ksize uint32 // Element 对应 key 的大小，以 byte 为单位
-	vsize uint32 // Element 对应 value 的大小，以 byte 为单位
+    flags uint32 // 当前 Element 是否代表一个 Bucket，如果是则其值为 1，如果不是则其值为 0;
+    pos uint32   // Element 对应的键值对存储位置相对于当前 Element 的偏移量
+    ksize uint32 // Element 对应 key 的大小，以 byte 为单位
+    vsize uint32 // Element 对应 value 的大小，以 byte 为单位
 }
 ```
 
@@ -98,14 +98,14 @@ type leafPageElement struct {
 
 ```go
 func (p *page) leafPageElements() []leafPageElement {
-	if p.count == 0 {
-		return nil
-	}
-	return *(*[]leafPageElement)(unsafe.Pointer(&reflect.SliceHeader{
-		Data: uintptr(unsafe.Pointer(p)) + unsafe.Sizeof(*p),
-		Len:  int(p.count),
-		Cap:  int(p.count),
-	}))
+    if p.count == 0 {
+        return nil
+    }
+    return *(*[]leafPageElement)(unsafe.Pointer(&reflect.SliceHeader{
+        Data: uintptr(unsafe.Pointer(p)) + unsafe.Sizeof(*p),
+        Len:  int(p.count),
+        Cap:  int(p.count),
+    }))
 }
 ```
 
@@ -115,22 +115,22 @@ func (p *page) leafPageElements() []leafPageElement {
 
 ```go
 type node struct {
-	bucket *Bucket  // 每一个 Bucket 都是一个完整的 B+ Tree
-	isLeaf bool 	// 区分 branch 和 leaf
-	unbalanced bool // 是否平衡
-	spilled    bool // 是否溢出
-	key  []byte 	// 该 node 的起始 key
-	pgid pgid
-	parent *node 	// 父节点指针
-	children nodes 	// 子节点指针
-	inodes inodes 	// 存储键值对的结构体数组
+    bucket *Bucket  // 每一个 Bucket 都是一个完整的 B+ Tree
+    isLeaf bool     // 区分 branch 和 leaf
+    unbalanced bool // 是否平衡
+    spilled    bool // 是否溢出
+    key  []byte     // 该 node 的起始 key
+    pgid pgid
+    parent *node    // 父节点指针
+    children nodes  // 子节点指针
+    inodes inodes   // 存储键值对的结构体数组
 }
 
 type inode struct {
-	flags uint32 // 用于 leaf node，是否代表一个 subbucket
-	pgid  pgid   // 用于 branch node, 子节点的 page id
-	key   []byte
-	value []byte
+    flags uint32    // 用于 leaf node，是否代表一个 subbucket
+    pgid  pgid      // 用于 branch node, 子节点的 page id
+    key   []byte
+    value []byte
 }
 
 type inodes []inode
@@ -144,32 +144,32 @@ BoltDB 中为了方便对数据的修改操作，需要将对应的`page`实例�
 
 ```go
 func (n *node) read(p *page) {
-	n.pgid = p.id
-	n.isLeaf = ((p.flags & leafPageFlag) != 0)
-	n.inodes = make(inodes, int(p.count))
+    n.pgid = p.id
+    n.isLeaf = ((p.flags & leafPageFlag) != 0)
+    n.inodes = make(inodes, int(p.count))
 
-	for i := 0; i < int(p.count); i++ {
-		inode := &n.inodes[i]
-		if n.isLeaf {
-			elem := p.leafPageElement(uint16(i))
-			inode.flags = elem.flags
-			inode.key = elem.key()
-			inode.value = elem.value()
-		} else {
-			elem := p.branchPageElement(uint16(i))
-			inode.pgid = elem.pgid
-			inode.key = elem.key()
-		}
-		_assert(len(inode.key) > 0, "read: zero-length inode key")
-	}
+    for i := 0; i < int(p.count); i++ {
+        inode := &n.inodes[i]
+        if n.isLeaf {
+            elem := p.leafPageElement(uint16(i))
+            inode.flags = elem.flags
+            inode.key = elem.key()
+            inode.value = elem.value()
+        } else {
+            elem := p.branchPageElement(uint16(i))
+            inode.pgid = elem.pgid
+            inode.key = elem.key()
+        }
+        _assert(len(inode.key) > 0, "read: zero-length inode key")
+    }
 
-	// Save first key so we can find the node in the parent when we spill.
-	if len(n.inodes) > 0 {
-		n.key = n.inodes[0].key
-		_assert(len(n.key) > 0, "read: zero-length node key")
-	} else {
-		n.key = nil
-	}
+    // Save first key so we can find the node in the parent when we spill.
+    if len(n.inodes) > 0 {
+        n.key = n.inodes[0].key
+        _assert(len(n.key) > 0, "read: zero-length node key")
+    } else {
+        n.key = nil
+    }
 }
 ```
 
@@ -185,19 +185,19 @@ Bucket 由`Bucket`结构体定义，其中包含一个由`bucket`定义的 Heade
 
 ```go
 type Bucket struct {
-	*bucket
-	tx *Tx // the associated transaction
-	buckets map[string]*Bucket // subbucket cache
-	page *page // inline page reference
-	rootNode *node // materialized node for the root page.
-	nodes map[pgid]*node // node cache
-	FillPercent float64
+    *bucket
+    tx *Tx // the associated transaction
+    buckets map[string]*Bucket // subbucket cache
+    page *page // inline page reference
+    rootNode *node // materialized node for the root page.
+    nodes map[pgid]*node // node cache
+    FillPercent float64
 }
 
 // In the case of inline buckets, the "root" will be 0.
 type bucket struct {
-	root pgid // page id of the bucket's root-level page
-	sequence uint64 // monotonically incrementing, used by NextSequence()
+    root pgid // page id of the bucket's root-level page
+    sequence uint64 // monotonically incrementing, used by NextSequence()
 }
 ```
 
@@ -211,14 +211,14 @@ Bucket 中的节点可能是已经实例化的`node`，也可能是序列化存�
 
 ```go
 type Cursor struct {
-	bucket *Bucket  // 遍历的 bucket
-	stack []elemRef // 记录游标的搜索路径，最后一个元素指向游标当前位置
+    bucket *Bucket  // 遍历的 bucket
+    stack []elemRef // 记录游标的搜索路径，最后一个元素指向游标当前位置
 }
 
 type elemRef struct {
-	page *page // 当前节点的 page
-	node *node // 当前节点的 node
-	index int  // page 或 node 中的下标
+    page *page      // 当前节点的 page
+    node *node      // 当前节点的 node
+    index int       // page 或 node 中的下标
 }
 ```
 
@@ -250,27 +250,27 @@ db.Update(func(tx *bolt.Tx) error {
 
 ```go
 func (b *Bucket) inlineable() bool {
-	var n = b.rootNode
+    var n = b.rootNode
 
-	// Bucket must only contain a single leaf node.
-	if n == nil || !n.isLeaf {
-		return false
-	}
+    // Bucket must only contain a single leaf node.
+    if n == nil || !n.isLeaf {
+        return false
+    }
 
-	// Bucket is not inlineable if it contains subbuckets or if it goes beyond
-	// our threshold for inline bucket size.
-	var size = pageHeaderSize
-	for _, inode := range n.inodes {
-		size += leafPageElementSize + uintptr(len(inode.key)) + uintptr(len(inode.value))
+    // Bucket is not inlineable if it contains subbuckets or if it goes beyond
+    // our threshold for inline bucket size.
+    var size = pageHeaderSize
+    for _, inode := range n.inodes {
+        size += leafPageElementSize + uintptr(len(inode.key)) + uintptr(len(inode.value))
 
-		if inode.flags&bucketLeafFlag != 0 {
-			return false
-		} else if size > b.maxInlineBucketSize() {
-			return false
-		}
-	}
+        if inode.flags&bucketLeafFlag != 0 {
+            return false
+        } else if size > b.maxInlineBucketSize() {
+            return false
+        }
+    }
 
-	return true
+    return true
 }
 
 ```
@@ -295,11 +295,11 @@ BoltDB 通过`meta`副本机制实现多版本并发控制，`meta`页是事务�
 
 ```go
 type meta struct {
-	root bucket     // 存储 rootBucket 所在的 page
-	freelist pgid   // freelist 所在的 pgid，初始化为 2
-	pgid pgid       // 已经申请的 page 数量，值为 max_pgid +1
-	txid txid       // 上次写事务的 id
-	checksum uint64 // 上面各字段的 64 位 FNV 哈希校验
+    root bucket     // 存储 rootBucket 所在的 page
+    freelist pgid   // freelist 所在的 pgid，初始化为 2
+    pgid pgid       // 已经申请的 page 数量，值为 max_pgid +1
+    txid txid       // 上次写事务的 id
+    checksum uint64 // 上面各字段的 64 位 FNV 哈希校验
 }
 ```
 
@@ -324,17 +324,17 @@ BoltDB 的工作原理是分配 4KB 的 page 并将它们组织成一个B+ Tree�
 
 ```go
 type freelist struct {
-	freelistType   FreelistType        // freelist type
-	ids            []pgid              // all free and available free page ids.
-	allocs         map[pgid]txid       // mapping of txid that allocated a pgid.
-	pending        map[txid]*txPending // mapping of soon-to-be free page ids by tx.
-	cache          map[pgid]bool       // fast lookup of all free and pending 
+    freelistType   FreelistType        // freelist type
+    ids            []pgid              // all free and available free page ids.
+    allocs         map[pgid]txid       // mapping of txid that allocated a pgid.
+    pending        map[txid]*txPending // mapping of soon-to-be free page ids by tx.
+    cache          map[pgid]bool       // fast lookup of all free and pending 
 }
 
 type txPending struct {
-	ids              []pgid
-	alloctx          []txid // txids allocating the ids
-	lastReleaseBegin txid   // beginning txid of last matching releaseRange
+    ids              []pgid
+    alloctx          []txid // txids allocating the ids
+    lastReleaseBegin txid   // beginning txid of last matching releaseRange
 }
 ```
 
@@ -353,7 +353,9 @@ BoltDB 这种设计思路，是为了实现多版本并发控制，加速事务�
 
 ## 总结
 
-BoltDB 是一个精简的数据库实现模型，使用`mmap`将磁盘的 page 映射到内存的 page，实现了数据的零拷贝，利用 B+ Tree 进行索引，对理解数据库系统的相关概念很有帮助。BoltDB 的写事务实现比较巧妙，利用`meta`副本和`freelist`机制实现并发控制，提供了一种解决问题的思路。操作系统通过 COW (copy-on-write) 技术进行 page 管理，通过 COW 技术，系统可实现无锁的读写并发，但是无法实现无锁的写写并发，这就注定了这类数据库读性能很高，但是随机写的性能较差，，因此非常适合于 “读多写少”的场景。
+BoltDB 是一个精简的数据库实现模型，使用`mmap`将磁盘的 page 映射到内存的 page，实现了数据的零拷贝，利用 B+ Tree 进行索引，对理解数据库系统的相关概念很有帮助。BoltDB 的写事务实现比较巧妙，利用`meta`副本和`freelist`机制实现并发控制，提供了一种解决问题的思路。操作系统通过 COW (Copy-On-Write) 技术进行 page 管理，通过写时复制技术，系统可实现无锁的读写并发，但是无法实现无锁的写写并发，这就注定了这类数据库读性能很高，但是随机写的性能较差，因此非常适合于『读多写少』的场景。
+
+使用写时复制技术也产生了一定的弊端，如果长时间执行只读事务，则会导致脏页面不能被回收；如果长时间执行的读写事务，会导致其他读写事务挂起等待。在使用 BoltDB 过程中要注意尽量避免长期运行的事务。
 
 **B+ Tree 相关阅读**：[Concepts of B+ Tree and Extensions – B+ and B Tree index files in DBMS](https://www.tutorialcup.com/dbms/b-tree.htm)
 
