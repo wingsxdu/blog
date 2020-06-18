@@ -22,7 +22,7 @@ draft: false
 
 Redis 内部一个有趣的小算法，将`long long` 类型转换为 `string` 类型数据。这个算法的原理十分巧妙，在一些编程语言中的类型转换也采用了类似的实现方式。
 
-这个算法是根据这篇文章[Three Optimization Tips for C++](https://www.facebook.com/notes/facebook-engineering/three-optimization-tips-for-c/10151361643253920)实现的。
+这个算法是根据这篇文章 [Three Optimization Tips for C++](https://www.facebook.com/notes/facebook-engineering/three-optimization-tips-for-c/10151361643253920) 实现的。
 
 首先实现了一个求 uint64 数字长度的函数：
 
