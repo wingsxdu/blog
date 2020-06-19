@@ -1082,3 +1082,4 @@ etcd 在很多处源码中都使用了 Go 语言提供的 CSP 并发模型，这
 - [多版本并发控制(MVCC)在分布式系统中的应用](https://coolshell.cn/articles/6790.html)
 - [In Search of an Understandable Consensus Algorithm](https://web.stanford.edu/~ouster/cgi-bin/papers/raft-atc14)
 - [分布式一致性协议 Raft 原理](https://www.wingsxdu.com/post/algorithms/raft/#gsc.tab=0)
+- [线性一致性和 Raft](https://pingcap.com/blog-cn/linearizability-and-raft/)
