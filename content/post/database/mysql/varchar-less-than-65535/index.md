@@ -14,7 +14,7 @@ date: 2020-05-19T12:05:03+08:00
 draft: false
 ---
 
-> CHAR 与 VARCHAR 是 MySQL 中常用的存储字符串的数据类型，在官方文档的介绍中 CHAR 类型的可定义最大长度为 255，而 VARCHAR 类型的最大长度为 65535，然而经过操作发现 VARCHAR 实际可创建的最大“长度”是一个不定值，这篇文章将会对这个问题进行分析。
+> CHAR 与 VARCHAR 是 MySQL 中常用的存储字符串的数据类型，在官方文档的介绍中 CHAR 类型的可定义最大长度为 255，而 VARCHAR 类型的最大长度为 65535，然而经过操作发现 VARCHAR 实际可创建的最大『长度』是一个不定值，这篇文章将会对这个问题进行分析。
 
 当我们在 MySQL 中输入建表语句`CREATE TABLE test( a VARCHAR(65535) NOT NULL)CHARSET=latin1;`时，MySQL 会返回给我们`Row size too large`错误，这表示 MySQL 并不支持创建 65535 字节长度的 VARCHAR 类型，最终测试发现最大可创建长度为 65533。为了更好地解释这个现象，我们需要了解 MySQL 内部的存储方式。
 
