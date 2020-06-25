@@ -1,2 +1,8 @@
+before_install:
+- openssl aes-256-cbc -K $encrypted_05e282a0ff02_key -iv $encrypted_05e282a0ff02_iv
+  -in blog.pem.enc
+
+addons:
+  ssh_known_hosts: 47.100.30.183
 after_success:
-  - ssh root@wingsxdu.com "cd blog && make pull"
+- ssh root@wingsxdu.com "cd blog && make pull"
