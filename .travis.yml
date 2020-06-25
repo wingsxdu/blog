@@ -1,0 +1,2 @@
+after_success:
+  - ssh root@wingsxdu.com "cd blog && make pull"
