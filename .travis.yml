@@ -5,3 +5,6 @@ after_success:
 before_install:
 - openssl aes-256-cbc -K $encrypted_5bdfe9850883_key -iv $encrypted_5bdfe9850883_iv
   -in login.pem.enc -out ./login.pem -d
+- chmod 600 ./login.pem
+  
+
