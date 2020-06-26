@@ -1,8 +1,7 @@
-before_install:
-- openssl aes-256-cbc -K $encrypted_5bdfe9850883_key -iv $encrypted_5bdfe9850883_iv
-  -in login.pem.enc -out ./login.pem -d
-- chmod 600 ~/login.pem
 addons:
   ssh_known_hosts: 47.100.30.183
 after_success:
 - ssh root@wingsxdu.com "cd blog && make pull"
+before_install:
+- openssl aes-256-cbc -K $encrypted_5bdfe9850883_key -iv $encrypted_5bdfe9850883_iv
+  -in login.pem.enc -out ./login.pem -d
