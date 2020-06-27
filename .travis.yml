@@ -5,8 +5,8 @@ before_install:
   -in login.pem.enc -out ./login.pem -d
 - chmod 600 ./login.pem
 
-after_success:
-- ssh ./login.pem root@wingsxdu.com "cd blog && make pull"
+script:
+- ssh root@wingsxdu.com "cd blog && make pull"
 
 addons:
   ssh_known_hosts: 
