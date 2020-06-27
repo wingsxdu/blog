@@ -6,7 +6,7 @@ before_install:
 - chmod 600 ./login.pem
 
 script:
-- ssh root@wingsxdu.com "cd blog && make pull"
+- ssh -i ./login.pem root@wingsxdu.com "cd blog && make pull"
 
 addons:
   ssh_known_hosts: 
