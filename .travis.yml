@@ -6,11 +6,10 @@ before_install:
 - chmod 600 ./login.pem
 
 after_success:
-- ssh root@wingsxdu.com "cd blog && make pull"
+- ssh ./login.pem root@wingsxdu.com "cd blog && make pull"
 
 addons:
   ssh_known_hosts: 
-  - 47.100.30.183
   - wingsxdu.com
   
 
