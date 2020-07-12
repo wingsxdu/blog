@@ -6,22 +6,34 @@ date: 2018-11-21T20:12:15+00:00
 weight: 20
 ---
 
-**Software Developer，Gopher，数码产品爱好者**
+### Hi there 👋, I'm beihai
 
-不务正业的某西北 211 在校学生
+🔭 I’m currently an undergraduate student, now live in Xi'an, China.
 
+- 🧐 Recent focus on **Distributed Systems**
+- 🌱 Currently learning **English** & **Network**
+- ✍🏻 Write some thoughts about Computer Science on my [Personal Blog](https://wingsxdu.com/)
+- 📚 Love **Reading**, all sorts of fields not limited to Programming 
+- 📄 Know more info, do read my resume here: [Resume](https://wingsxdu.com/t/2n9e) (~~maybe will have English version~~😃)
+- 📧 Contact me by email: beihai@wingsxdu.com
 
-热爱阅读，喜欢音乐、电影与艺术表演
+I've learned a lot from Open Source Software, hopefully I can contribute to them.
 
-#### 个人经历
+Oh, I also like music, film and artistic performance, these things make my life better !
 
-前学校社团成员，因不喜学生社团『TALK IS CHEAP』的氛围退部
+### 大家好👋, 我是  beihai
 
-自 2018 年起自学编程，在同学的创业公司中帮忙敲代码
+目前还是尚未毕业的本科生，现居陕西西安
 
-2019 年上半年与名义上的导师研究区块链落地应用场景
+- 现今主要研究**分布式系统**相关内容
+- 会在我的技术博客中记录学习与思考的内容（就是你正在浏览的这个网站）
+- 热爱阅读，不仅仅是计算机科学相关的书籍，其它领域也都有了解
+- 可以在这里阅读我的简历，了解更多的信息： [Resume](https://wingsxdu.com/t/2n9e)
+- 通过电子邮件与我取得联系：beihai@wingsxdu.com
 
-现今一直自主学习中🙂
+从开源软件中学到了很多知识，希望未来有一天我能为这些项目贡献代码。
+
+除此之外，我也喜欢音乐、电影与艺术表演，these things make my life better !
 
 ##### 技术栈
 
@@ -32,5 +44,5 @@ weight: 20
 
 ##### 正在学习
 
-- **计算机网络**：TCP/IP 协议等；
-- HTTP1/2/3 系列协议，了解其变迁历史。
+- **计算机网络**：TCP/IP 协议、HTTP1/2/3 系列协议、DNS 系统 等；
+- **英语**：这个 Flag 立了好久了（~~呜呜呜~~）
