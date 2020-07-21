@@ -1,7 +1,7 @@
 ---
 title: "分布式一致性协议 Raft 原理"
 author: "beihai"
-summary: "<blockquote><p>Raft 是一种基于消息传递通信模型、用来管理日志复制的一致性协议，它允许一组机器像一个整体一样工作，即使其中的一些机器出现错误也能正常提供服务。在 Raft 被提出来之前，Paxos 协议是第一个被证明的一致性算法，但是 Paxos 的原理理解与工程实现都很困难。Raft 是Paxos 的一种实现方式，目标是提供更好理解的算法，并被证明可以提供与 Paxos相同的容错性以及性能。</p></blockquote>"
+summary: "<blockquote><p>Raft 是一种基于消息传递通信模型、用来管理日志复制的一致性协议，它允许一组机器像一个整体一样工作，即使其中的一些机器出现错误也能正常提供服务。在 Raft 被提出来之前，Paxos 协议是第一个被证明的一致性算法，但是 Paxos 的原理理解与工程实现都很困难。Raft 是Paxos 的一种实现方式，目标是提供更好理解的算法，并被证明可以提供与 Paxos 相同的容错性以及性能。</p></blockquote>"
 tags: [
     "共识算法",
     "Raft",
@@ -9,6 +9,7 @@ tags: [
 categories: [
     "分布式",
     "算法",
+    "共识算法",
 ]
 date: 2020-03-20T20:54:04+08:00
 draft: false
@@ -19,7 +20,7 @@ draft: false
 
 ## 概述
 
-Raft 算法是可以用来替代 Paxos 算法的分布式共识算法，而且 raft 算法比 Paxos 算法更易懂更易实现。为了达到易于理解的目标，Raft 利用问题分解方法，将『复制集群节点一致性』这一复杂问题划分为四个可以被独立解释并处理的子问题：**领导选举（Leader Election）**、**日志复制（Log Replication）**、**安全性（Safety）**、**成员变更（Membership Changes）**。文中会从这四方面介绍 Raft 算法的机制。
+Raft 算法是可以用来替代 Paxos 算法的分布式共识算法，而且 Raft 算法比 Paxos 算法更易懂更易实现。为了达到易于理解的目标，Raft 利用问题分解方法，将『复制集群节点一致性』这一复杂问题划分为四个可以被独立解释并处理的子问题：**领导选举（Leader Election）**、**日志复制（Log Replication）**、**安全性（Safety）**、**成员变更（Membership Changes）**。文中会从这四方面介绍 Raft 算法的机制。
 
 ![The-Raft-Task](The-Raft-Task.png)
 
@@ -263,7 +264,7 @@ Raft 算法将共识问题分解成数个相对独立的字问题，总体流程
 - [Paxos](https://zh.wikipedia.org/zh-cn/Paxos%E7%AE%97%E6%B3%95)
 - [Raft](https://zh.wikipedia.org/wiki/Raft)
 - [拜占庭将军问题](https://zh.wikipedia.org/wiki/%E6%8B%9C%E5%8D%A0%E5%BA%AD%E5%B0%86%E5%86%9B%E9%97%AE%E9%A2%98)
-- [State machine replication]([https://zh.wikipedia.org/wiki/%E7%8A%B6%E6%80%81%E6%9C%BA%E5%A4%8D%E5%88%B6](https://zh.wikipedia.org/wiki/状态机复制))
+- [State machine replication](https://zh.wikipedia.org/wiki/%E7%8A%B6%E6%80%81%E6%9C%BA%E5%A4%8D%E5%88%B6)
 - [In Search of an Understandable Consensus Algorithm](https://web.stanford.edu/~ouster/cgi-bin/papers/raft-atc14)
 - [寻找一种易于理解的一致性算法（扩展版）](https://github.com/maemual/raft-zh_cn/blob/master/raft-zh_cn.md)
 - [The Raft Consensus Algorithm](https://raft.github.io/)
