@@ -14,23 +14,23 @@ date: 2020-04-17T13:04:35+08:00
 draft: false
 ---
 
-> BoltDB 是使用 Go 语言实现的嵌入式 K/V 数据库，其目标是为不需要完整数据库服务（如 Postgres 或 MySQL）的项目提供一个简单、快速、可靠的嵌入数据库。BoltDB 已在 Etcd、Bitcoin 等项目中作为底层数据库实现。这篇文章对 BoltDB 的设计原理进行简要分析。
+> BoltDB 是使用 Go 语言实现的嵌入式 K/V 数据库，其目标是为不需要完整数据库服务（如 Postgres 或 MySQL）的项目提供一个简单、快速、可靠的嵌入数据库。BoltDB 已在 e tcd、Bitcoin 等项目中作为底层数据库实现。这篇文章对 BoltDB 的设计原理进行简要分析。
 
-[BoltDB ](https://github.com/boltdb/bolt#getting-started) 目前已经被原作者归档，因此文中分析的是由 Etcd 进行维护的版本：[etcd-io/bbolt](https://github.com/etcd-io/bbolt)。
+[BoltDB](https://github.com/boltdb/bolt#getting-started) 目前已经被原作者归档，因此文中分析的是由 etcd 进行维护的版本：*[etcd-io/bbolt](https://github.com/etcd-io/bbolt)*。
 
-BoltDB 主要设计源于 LMDB，支持 ACID 事务、无锁 MVCC，提供 B+Tree 索引。BoltDB 采用一个单独的文件作为持久化存储，利用`mmap`将文件映射到内存中，并将文件划分为大小相同的 page 存储数据，使用写时复制技术将脏页写入文件。
+BoltDB 主要设计思想源于 LMDB，支持 ACID 事务、无锁并发事务 MVCC，提供 B+Tree 索引。BoltDB 采用一个单独的文件作为持久化存储，利用`mmap`将文件映射到内存中，并将文件划分为大小相同的 Page 存储数据，使用写时复制技术将脏页写入文件。
 
 ## MMAP
 
-mmap（内存映射）技术是将一个文件映射到调用进程的虚拟内存中，通过操作相应的内存区域来访问被映射文件的内容。`mmap()`通常在需要对文件进行频繁读写时使用，用内存读写取代 I/O 读写，以获得较高的性能。
+内存映射文件（Memory-Mapped File，mmap）技术是将一个文件映射到调用进程的虚拟内存中，通过操作相应的内存区域来访问被映射文件的内容。`mmap()`系统调用函数通常在需要对文件进行频繁读写时使用，用内存读写取代 I/O 读写，以获得较高的性能。
 
-![mmap](index.assets/mmap.png)
+![mmap@2x](mmap@2x.png)
 
 传统的 UNIX 或 Linux 系统在内核中设有多个缓冲区，当我们调用`read()`系统调用从文件中读取数据时，内核通常先将该数据复制到一个缓冲区中，再将数据复制到进程的内存空间。
 
 而使用`mmap`时，内核会在调用进程的虚拟地址空间中创建一个内存映射区，应用进程可以直接访问这段内存获取数据，节省了从内核空间拷贝数据到用户进程空间的开销。`mmap`并不会真的将文件的内容实时拷贝到内存中，而是在读取数据过程中，触发缺页中断，才会将文件数据复制到内存中。
 
-现代操作系统中常用分页技术进行内存管理，将虚拟内存空间划分成大小相同的 page，其大小通常是 4KB，在类 UNIX 系统中，我们可以使用下面的命令获取 page 的大小：
+现代操作系统中常用分页技术进行内存管理，将虚拟内存空间划分成大小相同的 Page，其大小通常是 4KB，在类 UNIX 系统中，我们可以使用下面的命令获取 page 的大小：
 
 ```shell
 $ getconf PAGESIZE
@@ -43,11 +43,11 @@ $ getconf PAGESIZE
 
 ## 数据结构
 
-BoltDB 的数据文件被组织为多个 page，数据库初始化时，会预先分配 4 个 page，第 0 页和第 1 页初始化`meta`页，第 2 页初始化为`freelist`页，第 3 页初始化为一个空`leafPage`，用来写入键值对数据。关于这几种类型的 page 会在下文介绍，我们首先分析 page 的数据结构。
+BoltDB 的数据文件被组织为多个 Page，数据库初始化时，会预先分配 4 个 Page，第 0 页和第 1 页初始化`meta`页，第 2 页初始化为`freelist`页，第 3 页初始化为一个空的`leafPage`，用来写入键值对数据。关于这几种类型的 Page 会在下文介绍，我们首先分析 page 的数据结构。
 
 #### Page
 
-每一个`page`都有一个固定大小的`Header`区域，用于标记这个页面的 id、数据类型等信息，由于 BoltDB 使用 B+Tree 索引，因此除了存放数据的`leafPage`，还会有做为数据索引的`branchPage`。
+每一个 Page 都有一个固定大小的`Header`区域，用于标记这个页面的 id、页面类型等信息，由于 BoltDB 使用 B+Tree 索引，因此除了存放数据的`leafPage`，还会有做为数据索引的`branchPage`。
 
 ```go
 const (
@@ -67,7 +67,7 @@ type page struct {
 }
 ```
 
-> 在旧版本的实现中会有一个额外的`ptr`字段指向数据存储地址，但在 Go 1.14 中无法通过指针安全性检查，因此这个字段已经去除了，详细了解：[Fix unsafe pointer conversions caught by Go 1.14 checkptr](https://github.com/etcd-io/bbolt/pull/201)
+> 在旧版本的实现中会有一个额外的`ptr`字段指向数据存储地址，但在 Go 1.14 中无法通过指针安全性检查，因此这个字段已经去除了，详细了解可以参考 ：[PR#201 Fix unsafe pointer conversions caught by Go 1.14 checkptr](https://github.com/etcd-io/bbolt/pull/201)
 
 BoltDB 会为每个`page`分配一个唯一标识 id，并通过 id 查找对应的页。`pageHeader`之后就是具体的数据存储结构。每一个键值对用一个`Element`结构体表示，并利用偏移量`pos`进行指针运算获取键值对的存储地址：`&Element + pos == &key`。
 
@@ -92,7 +92,7 @@ type leafPageElement struct {
 
 通过对`Element`的分析可以得出`branchPage`与`leafPage`的内存布局如下图所示：
 
-![page-layout](index.assets/page-layout.png)
+![Page-Layout@2x](Page-Layout@2x.png)
 
 将 `Element` 和键值对分开存储减少了查找的时间，因为`Element`结构体的大小是固定的，我们可以在 *O(1)* 时间复杂度内获取所有的`Element` ，若是以 `[Element header][key value][...]` 格式存储，需要按顺序遍历查找。
 
@@ -111,7 +111,7 @@ func (p *page) leafPageElements() []leafPageElement {
 
 #### Node
 
-`page`是数据在磁盘文件中的布局格式，当`page`加载到内存中要反序列化为`node`，以便进行数据修改操作。一个 `node`表示为一个 B+ Tree 节点，因此额外的`unbalanced`与`spilled`字段表明节点是否需要旋转与分裂。`node`中还会存储父节点与子节点的指针，用于对 key 进行范围查询。
+`page`是数据在磁盘文件中的布局格式，当 Page 加载到内存中要反序列化为`node`，以便进行数据修改操作。一个 `node`表示为一个 B+Tree 节点，因此需要额外的`unbalanced`与`spilled`字段表明节点是否需要旋转与分裂。`node`中还会存储父节点与子节点的指针，用于对 key 进行范围查询。
 
 ```go
 type node struct {
@@ -177,7 +177,7 @@ func (n *node) read(p *page) {
 
 ## Bucket
 
-Bucket 是更为上层的数据结构，每一个 Bucket 都是一个完整的 B+ Tree，将多个节点组织起来。
+Bucket 是更为上层的数据结构，每一个 Bucket 都是一个完整的 B+Tree，将多个节点页面组织起来。
 
 #### 数据结构
 
@@ -240,9 +240,9 @@ db.Update(func(tx *bolt.Tx) error {
 })
 ```
 
-`subBucket`本身也是一个完整的 B+ Tree，其名称做为 key，一个`bucket`结构体做为 value，索引到子 Bucket 根节点所在的页面。BoltDB 持有一个 `rootBucket`，存储着数据库中所有 B+ Tree 的根节点，我们创建的每一个 `Bucket` 都是 `rootBucket` 的 `subBucket`。
+`subBucket`本身也是一个完整的 B+Tree，其名称做为 key，一个`bucket`结构体做为 value，索引到子 Bucket 根节点所在的页面。BoltDB 持有一个 `rootBucket`，存储着数据库中所有 B+ Tree 的根节点，我们创建的每一个 `Bucket` 都是 `rootBucket` 的 `subBucket`。
 
-![subbucket](index.assets/subbucket.png)
+![SubBucket@2x](SubBucket@2x.png)
 
 从上图可以看出，父 Bucket 中只保存了`subBucket`的 `bucket`字段，每个 `subBucket` 都会占用额外的 page 存储数据，通常情况下嵌套的子 Bucket 不会拥有大量的数据，这造成了空间的浪费。BoltDB 使用`inlineBucket`解决这个问题，将较小的子 Bucket 的值直接存储在父 bucket 的叶子节点中，从而减少 page 的使用数量。
 
@@ -347,7 +347,7 @@ BoltDB 这种设计思路，是为了实现多版本并发控制，加速事务�
 1. 当写事务更新数据时，并不会直接覆盖旧数据所在的页，而且分配一个新的 page 将更新后的数据写入，然后将旧数据占用的 page 放入`freelist.pending`池中，并建立新的索引。当事务需要回滚时，只需要将`pending`池中的 page 删除，将索引回滚为原来的页面。
 2. 当发起一个读事务时，会单独复制一份`meta`信息，从这份独有的`meta`作为入口，可以读出该`meta`指向的数据。此时即使有写事务修改了相关 key 的数据，修改后的数据只会被写入新的 page，读事务引用的旧 page 会进入`pending` 池，与该读事务相关的数据并不会被修改。当该 page 相关的读事务都结束时，才会被复用修改。
 
-![page-freelist](index.assets/page-freelist.png)
+![Page-Freelist@2x](Page-Freelist@2x.png)
 
 `freelist`实现了 MVCC 与空间的复用，只有当剩余空间不满足写入要求时才会进行文件映射增长，当数据文件小于 1GB 时，每次重新映射大小翻倍，当文件大于 1GB 时，每次增长 1GB，以充分利用空间。
 

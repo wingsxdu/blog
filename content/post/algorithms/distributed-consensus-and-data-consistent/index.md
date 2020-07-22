@@ -300,3 +300,4 @@ SHA256(Hello World107105) == 0000bfe6af4232f78b0c8eba37a6ba6c17b9b8671473b0b8230
 - [Byzantine fault](https://en.wikipedia.org/wiki/Byzantine_fault)
 - [L6: Byzantine Fault Tolerance](https://www.youtube.com/watch?v=_e4wNoTV3Gw)
 - [Understanding Blockchain Fundamentals](https://medium.com/loom-network/understanding-blockchain-fundamentals-part-2-proof-of-work-proof-of-stake-b6ae907c7edb)
+- [Designing Data-Intensive Applications](https://book.douban.com/subject/30329536//)
