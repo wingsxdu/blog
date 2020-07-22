@@ -45,7 +45,7 @@ MySQL 中记录是以行的形式存储的，每个 16KB 大小的页中可以�
 4. 如果创建表时没有确认主键，那么 MySQL 会自动生成一个 RowID，长度为 6 字节；
 5. 最后是两个隐藏列，TransactionID 记录着最后一次修改该行的事务 ID，长度为 6 字节，Roll Pointer 是一个回滚指针，长度 7 字节。
 
-![compact--row-format](compact-row-format.png)
+![Compact-Row-Format@2x](Compact-Row-Format@2x.png)
 
 首部的变长列长度记录最大占用两个字节，65535 是 16 位二进制数所能表示的最大值，也是变长字段所能存储的最大值，所以理论上 MySQL 是支持这一长度的 VARCHAR 类型的列存储数据的。但是在官方文档 <u>[Limits on Table Column Count and Row Size](https://dev.mysql.com/doc/refman/8.0/en/column-count-limit.html)</u> 中指出，MySQL 的行具有 65,535 字节的大小限制，并且这一特性是与存储引擎无关的，即使我们选择能够支持更大的行的存储引擎也是如此。也就是说，**最大行长度限制了列的长度**。
 

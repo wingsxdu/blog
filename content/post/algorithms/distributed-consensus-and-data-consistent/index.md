@@ -158,7 +158,7 @@ BASE 理论强调的最终一致性允许系统中的数据存在中间状态，
 
 Paxos 是 Leslie Lamport 于 1990 年在论文 **[ [4] The Part-Time Parliament](https://lamport.azurewebsites.net/pubs/lamport-paxos.pdf)** 中提出的一个理论上的一致性解决方案，这篇论文中虚构了一个名叫 Paxos 的小岛，来描述共识算法解决数据一致性问题的过程：
 
-> 在古希腊有一个叫做 Paxos 的小岛，岛上采用兼职议会的形式来通过法令，但是 Paxos 的议员并不愿意把他全部的时间投入到议会事务中。议会中的议员通过信使进行消息的传递，但是，议员和信使随时有可能会离开议事大厅，并且信使可能会重复地传送消息，也可能一去不复返（但是不会篡改消息）。因此，议会协议要保证在每个议员都可能随时缺席的情况下也能继续产生法令，并且不会出现冲突。
+> *在古希腊有一个叫做 Paxos 的小岛，岛上采用兼职议会的形式来通过法令，但是 Paxos 的议员并不愿意把他全部的时间投入到议会事务中。议会中的议员通过信使进行消息的传递，但是，议员和信使随时有可能会离开议事大厅，并且信使可能会重复地传送消息，也可能一去不复返（但是不会篡改消息）。因此，议会协议要保证在每个议员都可能随时缺席的情况下也能继续产生法令，并且不会出现冲突。*
 
 兼职议会所面对的问题对应于今天的容错式分布式系统所面对的问题：议员对应于分布式系统中的处理进程，而议员的缺席对应于处理进程的宕机或网络故障。但是在这篇论文中，Lamport 采用了故事叙事的方式，使得很多工程人员难以正确理解算法的概念。于是在 2001 年，Lamport 做出妥协，发表了 **[ [5] Paxos Made Simple](https://lamport.azurewebsites.net/pubs/paxos-simple.pdf)** 一文，用通俗易懂的语言重新讲述了 Paxos。
 
@@ -229,9 +229,9 @@ Raft 被产业界广泛使用，像 etcd、TiDB 就是根据 Raft 构建的分�
 
 1982 年，Lamport 与 Robert Shostak、Marshall Pease 发表了论文 **[ [7] The Byzantine Generals Problem ](https://lamport.azurewebsites.net/pubs/byz.pdf)**，提出了拜占庭将军问题来描述分布式系统中的消息不可靠现象。这篇论文依然是以故事叙事的方式叙述的：
 
-> 一组拜占庭将军分别各率领一支军队共同围困一座城市，各支军队的行动策略限定为**进攻**或**撤退**两种。因为部分军队进攻部分军队撤退可能会造成灾难性后果，因此各位将军必须通过投票来达成一致策略，即所有军队一起进攻或所有军队一起撤退。各位将军分处城市不同方向，他们只能通过信使互相联系。在投票过程中每位将军都将自己投票给进攻或是撤退的信息通过信使通知其他所有将军，这样一来每位将军根据自己的投票和其他所有将军送来的信息就可以知道共同的投票结果而决定行动策略。
+> *一组拜占庭将军分别各率领一支军队共同围困一座城市，各支军队的行动策略限定为**进攻**或**撤退**两种。因为部分军队进攻部分军队撤退可能会造成灾难性后果，因此各位将军必须通过投票来达成一致策略，即所有军队一起进攻或所有军队一起撤退。各位将军分处城市不同方向，他们只能通过信使互相联系。在投票过程中每位将军都将自己投票给进攻或是撤退的信息通过信使通知其他所有将军，这样一来每位将军根据自己的投票和其他所有将军送来的信息就可以知道共同的投票结果而决定行动策略。*
 >
-> 这个系统的问题在于，将军和信使中可能出现叛徒，他们不仅可能向较为糟糕的策略投票，还可能选择性地发送投票信息。
+> *这个系统的问题在于，将军和信使中可能出现叛徒，他们不仅可能向较为糟糕的策略投票，还可能选择性地发送投票信息。*
 
 ![Byzantine-Fault@2x](Byzantine-Fault@2x.png)
 
@@ -255,7 +255,7 @@ SHA256(Hello World107105) == 0000bfe6af4232f78b0c8eba37a6ba6c17b9b8671473b0b8230
 
 因为问题解谜是一个纯粹的概率性事件，尝试的次数越多得到答案的概率越大，所以 POW 算法倾向于计算能力更强、网络环境更好的节点当选主节点。这就导致了在比特币网络中，为了获得记账奖励而创建大规模的矿池，浪费了很多算力与电力。
 
-2011 年，一名用户在比特币论坛发表帖子 **[Proof of stake instead of proof of work](https://bitcointalk.org/index.php?topic=27787.0)**，提出了股权证明（Proof-of-Stake，POS）的概念。股权证明去掉了工作量证明对能源和计算能力的要求，而是用股权取而代之。每一个节点使用自己持有的数字货币作为『股权』抵押，下一个记账权的持有者是根据不同节点的股份和时间进行随机选择的。
+2011 年，一名用户在比特币论坛发表帖子 **[Proof of stake instead of proof of work](https://bitcointalk.org/index.php?topic=27787.0)*，提出了股权证明（Proof-of-Stake，POS）的概念。股权证明去掉了工作量证明对能源和计算能力的要求，而是用股权取而代之。每一个节点使用自己持有的数字货币作为『股权』抵押，下一个记账权的持有者是根据不同节点的股份和时间进行随机选择的。
 
 由于节点被选举的概率与抵押的股权占比呈正相关，这就使得富有的节点有更多的机会得到记账权，对于小股东来说，千分之几甚至万分之几的股份很难有什么作为。改进后的委托权益证明（DPOS，Delegated Proof-of-Stake）能够让节点将自己的股权委托给一个代理人，代表自己参与到记账权的争夺中，这样小股东也可以从中获取收益。
 
@@ -263,7 +263,7 @@ SHA256(Hello World107105) == 0000bfe6af4232f78b0c8eba37a6ba6c17b9b8671473b0b8230
 
 在委托权益证明中，每一个参与者都能够选举任意数量的节点去争夺记账权，得票最多的前 N 个节点会成为候选人，下一个记账权的持有者就是从这样一组候选人中随机选取。除此之外，N 的数量也是由整个网络投票决定的，所以可以尽可能地保证网络的去中心化。
 
-作为区块链领域最重要的两类共识算法，POW 与 POS 都引入了经济学的概念，只要让攻击的成本远远高于收益，就可以消除作假的动机，保证多数人的利益。对于区块链共识感兴趣的同学，可以观看视频 [Proof-of-Stake (vs proof-of-work)](https://youtu.be/M3EFi_POhps) 更详细地介绍了 POW 与 POS 的区别和优缺点。
+作为区块链领域最重要的两类共识算法，POW 与 POS 都引入了经济学的概念，只要让攻击的成本远远高于收益，就可以消除作假的动机，保证多数人的利益。对于区块链共识感兴趣的同学，可以观看视频 *[Proof-of-Stake (vs proof-of-work)](https://youtu.be/M3EFi_POhps)* 更详细地介绍了 POW 与 POS 的区别和优缺点。
 
 #### 小节
 
@@ -277,17 +277,17 @@ SHA256(Hello World107105) == 0000bfe6af4232f78b0c8eba37a6ba6c17b9b8671473b0b8230
 
 分布式系统仍然有许多问题存在，处理这些问题不仅是一个持续活跃的研究领域，也是构建实用的分布式系统时的主要关注点，放慢脚步，多积累一些知识，终究不是一件坏事。
 
-随着这篇广泛而不全面的总结文章，笔者一阶段的学习计划算是结束了，未来一周会对前面的文章重新整理，调整学习方式，并准备下一阶段的规划。临近大四，学校还总是推出一些令人费解的政策制度，希望自己能够放平心态，做好平衡。
+随着这篇广泛而不全面的总结文章，笔者一阶段的学习计划算是结束了，未来一周会对前面的文章重新整理，复盘学习过程并进行调整。临近大四，希望自己能够放平心态，平衡好学习规划与学校安排。
 
 ## 相关论文
 
-- [ [1] Impossibility of Distributed Consensus with One Faulty Process](https://groups.csail.mit.edu/tds/papers/Lynch/jacm85.pdf)
-- [ [2] Brewer’s Conjecture and the Feasibility of Consistent, Available, Partition-Tolerant Web Services](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.67.6951&rep=rep1&type=pdf)
-- [ [3] Base: An Acid Alternative](https://queue.acm.org/detail.cfm?id=1394128)
-- [ [4] The Part-Time Parliament](https://lamport.azurewebsites.net/pubs/lamport-paxos.pdf)
-- [ [5] Paxos Made Simple](https://lamport.azurewebsites.net/pubs/paxos-simple.pdf)
-- [ [6] In Search of an Understandable Consensus Algorithm (Extended Version)](https://raft.github.io/raft.pdf)
-- [ [7] The Byzantine Generals Problem ](https://lamport.azurewebsites.net/pubs/byz.pdf)
+- *[ [1] Impossibility of Distributed Consensus with One Faulty Process](https://groups.csail.mit.edu/tds/papers/Lynch/jacm85.pdf)*
+- *[ [2] Brewer’s Conjecture and the Feasibility of Consistent, Available, Partition-Tolerant Web Services](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.67.6951&rep=rep1&type=pdf)*
+- *[ [3] Base: An Acid Alternative](https://queue.acm.org/detail.cfm?id=1394128)*
+- *[ [4] The Part-Time Parliament](https://lamport.azurewebsites.net/pubs/lamport-paxos.pdf)*
+- *[ [5] Paxos Made Simple](https://lamport.azurewebsites.net/pubs/paxos-simple.pdf)*
+- *[ [6] In Search of an Understandable Consensus Algorithm (Extended Version)](https://raft.github.io/raft.pdf)*
+- *[ [7] The Byzantine Generals Problem ](https://lamport.azurewebsites.net/pubs/byz.pdf)*
 
 ##  Reference
 

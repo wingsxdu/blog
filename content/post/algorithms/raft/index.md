@@ -22,7 +22,7 @@ draft: false
 
 Raft 算法是可以用来替代 Paxos 算法的分布式共识算法，而且 Raft 算法比 Paxos 算法更易懂更易实现。为了达到易于理解的目标，Raft 利用问题分解方法，将『复制集群节点一致性』这一复杂问题划分为四个可以被独立解释并处理的子问题：**领导选举（Leader Election）**、**日志复制（Log Replication）**、**安全性（Safety）**、**成员变更（Membership Changes）**。文中会从这四方面介绍 Raft 算法的机制。
 
-![The-Raft-Task](The-Raft-Task.png)
+![The-Raft-Task@2x](The-Raft-Task@2x.png)
 
 #### 数据一致性
 
@@ -61,11 +61,11 @@ Raft 是一种用来管理上述日志复制过程的算法，Raft 通过『领�
 - **Follower**（跟随者）：Follower 不会发送任何请求，只是简单地响应来自 Leader 或 Candidate 的请求，如果一个客户端与 Follower 联系，那么 Follower 会把请求重定向至 Leader；
 - **Candidate**（候选人）：如果 Follower 接收不到来自 Leader 的消息，那么它就会变成 Candidate 并发起一次选举，获得集群中大多数选票（超过 n/2+1）的候选人将成为新的 Leader。
 
-![Node-State](Node-State.png)
+![Node-State@2x](Node-State@2x.png)
 
 Raft 把时间分割成任意长度的**任期**（Term），任期用连续的整数标记。每一段任期从一次选举开始，如果一个 Candidate  赢得选举，那么它在这个任期内充当领导人的职责。在某些情况下，一次选举可能会发生选票瓜分的情况，每个 Candidate 的选票数都不足`n/2+1`，这时这个任期会以没有 Leader 结束，一个新的任期和一次新的选举会重新开始。Raft 保证了在一个给定的任期内，最多只有一个 Leader。
 
-![Raft-Leader-Term](Raft-Leader-Term.png)
+![Raft-Leader-Term@2x](Raft-Leader-Term@2x.png)
 
 #### 节点通信
 
@@ -103,7 +103,7 @@ RequestVote RPC 用于 Candidate  向其它节点发起选举，主要内容有�
 2. 第二种情况是其它节点成为 Leader：在等待投票期间，Candidate 可能会收到其它服务器节点声明它是领导人的 AppendEntries  RPC。如果这个节点的`term`字段不小于 Candidate 当前的任期号，那么 Candidate 会承认 Leader 的合法性并回到 Follower 状态。 如果此次 RPC 中的任期号比自己小，那么 Candidate  会拒绝这次的 RPC 并且继续保持 Candidate 状态。
 3. 第三种情况是如果有多个 Follower 同时成为 Candidate，那么选票可能会被瓜分以至于没有 Candidate  可以赢得大多数节点的支持。当这种情况发生时，Candidate 会发生选举时间超时，然后增加当前任期号来开始一轮新的选举。
 
-![Candidate](Candidate.png)
+![Candidate@2x](Candidate@2x.png)
 
 前两种情况比较好理解，第三种情况中，如果没有额外的机制，每个 Candidate 都会进入选举超时状态并开启下一轮选举，选票可能会被无限的重复瓜分。为了避免集群陷入选举死循环状态，Raft 使用**随机选举超时时间**来解决这个问题。
 
@@ -127,7 +127,7 @@ Raft 算法使用随机选举超时时间机制来确保很少会发生选票瓜
 
 每个日志条目存储一条**状态机指令**和 Leader 收到该指令时的**任期号**。任期号用来检测多个日志副本之间的不一致情况，每个日志条目都有一个**整数索引值**来表明它在日志中的位置。
 
-![Log-Entries](Log-Entries.png)
+![Log-Entries@2x](Log-Entries@2x.png)
 
 Leader 决定什么时候把日志条目应用到状态机中是安全的：这种日志条目被称为**已提交的（Committed）**。Raft 算法保证所有已提交的日志条目都是持久化的并且最终会被所有可用的状态机执行。一旦创建该日志条目的 Leader 将它复制到过半的服务器上，该日志条目就会被提交。同时，Leader 日志中该日志条目之前的所有日志条目也都会被提交，包括由其他 Leader 创建的日志条目。
 
@@ -170,7 +170,7 @@ Candidate 为了赢得选举必须联系集群中的大部分节点，这意味�
 
 为了使配置变更机制能够安全，在转换的过程中不能够存在任何时间点使得在同一个任期里可能选出多个 Leader 。但是任何服务器直接从旧的配置转换到新的配置的方案都是不安全的，在成员变更时，因为无法做到在同一个时刻使所有的节点从旧配置转换到新配置，那么直接从旧配置向新配置切换就可能存在一个节点同时满足新旧配置的“超过半数”原则。
 
-![Two-Leader](Two-Leader.png)
+![Two-Leader-In-Network-Partition@2x](Two-Leader-In-Network-Partition@2x.png)
 
 > 直接从一种配置转到另一种配置是不安全的，因为各个机器会在不同的时候进行转换。在上图中，集群从 3 台机器变成了 5 台。不幸的是，存在这样的一个时间点，Server1 可以通过自身和 Server2 的选票成为Leader（满足旧配置下收到大多数选票的原则），Server3 可以通过自身和 Server4、Server5 的选票成为Leader（满足新配置，即集群有 5 个节点的情况下的大多数选票原则）。此时整个集群可能在同一任期中出现了两个 Leader，这和协议是违背的。
 
@@ -206,13 +206,13 @@ Candidate 为了赢得选举必须联系集群中的大部分节点，这意味�
 
 在一个集群中，如果有部分节点的网络发生故障，与集群中另一部分节点的连接中断，形成相对独立的子网，就会出现网络分区现象。Raft 算法对不同情况下的网络分区具有不同的应对方案。
 
-![Network-Partition](Network-Partition.png)
+![Network-Partition@2X](Network-Partition@2X.png)
 
 #### Leader 在少数节点分区中
 
 在上图中，假设 Leader 节点 S1 被分割在了左侧的少数节点分区中。随着时间的流逝，集群中与 Leader 节点隔离的网络分区中，会率先有一个节点的选举计时器超时，这里假设该节点是 S5，此时 S5 就会切换成 Candidate 状态并发起下一轮选举。由于网络分区，当前集群中只有节点 S4、S5 能够收到节点 S5 的选举请求，假设节点 S5 最终赢得了选举，那么此时集群中会存在两个 Leader。
 
-![Two-Leader-In-Network-Partition](Two-Leader-In-Network-Partition.png)
+![Two-Leader-In-Network-Partition@2x](Two-Leader-In-Network-Partition@2x.png)
 
 当出现这种情况时，Raft 算法需要保证客户端请求数据的一致性，为了解决这个问题，集群需要做到：
 
@@ -237,7 +237,7 @@ Raft 协议对这种情况进行了处理，当某个节点要发起选举之前
 
 通常服务器都是独立地创建快照，但是 Leader 也会偶尔发送快照给一些落后的节点，例如一个运行缓慢的 Follower 或者新加入集群的服务器，通过网络发送快照让该 Follower 更新到最新的状态。
 
-![Snapshot-RPC](Snapshot-RPC.png)
+![Snapshot-RPC@2x(Snapshot-RPC@2x.png)
 
 Leader 使用 InstallSnapshot RPC 分块发送快照给太落后的 Follower，如果快照中包含重复的日志条目，那么 Follower 会删除日志中存在的条目，采用快照中的数据。
 

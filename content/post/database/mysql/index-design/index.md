@@ -20,9 +20,9 @@ draft: false
 
 ## 索引组织结构
 
-关系型数据库的数据行和索引行都被存储在页中，在大多数的操作系统中，页的大小一般为 4KB，在 MySQL 中一个页的默认大小为 16 KB。页的大小并不影响我们对性能的分析，它仅仅决定了一个页可以存储多少行数据。在 MySQL 中，辅助索引也是由 B+ Tree 组织的，其中包含该条数据的主键。在使用辅助索引查行时，需要先获得主键再去聚集索引中查找该条行数据所在的页，再将页加载到内存中遍历查找出行数据。
+关系型数据库的数据行和索引行都被存储在页中，在大多数的操作系统中，页的大小一般为 4KB，在 MySQL 中一个页的默认大小为 16KB。页的大小并不影响我们对性能的分析，它仅仅决定了一个页可以存储多少行数据。在 MySQL 中，辅助索引也是由 B+Tree 组织的，其中包含该条数据的主键。在使用辅助索引查行时，需要先获得主键再去聚集索引中查找该条行数据所在的页，再将页加载到内存中遍历查找出行数据。
 
-![B+Tree-In-MySQL-Index](B+Tree-In-MySQL-Index.png)
+![MySQL-B+Tree-Index@2x](MySQL-B+Tree-Index@2x.png)
 
 #### I/O 的代价
 
@@ -43,7 +43,7 @@ draft: false
 
 某些数据库系统能够在表和索引行顺序不一致的情况下主动创建跳跃式顺序访问，它会首先访问所有满足条件的索引行，然后按照表页的顺序对其进行排序后再访问表，将随机 I/O 变成跳跃式顺序读，以加快读取速度。
 
-![Skip-And-Sequential-Reading](Skip-And-Sequential-Reading.png)
+![Skip-And-Sequential-Reading@2x](Skip-And-Sequential-Reading@2x.png)
 
 跳跃式顺序读的好处会在数据预读的场景下放大，例如在 MySQL 中通过聚集索引访问数据时，数据库实例可能会根据数据的访问情况向前提前读取多个页，如果 SELECT 语句几乎以顺序的方式访问索引页或数据页，那么会大大增加预读数据的命中率，提升 I/O 效率。
 
@@ -53,7 +53,7 @@ draft: false
 
 虽然官方没有明确表示 MySQL 拥有这一机制，但是我们可以认为所有的索引页都被缓存在内存中。MySQL 中的 B+ Tree  通常有 3~4 层高，以索引页行数据的平均长度为 100 字节计算（索引页行数据不会占据太多的空间），考虑到离散的空闲空间，那么一页大概能包含 100 条索引行数据。以一张拥有一百万行索引的四层表为例，这张表大概拥有一万个索引页，占用内存不到 200MB。对于今天的机器配置来说，即使一条行数据拥有多个索引，也可以承担这一内存消耗。
 
-![Count-Of-Index-Page](Count-Of-Index-Page.png)
+![Count-Of-Index-Page@2x](Count-Of-Index-Page@2x.png)
 
 相比之下，从内存缓冲区读取数据的成本十分低廉，通常可以忽略这一时间消耗。对于层高为 4 的 B+ Tree  进行一次聚集索引查询需要访问 4 个页：三个索引页和一个数据页，但是**只需要进行一次随机 I/O**，再配合上数据预读机制，大大减少了查询所需的时间。
 
@@ -69,7 +69,7 @@ draft: false
 
 索引片是 SQL 查询在执行过程中扫描的一个索引片段，在这个范围中的索引将被顺序扫描，访问路径的成本很大程度上取决于索引片的厚度。索引片越厚，需要顺序扫描的索引页就越多，相应的行数据也需要从表中同步读取。如果索引片比较薄，就可以减少同步读取所需的随机 I/O 次数。
 
-![Thick-And-Thin-Index-Slices](Thick-And-Thin-Index-Slices.png)
+![Thick-And-Thin-Index-Slices@2x](Thick-And-Thin-Index-Slices@2x.png)
 
 除此之外，根据索引片包含的列数不同，可将索引分为**宽索引**和**窄索引**：如果一个索引包含 SELECT 语句所需要的全部数据列，那么它就是一个宽索引；如果某个或多个查询所需要的数据列不在索引上，那么它就是一个窄索引。对于`SELECT id, title, author FROM pages WHERE author="beihai"`这条 SQL 语句来说， (author, title, id) 就是该查询的一个宽索引， (author, id) 就是该查询的一个窄索引，因为该索引没有包含查询需要的`title`列。
 
@@ -89,12 +89,12 @@ WHERE 字句后面的条件表达式用于帮助 SQL 优化器定义索引片范
 
 ```sql
 SELECT * FROM pages
-WHERE author = "beihai" AND years > 2019 AND tags = "MySQL";
+WHERE author = "Beihai" AND years > 2019 AND tags = "MySQL";
 ```
 
 虽然我们有(author, years, tags)索引包含了上述查询条件中的全部列，但是根据上述规则，在这条 SQL 语句中只有`author`和`years`两列才是匹配列，MySQL 会扫描所有满足条件的数据行，然后将`tags` 当做过滤列，从中筛选符合条件的数据行。
 
-![Matching-Column-And-Filtering-Column](Matching-Column-And-Filtering-Column.png)
+![Matching-Column-And-Filtering-Column@2x](Matching-Column-And-Filtering-Column@2x.png)
 
 过滤列虽然不能够减少索引片的大小，但是能够减少随机 I/O 的次数，在索引中也扮演着非常重要的角色。
 
@@ -104,7 +104,9 @@ WHERE author = "beihai" AND years > 2019 AND tags = "MySQL";
 
 如果组成条件表达式的列之间非相关，那么联合索引的过滤因子可以由各个索引的过滤因子直接相乘得到。例如索引(author, years, tags)的过滤因子可以由`FF(author)×FF(years)×FF(tags)`计算得到。如果每个列的过滤因子为 1%，那么组合条件的过滤因子已经达到百万分之一了，大大减少了索引片的厚度。
 
-![Filter-Factor](Filter-Factor.png)
+![Filter-Factor@2x](Filter-Factor@2x-1595403377378.png)
+
+
 
 > 直接使用乘积来计算组合条件的过滤因子时，需要特别注意一个问题：列与列之间不应该有太强的相关性，如果不同的列之间有相关性，那么实际的过滤因子与直接相乘得到的过滤因子会有很大的偏差。例如：所在的城市和邮政编码就有非常强的相关性，不过这在多数情况下都不是太大的问题。
 
@@ -126,7 +128,7 @@ SQL 优化器决定了需要顺序扫描的索引数量与需要进行的随机 
 2. 第二颗星：将 GROUP BY 和 ORDER BY 中的列加入到索引中；
 3. 第三颗星：将 SELECT 语句中含有的列加入到索引片中。
 
-例如对于下面的 SQL 语句，索引(author, years, tags, title, id)就是该查询语句的一个三星索引。
+例如对于下面的 SQL 语句，索引`(author, years, tags, title, id)`就是该查询语句的一个三星索引。
 
 ```sql
 SELECT id, title FROM pages
@@ -153,7 +155,7 @@ ORDER BY tags;
 
 在上面的查询语句中，如果我们想要获得第一颗星，索引的前缀必须为 (author, years)，这时第二颗星是无法获得的，因为需要排序的列`tags`在范围索引列`years`后面，无法直接从索引中获得排序好的`tags`列，必须在内存中进行一次排序操作，这种情况下最终得到的索引就是 (author, years, tags, id)。如果我们想要避免排序的话，就需要交换 `tags`和 `years`的位置，牺牲索引片的薄度，最终会得到索引 (author, tags, years, id)。
 
-针对一条 SQL 语句来说，三星索引是理想的索引方式，但在运行时要针对实际情况进行权衡，通常情况下满足三颗星中的两颗（1,3或2,3）就能够达成需求了。
+针对一条 SQL 语句来说，三星索引是理想的索引方式，但在运行时要针对实际情况进行权衡，通常情况下满足三颗星中的两颗（1,3 或 2,3）就能够达成需求了。
 
 ## 总结
 
