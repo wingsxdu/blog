@@ -18,15 +18,15 @@ draft: false
 
 ---
 
-> ZooKeeper 是一个典型的分布式数据一致性解决方案，致力于提供一个高性能、高可用、且具有严格的顺序访问控制能力的分布式协调服务。在上一篇文章 [分布式键值存储 etcd 原理与实现](https://wingsxdu.com/post/database/etcd/) 中我们了解了分布式协调服务 etcd 关键模块的实现原理，在这篇文章中，我们看看 ZooKeeper 的实现思路。
+> ZooKeeper 是一个典型的分布式数据一致性解决方案，致力于提供一个高性能、高可用、且具有严格的顺序访问控制能力的分布式协调服务。在上一篇文章 *[分布式键值存储 etcd 原理与实现](https://wingsxdu.com/post/database/etcd/)* 中我们了解了分布式协调服务 etcd 关键模块的实现原理，在这篇文章中，我们看看 ZooKeeper 的实现思路。
 
 ZooKeeper 由互联网公司雅虎创建，使用专门为该服务设计的 Zab 协议作为共识算法，基于该协议，ZooKeeper 实现了主备模式的系统架构，并以此保证集群中各个副本数据之间的一致性。下面将以 Zab 协议为中心展开介绍 ZooKeeper 的原理。
 
 ## Zab 协议
 
-Zab 协议的全称是 **ZooKeeper Atomic Broadcast Protocol**（ZooKeeper 原子广播协议），从名字可以看出，Zab 协议是一种原子性的消息广播协议。Zab 协议借鉴了 Paxos 算法，具有一些相似之处，但又不像 Paxos 那样，是一种通用的分布式一致性算法，它是特别为 ZooKeeper 设计的支持崩溃恢复的原子广播协议。
+Zab 协议的全称是 ZooKeeper 原子广播协议（ZooKeeper Atomic Broadcast Protocol），从名字可以看出，Zab 协议是一种原子性的消息广播协议。Zab 协议借鉴了 Paxos 算法，具有一些相似之处，但又不像 Paxos 那样，是一种通用的分布式一致性算法，它是特别为 ZooKeeper 设计的支持崩溃恢复的原子广播协议。
 
-Zab 协议的原理可细分为四个阶段：**选举（Leader Election）、发现（Discovery）、同步（Synchronization）和广播（Broadcast）**。但是在 ZooKeeper 的实现中，将发现和同步两部分内容合成数据恢复一部分，所以按实现划分可以分为三个阶段：**Leader 选举（Fast Leader Election）、数据恢复（Recovery Phase）和广播（Broadcast Phase）**。按照功能的不同，从整体上可以划分为两个基本模式：**消息广播和崩溃恢复**。其中消息广播模式用于处理客户端的请求，崩溃恢复模式用于在节点意外崩溃时能够快速恢复，继续对外提供服务，让集群达成高可用状态。
+关于 ZooKeeper 与 Zab 协议的原理介绍比较混乱，从大体上看，Zab 协议的原理可细分为四个阶段：**选举（Leader Election）、发现（Discovery）、同步（Synchronization）和广播（Broadcast）**。但是在 ZooKeeper 的实现中，将发现和同步两部分内容合成数据恢复一部分，所以按实现划分可以分为三个阶段：**Leader 选举（Fast Leader Election）、数据恢复（Recovery Phase）和广播（Broadcast Phase）**。按照功能的不同，可以划分为两个基本模式：**消息广播和崩溃恢复**。其中消息广播模式用于处理客户端的请求，崩溃恢复模式用于在节点意外崩溃时能够快速恢复，继续对外提供服务，让集群达成高可用状态。
 
 ![ZAB@2x](Zab@2x.png)
 
@@ -113,7 +113,7 @@ long proposedEpoch;
 
 #### 顺序一致性读
 
-在上一篇文章的 [线性一致性读](https://wingsxdu.com/post/database/etcd/#%E7%BA%BF%E6%80%A7%E4%B8%80%E8%87%B4%E6%80%A7%E8%AF%BB) 一节中提到 etcd 利用 ReadIndex 机制实现了线性一致性读，由于 Zab  协议采用过半写入策略，所以读操作只能达到顺序一致性。顺序一致性模型中所有的进程都以相同的顺序看到所有的修改，其它进程的读操作未必能够获得最新的数据，但是每个进程读到的该数据不同值的顺序却是一致的。
+在上一篇文章的 *[线性一致性读](https://wingsxdu.com/post/database/etcd/#%E7%BA%BF%E6%80%A7%E4%B8%80%E8%87%B4%E6%80%A7%E8%AF%BB)* 一节中提到 etcd 利用 ReadIndex 机制实现了线性一致性读，由于 Zab  协议采用过半写入策略，所以读操作只能达到顺序一致性。顺序一致性模型中所有的进程都以相同的顺序看到所有的修改，其它进程的读操作未必能够获得最新的数据，但是每个进程读到的该数据不同值的顺序却是一致的。
 
 ![Sequential-Consistency@2x](Sequential-Consistency@2x.png)
 

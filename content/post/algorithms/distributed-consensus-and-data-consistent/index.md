@@ -60,7 +60,7 @@ FLP 不可能定理是分布式系统历史中最重要的定理之一，FLP 的
 
 #### CAP 定理
 
-CAP 定理由 **Eric Brewer** 在 1998 年首次提出，并于 2002 年在论文 **[[2] Brewer’s Conjecture and the Feasibility of Consistent, Available, Partition-Tolerant Web Services](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.67.6951&rep=rep1&type=pdf)** 中得到论证。它提出在异步的网络模型中分布式系统的三个指标：一致性（Consistency）、可用性（Availability）和分区容错性（Partition Tolerance），当发生故障时，最多只能同时满足这三项中的两项。
+CAP 定理由 Eric Brewer 在 1998 年首次提出，并于 2002 年在论文 **[[2] Brewer’s Conjecture and the Feasibility of Consistent, Available, Partition-Tolerant Web Services](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.67.6951&rep=rep1&type=pdf)** 中得到论证。它提出在异步的网络模型中分布式系统的三个指标：一致性（Consistency）、可用性（Availability）和分区容错性（Partition Tolerance），当发生故障时，最多只能同时满足这三项中的两项。
 
 ![CAP-Theorem@2x](CAP-Theorem@2x.png)
 
@@ -110,9 +110,9 @@ BASE 理论强调的最终一致性允许系统中的数据存在中间状态，
 
 如果一部分节点提交了事务，而其它节点放弃了事务，这就违反了数据一致性保证。而且事务还具有隔离性与持久性，彼此之间的事务提交不可见，也不能撤销。所以这就要求如果有部分节点提交了事务，则所有节点也必须跟着提交事务。
 
-#### 2PC(Two Phase Commit)
+#### 2PC
 
-两阶段提交（Two Phase Commit, 2PC）是一种在多节点之间实现事务原子提交的算法，用来保证所有节点要么全部提交，要么全部中止。2PC 引入了『协调者』这一全新的节点身份，而其它节点被称为参与者，客户端的所有请求都需要经由协调者来处理。
+两阶段提交（Two Phase Commit, 2PC）是一种在多节点之间实现事务原子提交的共识算法，用来保证所有节点要么全部提交，要么全部中止。2PC 引入了协调者（Coordinator）这一全新的节点身份，而其它节点被称为参与者（Participant），客户端的所有请求都需要经由协调者来处理。
 
 2PC 将事务的提交过程分成了准备和提交两个阶段进行处理，在准备阶段：
 
@@ -132,7 +132,7 @@ BASE 理论强调的最终一致性允许系统中的数据存在中间状态，
 
 ![Coordinator-Crash@2x](Coordinator-Crash@2x.png)
 
-#### 3PC(Three Phase Commit)
+#### 3PC
 
 三阶段提交对两阶段提交进行了一定的改进，将准备过程一分为二，形成了 CanCommit、PreCommit、DoCommit 三个阶段：
 
@@ -255,9 +255,9 @@ SHA256(Hello World107105) == 0000bfe6af4232f78b0c8eba37a6ba6c17b9b8671473b0b8230
 
 因为问题解谜是一个纯粹的概率性事件，尝试的次数越多得到答案的概率越大，所以 POW 算法倾向于计算能力更强、网络环境更好的节点当选主节点。这就导致了在比特币网络中，为了获得记账奖励而创建大规模的矿池，浪费了很多算力与电力。
 
-2011 年，一名用户在比特币论坛发表帖子 **[Proof of stake instead of proof of work](https://bitcointalk.org/index.php?topic=27787.0)**，提出了股权证明（Proof-of-Stake，POS）的概念。股权证明去掉了工作量证明对能源和计算能力的要求，而是用股权取而代之。每一个节点使用自己持有的数字货币作为『股权』抵押，下一个记账权的持有者是根据不同节点的股份和时间进行随机选择的。
+2011 年，一名用户在比特币论坛发表帖子 **[ [8] Proof of stake instead of proof of work](https://bitcointalk.org/index.php?topic=27787.0)**，提出了股权证明（Proof-of-Stake，POS）的概念。股权证明去掉了工作量证明对能源和计算能力的要求，而是用股权取而代之。每一个节点使用自己持有的数字货币作为『股权』抵押，下一个记账权的持有者是根据不同节点的股份和时间进行随机选择的。
 
-由于节点被选举的概率与抵押的股权占比呈正相关，这就使得富有的节点有更多的机会得到记账权，对于小股东来说，千分之几甚至万分之几的股份很难有什么作为。改进后的委托权益证明（DPOS，Delegated Proof-of-Stake）能够让节点将自己的股权委托给一个代理人，代表自己参与到记账权的争夺中，这样小股东也可以从中获取收益。
+由于节点被选举的概率与抵押的股权占比呈正相关，这就使得富有的节点有更多的机会得到记账权，对于小股东来说，千分之几甚至万分之几的股份很难有什么作为。改进后的委托权益证明（Delegated Proof-of-Stake，DPOS）能够让节点将自己的股权委托给一个代理人，代表自己参与到记账权的争夺中，这样小股东也可以从中获取收益。
 
 ![DPOS@2x](DPOS@2x.png)
 
@@ -281,7 +281,7 @@ SHA256(Hello World107105) == 0000bfe6af4232f78b0c8eba37a6ba6c17b9b8671473b0b8230
 
 随着这篇广泛而不全面的总结文章，笔者一阶段的学习计划算是结束了，未来一周会对前面的文章重新整理，复盘学习过程并进行调整。临近大四，希望自己能够放平心态，平衡好学习规划与学校安排。
 
-## 相关论文
+## 引用文献
 
 - *[ [1] Impossibility of Distributed Consensus with One Faulty Process](https://groups.csail.mit.edu/tds/papers/Lynch/jacm85.pdf)*
 - *[ [2] Brewer’s Conjecture and the Feasibility of Consistent, Available, Partition-Tolerant Web Services](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.67.6951&rep=rep1&type=pdf)*
@@ -290,6 +290,7 @@ SHA256(Hello World107105) == 0000bfe6af4232f78b0c8eba37a6ba6c17b9b8671473b0b8230
 - *[ [5] Paxos Made Simple](https://lamport.azurewebsites.net/pubs/paxos-simple.pdf)*
 - *[ [6] In Search of an Understandable Consensus Algorithm (Extended Version)](https://raft.github.io/raft.pdf)*
 - *[ [7] The Byzantine Generals Problem ](https://lamport.azurewebsites.net/pubs/byz.pdf)*
+- *[ [8] Proof of stake instead of proof of work](https://bitcointalk.org/index.php?topic=27787.0)*
 
 ##  Reference
 

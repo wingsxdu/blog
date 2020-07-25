@@ -67,7 +67,7 @@ type page struct {
 }
 ```
 
-> 在旧版本的实现中会有一个额外的`ptr`字段指向数据存储地址，但在 Go 1.14 中无法通过指针安全性检查，因此这个字段已经去除了，详细了解可以参考 ：[PR#201 Fix unsafe pointer conversions caught by Go 1.14 checkptr](https://github.com/etcd-io/bbolt/pull/201)
+> 在旧版本的实现中会有一个额外的`ptr`字段指向数据存储地址，但在 Go 1.14 中无法通过指针安全性检查，因此这个字段已经去除了，详细了解可以参考 ：*[PR#201 Fix unsafe pointer conversions caught by Go 1.14 checkptr](https://github.com/etcd-io/bbolt/pull/201)*
 
 BoltDB 会为每个`page`分配一个唯一标识 id，并通过 id 查找对应的页。`pageHeader`之后就是具体的数据存储结构。每一个键值对用一个`Element`结构体表示，并利用偏移量`pos`进行指针运算获取键值对的存储地址：`&Element + pos == &key`。
 
@@ -353,11 +353,11 @@ BoltDB 这种设计思路，是为了实现多版本并发控制，加速事务�
 
 ## 总结
 
-BoltDB 是一个精简的数据库实现模型，使用`mmap`将磁盘的 page 映射到内存的 page，实现了数据的零拷贝，利用 B+ Tree 进行索引，对理解数据库系统的相关概念很有帮助。BoltDB 的写事务实现比较巧妙，利用`meta`副本和`freelist`机制实现并发控制，提供了一种解决问题的思路。操作系统通过 COW (Copy-On-Write) 技术进行 page 管理，通过写时复制技术，系统可实现无锁的读写并发，但是无法实现无锁的写写并发，这就注定了这类数据库读性能很高，但是随机写的性能较差，因此非常适合于『读多写少』的场景。
+BoltDB 是一个精简的数据库实现模型，使用`mmap`将磁盘的 page 映射到内存的 page，实现了数据的零拷贝，利用 B+ Tree 进行索引，对理解数据库系统的相关概念很有帮助。BoltDB 的写事务实现比较巧妙，利用 meta 副本和 freelist 机制实现并发控制，提供了一种解决问题的思路。操作系统通过 COW (Copy-On-Write) 技术进行 Page 管理，通过写时复制技术，系统可实现无锁的读写并发，但是无法实现无锁的写写并发，这就注定了这类数据库读性能很高，但是随机写的性能较差，因此非常适合于『读多写少』的场景。
 
 使用写时复制技术也产生了一定的弊端，如果长时间执行只读事务，则会导致脏页面不能被回收；如果长时间执行的读写事务，会导致其他读写事务挂起等待。在使用 BoltDB 过程中要注意尽量避免长期运行的事务。
 
-**B+ Tree 相关阅读**：[Concepts of B+ Tree and Extensions – B+ and B Tree index files in DBMS](https://www.tutorialcup.com/dbms/b-tree.htm)
+**文中并没有详细介绍 B+Tree 这一数据结构，可以自行阅读文章**：*[Concepts of B+ Tree and Extensions – B+ and B Tree index files in DBMS](https://www.tutorialcup.com/dbms/b-tree.htm)*
 
 ## Reference
 
@@ -365,5 +365,5 @@ BoltDB 是一个精简的数据库实现模型，使用`mmap`将磁盘的 page �
 - [fdatasync(2)](http://man7.org/linux/man-pages/man2/fdatasync.2.html)
 - [linux 同步IO: sync、fsync与fdatasync](https://blog.csdn.net/letterwuyu/article/details/80927226)
 - [Linux Memory Mapping](http://blog.decaywood.me/2017/04/10/Linux-mmap/)
-- [Issue:database file size not updating?](https://github.com/boltdb/bolt/issues/308)
+- [Issue#308:database file size not updating?](https://github.com/boltdb/bolt/issues/308)
 - [boltdb 源码分析](https://youjiali1995.github.io/storage/boltdb/#%E5%AE%9E%E7%8E%B0)

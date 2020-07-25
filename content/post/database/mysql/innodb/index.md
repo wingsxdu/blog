@@ -43,7 +43,7 @@ InnoDB 是目前最通用的存储引擎，在高可靠性与高性能之间具�
 
 ![MySQL-TableSpace@2x](MySQL-TableSpace@2x.png)
 
-> 上图修改自《MySQL 技术内幕：InnoDB 存储引擎》图4-1 InnoDB逻辑存储结构
+> 上图修改自 *[《MySQL技术内幕：InnoDB存储引擎》](https://read.douban.com/ebook/15233230/)* 图4-1 InnoDB逻辑存储结构
 
 Segment 与数据库中的索引相映射。InnoDB 引擎内，数据段即为 B+ Tree 的叶子节点，索引段即为 B+ Tree 的非叶子节点，创建索引中很关键的步骤便是分配 Segment。
 
@@ -92,7 +92,7 @@ InnoDB 存储引擎和大多数数据库一样，记录是以行的形式存储�
 
 `Dynamic`和`Compressed`是`Compact`行记录格式的变种，`Compressed`会对存储在其中的行数据会以`zlib`的算法进行压缩，因此对于 BLOB、TEXT、VARCHAR 这类大长度类型的数据能够进行非常有效的存储。
 
-> 详细了解 InnoDB 行记录格式可参考文档：[InnoDB Row Formats](https://dev.mysql.com/doc/refman/8.0/en/innodb-row-format.html)
+> 详细了解 InnoDB 行记录格式可参考文档：*[InnoDB Row Formats](https://dev.mysql.com/doc/refman/8.0/en/innodb-row-format.html)*
 
 ####  行溢出
 
@@ -281,7 +281,7 @@ S 锁和 S 锁是兼容的，X 锁和其它锁都不兼容，举个例子，事�
 
 > 如果没有意向锁，当已经有事务使用行锁对表中的某一行进行修改时，如果另外一个事务要对全表进行修改，那么就需要对所有的行是否被锁定进行扫描，在这种情况下，效率是非常低的；不过，在引入意向锁之后，当有事务使用行锁对表中的某一行进行修改之前，会先为表添加意向排他锁（IX），再为行记录添加排他锁（X），在这时如果有事务尝试对全表进行修改就不需要判断表中的每一行数据是否被加锁了，只需要通过等待意向互斥锁被释放就可以了。
 >
-> ——上述内容来自[『浅入浅出』MySQL 和 InnoDB](https://draveness.me/mysql-innodb/)
+> ——上述内容来自*[『浅入浅出』MySQL 和 InnoDB](https://draveness.me/mysql-innodb/)*
 
 #### 行锁的算法
 
@@ -465,7 +465,7 @@ commit;
 
 ## 总结
 
-文中对 MySQL 的主要特性进行了总结，但是 MySQL 的相关知识十分庞杂，读者想了解具体细节的实现可以参考[《MySQL技术内幕：InnoDB存储引擎》](https://read.douban.com/ebook/15233230/)一书。如果发现文中存在不正确的地方可以在下面留言指正。
+文中对 MySQL 的主要特性进行了总结，但是 MySQL 的相关知识十分庞杂，读者想了解具体细节的实现可以预读*[《MySQL技术内幕：InnoDB存储引擎》](https://read.douban.com/ebook/15233230/)*一书。如果发现文中存在不正确的地方可以在下面留言指正。
 
 ## Reference
 

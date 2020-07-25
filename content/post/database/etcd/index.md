@@ -27,7 +27,7 @@ etcd 是一个基于 Raft 共识算法实现的分布式键值存储服务，在
 
 ## 分布式共识
 
-共识问题是分布式计算中最重要也是最基本的问题之一，通俗地理解其目标就是让多个节点就某件事情达成一致，所以在分析 etcd 的具体实现之前介绍 Raft 共识算法中一些重要的概念。强烈建议先阅读 Raft 论文 [In Search of an Understandable Consensus Algorithm](https://web.stanford.edu/~ouster/cgi-bin/papers/raft-atc14)，对于理解 etcd 的实现原理有很大帮助。
+共识问题是分布式计算中最重要也是最基本的问题之一，通俗地理解其目标就是让多个节点就某件事情达成一致，所以在分析 etcd 的具体实现之前介绍 Raft 共识算法中一些重要的概念。强烈建议先阅读 Raft 论文 *[In Search of an Understandable Consensus Algorithm](https://web.stanford.edu/~ouster/cgi-bin/papers/raft-atc14)*，对于理解 etcd 的实现原理有很大帮助。
 
 #### 状态机复制
 
@@ -39,7 +39,7 @@ Raft 的工作就是保证复制日志的一致性，服务器节点上的`Conse
 
 ![State-Machine-Replication@2x](State-Machine-Replication@2x.png)
 
-> 上图修改自论文 [In Search of an Understandable Consensus Algorithm](https://web.stanford.edu/~ouster/cgi-bin/papers/raft-atc14) Figure 1
+> 上图修改自论文 *[In Search of an Understandable Consensus Algorithm](https://web.stanford.edu/~ouster/cgi-bin/papers/raft-atc14)* Figure 1
 
 复制状态机是一个抽象的模块，状态机的数据由一个单独的后端存储模块维护。客户端的每次写请求都会先持久化到 WAL 文件，然后根据写请求的内容修改状态机数据。读请求获取数据时需要从状态机中查询数据，而不是直接获取当前节点维护的最新的日志条目。为了防止数据过多，etcd 会定期生成快照对数据进行压缩。通常情况下，只要集群中超过法定人数（n/2+1）的节点响应了单轮远程过程调用，就可以认为客户端的请求已经执行完成，少数的慢服务器不会影响整个系统性能。
 
@@ -49,7 +49,7 @@ Raft 是一种用来管理日志复制过程的算法，Raft 通过『领导选�
 
 ![Node-State-Change@2x](Node-State-Change@2x.png)
 
-> 上图修改自论文 [In Search of an Understandable Consensus Algorithm](https://web.stanford.edu/~ouster/cgi-bin/papers/raft-atc14) Figure 4
+> 上图修改自论文 *[In Search of an Understandable Consensus Algorithm](https://web.stanford.edu/~ouster/cgi-bin/papers/raft-atc14)* Figure 4
 
 集群启动时所有节点初始状态均为 Follower，随后会有一个节点选举成功成为 Leader，在绝大多数时间里集群内的节点会处于这两种身份之一。当一个 Follower 节点的选举计时器超时后，会先进入`preVote`状态（切换为 PreCandidate 身份），在它准备发起一次选举之前，需要尝试连接集群中的其他节点，并询问它们是否愿意参与选举，如果集群中的其它节点能够正常收到 Leader 的心跳消息，那么会拒绝参与选举。如果有超过法定人数的节点响应并表示参与新一轮选举，该节点会从 PreCandidate 身份切换到 Candidate，发起新一轮的选举。
 
@@ -590,7 +590,7 @@ func (s *Snapshotter) SaveDBFrom(r io.Reader, id uint64) (int64, error) {
 
 ## 状态机存储
 
-etcd 的 MVCC 模块实现了状态机存储功能，其底层使用的是开源的嵌入式键值存储数据库 BoltDB，但是这个项目已经由作者归档不再维护了，因此 etcd 社区自己维护了一个 [bbolt](https://github.com/etcd-io/bbolt) 版本。关于 BoltDB 的实现细节可以参考笔者的文章 [可嵌入式数据库 BoltDB 实现原理](https://www.wingsxdu.com/post/database/boltdb)，这一小节中主要分析 MVCC 模块如何利用多版本并发控制维护数据的历史版本信息。
+etcd 的 MVCC 模块实现了状态机存储功能，其底层使用的是开源的嵌入式键值存储数据库 BoltDB，但是这个项目已经由作者归档不再维护了，因此 etcd 社区自己维护了一个 [bbolt](https://github.com/etcd-io/bbolt) 版本。关于 BoltDB 的实现细节可以参考笔者的文章 *[可嵌入式数据库 BoltDB 实现原理](https://www.wingsxdu.com/post/database/boltdb)*，这一小节中主要分析 MVCC 模块如何利用多版本并发控制维护数据的历史版本信息。
 
 #### 并发控制
 
