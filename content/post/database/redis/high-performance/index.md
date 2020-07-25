@@ -7,7 +7,6 @@ tags: [
 ]
 categories: [
     "Why",
-	"数据库",
 	"Redis",
 ]
 keywords: [

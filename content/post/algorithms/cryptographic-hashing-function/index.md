@@ -7,7 +7,7 @@ tags: [
 ]
 categories: [
     "Hash",
-    "算法",
+    "加密算法",
 ]
 date: 2020-03-10T12:07:45+08:00
 draft: false

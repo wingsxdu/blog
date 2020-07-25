@@ -6,9 +6,8 @@ tags: [
     "Redis",
 ]
 categories: [
-    "Analyze",
-	"Redis",
 	"算法",
+	"Redis",
 ]
 keywords: [
     "Redis",

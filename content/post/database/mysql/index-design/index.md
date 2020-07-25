@@ -9,6 +9,7 @@ tags: [
 categories: [
   	"MySQL",
 	"数据库",
+  	"索引设计",
 ]
 date: 2020-05-18T16:05:03+08:00
 draft: false

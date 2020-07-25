@@ -9,6 +9,7 @@ tags: [
 categories: [
   	"MySQL",
 	"数据库",
+	"存储引擎",
 ]
 date: 2020-05-05T17:15:03+08:00
 draft: false

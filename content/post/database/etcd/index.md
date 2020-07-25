@@ -11,7 +11,7 @@ categories: [
     "etcd",
     "Raft",
     "数据库",
-    "分布式",
+    "分布式协调服务",
 ]
 date: 2020-06-18T12:05:03+08:00
 draft: false

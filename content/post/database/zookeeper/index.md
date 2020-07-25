@@ -11,11 +11,11 @@ categories: [
     "ZooKeeper",
     "Zab",
     "数据库",
-    "分布式",
+    "分布式协调服务",
+    "共识算法",
 ]
 date: 2020-07-07T12:05:03+08:00
 draft: false
-
 ---
 
 > ZooKeeper 是一个典型的分布式数据一致性解决方案，致力于提供一个高性能、高可用、且具有严格的顺序访问控制能力的分布式协调服务。在上一篇文章 *[分布式键值存储 etcd 原理与实现](https://wingsxdu.com/post/database/etcd/)* 中我们了解了分布式协调服务 etcd 关键模块的实现原理，在这篇文章中，我们看看 ZooKeeper 的实现思路。

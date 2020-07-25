@@ -7,8 +7,10 @@ tags: [
     "数据一致性",
 ]
 categories: [
-    "分布式",
     "共识算法",
+    "Paxos",
+    "Raft",
+    "Zab",
 ]
 date: 2020-07-21T14:52:48+08:00
 draft: false
