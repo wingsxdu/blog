@@ -1,0 +1,143 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Multiple upload</title>
+</head>
+
+<body>
+    <h2>Get a TinyUrl</h2>
+    <form id="GetTinyUrl">
+        Url: <input type="text" name="tinyurl"><br>
+        <p id="Got"></p>
+        <input type="button" name="Submit" value="Submit" onclick="Get();">
+    </form>
+
+    <h2>Create a new TinyUrl</h2>
+    <form id="CreateTinyUrl">
+        Url: <input type="text" name="url"><br>
+        <p id="Created"></p>
+        <input type="button" name="Submit" value="Submit" onclick="Create();">
+    </form>
+
+    <h2>Update a TinyUrl</h2>
+    <form id="UpdateTinyUrl">
+        OldTinyUrl: <input type="text" name="tinyurl"><br>
+        NewTinyUrl: <input type="text" name="newurl"><br>
+        <input type="button" name="Submit" value="Submit" onclick="Update();">
+    </form>
+
+    <h2>Delete a TinyUrl</h2>
+    <form id="DeleteTinyUrl">
+        Url: <input type="text" name="url"><br>
+        <input type="button" name="Submit" value="Submit" onclick="Delete();">
+    </form>
+</body>
+
+
+<script>
+    // 能跑就行
+
+    const host = "https://wingsxdu.com"
+
+    function Get() {
+        let elements = getElements('GetTinyUrl');
+        let url = host + "/gett/" + elements[0].value;
+        console.log(url);
+
+        let xmlHttp = new XMLHttpRequest();
+        xmlHttp.open("GET", url);
+        xmlHttp.send(null);   // 请求体数据
+        xmlHttp.onreadystatechange = function () {
+            if (xmlHttp.readyState === XMLHttpRequest.DONE) {
+                if (this.status === 200) {
+                    prompt("以查询该 TinyUrl 指向的链接：", this.responseText);
+                    document.getElementById("Got").innerHTML = elements[0].value + ":" + this.responseText;
+                } else {
+                    alert(this.responseText);
+                }
+            }
+        };
+    }
+
+    function Create() {
+        let elements = getElements('CreateTinyUrl');
+
+        let url = host + "/t?url=" + elements[0].value;
+        console.log(url);
+
+        let xmlHttp = new XMLHttpRequest();
+        xmlHttp.open("POST", url);
+        xmlHttp.onreadystatechange = function () {
+            if (xmlHttp.readyState === XMLHttpRequest.DONE) {
+                if (this.status === 200) {
+                    prompt("以获取新的 TinyUrl，点击复制：", this.responseText);
+                    document.getElementById("Created").innerHTML = elements[0].value + ":" + this.responseText;
+                } else {
+                    alert(this.responseText);
+                }
+            }
+
+        };
+        xmlHttp.send(null);
+    }
+
+    function Update() {
+        let elements = getElements('UpdateTinyUrl');
+
+        let url = host + "/t?" + elements[0].name + "=" + elements[0].value + "&" + elements[1].name + "=" + elements[1].value;
+        console.log(url)
+
+        let xmlHttp = new XMLHttpRequest();
+        xmlHttp.open("PUT", url);
+        xmlHttp.send(null);
+        xmlHttp.onreadystatechange = function () {
+            if (xmlHttp.readyState === XMLHttpRequest.DONE) {
+                alert(this.responseText);
+            }
+        };
+    }
+
+    function Delete() {
+        let elements = getElements('DeleteTinyUrl');
+
+        let url = host + "/t?tinyurl=" + elements[0].value;
+        console.log(url);
+
+        let xmlHttp = new XMLHttpRequest();
+        xmlHttp.open("DELETE", url);
+        xmlHttp.send(null);   // 请求体数据
+        xmlHttp.onreadystatechange = function () {
+            if (xmlHttp.readyState === XMLHttpRequest.DONE) {
+                alert(this.responseText);
+            }
+        };
+    }
+
+
+    // 获取指定 form 中所有的 <input> 对象
+    function getElements(formId) {
+        let form = document.getElementById(formId);
+        if (form == null) {
+            return false;
+        }
+        let elements = new Array();
+
+        let inputTagElements = form.getElementsByTagName('input');
+        for (let j = 0; j < inputTagElements.length; j++) {
+            elements.push(inputTagElements[j]);
+        }
+
+        return elements;
+    }
+
+    // 获取单个 <input> 中的 [name,value] 数组
+    function inputSelector(element) {
+        if (element.checked){
+            return [element.name, element.value];
+        }
+    }
+
+</script>
+
+</html>
