@@ -1,7 +1,7 @@
 ---
 title: ZooKeeper 与 Zab 协议 · Analyze
 author: beihai
-summary: "<blockquote><p>etcd 是由 CoreOS 发起的开源项目，旨在构建一个高可用的分布式键值存储系统。etcd 可以用于存储关键数据和实现分布式调度，在现代化的集群运行中起到关键性的作用。</p></blockquote>"
+summary: "<blockquote><p>ZooKeeper 是一个典型的分布式数据一致性解决方案，致力于提供一个高性能、高可用、且具有严格的顺序访问控制能力的分布式协调服务。在这篇文章中，我们看看 ZooKeeper 的实现思路。</p></blockquote>"
 tags: [
     "ZooKeeper",
     "Zab",
