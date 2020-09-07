@@ -195,21 +195,21 @@ unstable 和 MemoryStorage 为 RaftLog 提供了很多相同的 API，例如获�
 
 ```go
 func (u *unstable) truncateAndAppend(ents []pb.Entry) {
-	after := ents[0].Index // 获取第一条待追加的 Entry 记录的索引值
-	switch {
-	case after == u.offset+uint64(len(u.entries)):
+    after := ents[0].Index // 获取第一条待追加的 Entry 记录的索引值
+    switch {
+    case after == u.offset+uint64(len(u.entries)):
         // 如果待追加的记录与 entries 中的记录正好连续，则可以直接向 entries 中追加
-    	u.entries = append(u.entries, ents...)
-	case after <= u.offset:
+        u.entries = append(u.entries, ents...)
+    case after <= u.offset:
         // 用待追加的 Entry 记录替换当前的 entries 字段，并更新 offset
-    	u.logger.Infof("replace the unstable entries from index %d", after)
-    	u.offset = after
-    	u.entries = ents
-	default:
+        u.logger.Infof("replace the unstable entries from index %d", after)
+        u.offset = after
+        u.entries = ents
+    default:
         // after 在 offset～last 之间，将 offset~after 之间的记录保留，抛弃 after 之后的记录
-    	u.logger.Infof("truncate the unstable entries before index %d", after)
-    	u.entries = append([]pb.Entry{}, u.slice(u.offset, after)...)
-    	u.entries = append(u.entries, ents...)
+        u.logger.Infof("truncate the unstable entries before index %d", after)
+        u.entries = append([]pb.Entry{}, u.slice(u.offset, after)...)
+        u.entries = append(u.entries, ents...)
     }
 }
 ```
@@ -417,17 +417,17 @@ func (w *WAL) Save(st raftpb.HardState, ents []raftpb.Entry) error {
         return err
     }
     curOff, err := w.tail().Seek(0, io.SeekCurrent)
-	if err != nil {
-    	return err
+    if err != nil {
+        return err
     }
-	if curOff < SegmentSizeBytes {
-    	if mustSync {
-        	return w.sync()
+    if curOff < SegmentSizeBytes {
+        if mustSync {
+            return w.sync()
         }
-    	return nil
+        return nil
     }
 
-	return w.cut()
+    return w.cut()
 }
 
 func (w *WAL) saveEntry(e *raftpb.Entry) error {……}
@@ -634,14 +634,14 @@ rev={2 1}, key=key2, value="update2"
 ```go
 // etcd/mvcc/backend/backend.go
 type keyIndex struct {
-	key []byte        // 客户端提供的原始 Key 值
-	modified revision // 该 Key 值最后一次修改时对应的 revision 信息
-	generations []generation
+    key []byte        // 客户端提供的原始 Key 值
+    modified revision // 该 Key 值最后一次修改时对应的 revision 信息
+    generations []generation
 }
 
 type revision struct {
-	main int64
-	sub int64
+    main int64
+    sub int64
 }
 ```
 
@@ -677,17 +677,17 @@ keyIndex 结构体提供了两种查询 revision 的方法。`since()`方法用�
 ```go
 // etcd/mvcc/key_index.go（代码已删减）
 func (ki *keyIndex) get(lg *zap.Logger, atRev int64) (modified, created revision, ver int64, err error) {
-	g := ki.findGeneration(atRev)
-	if g.isEmpty() {
-    	return revision{}, revision{}, 0, ErrRevisionNotFound
+    g := ki.findGeneration(atRev)
+    if g.isEmpty() {
+        return revision{}, revision{}, 0, ErrRevisionNotFound
     }
 
-	n := g.walk(func(rev revision) bool { return rev.main > atRev })
-	if n != -1 {
-    	return g.revs[n], g.created, g.ver - int64(len(g.revs)-n-1), nil
+    n := g.walk(func(rev revision) bool { return rev.main > atRev })
+    if n != -1 {
+        return g.revs[n], g.created, g.ver - int64(len(g.revs)-n-1), nil
     }
 
-	return revision{}, revision{}, 0, ErrRevisionNotFound
+    return revision{}, revision{}, 0, ErrRevisionNotFound
 }
 ```
 
@@ -702,44 +702,44 @@ etcd 使用 Backend 这一设计封装了存储引擎的实现细节，为上层
 ```go
 // etcd/mvcc/backend/backend.go
 type Backend interface {
-	ReadTx() ReadTx           // 只读事务，已经被 ConcurrentReadTx() 取代，
-	BatchTx() BatchTx         // 读写事务（批量事务）
-	ConcurrentReadTx() ReadTx // 非阻塞的只读事务，代替了 ReadTx()，详情见 PR#10523
-	Snapshot() Snapshot       // 创建快照
-	Hash(ignores map[IgnoreKey]struct{}) (uint32, error)
-	Size() int64
-	SizeInUse() int64
-	OpenReadTxN() int64       // 返回当前正在进行的只读事务数量
-	Defrag() error            // 碎片整理
-	ForceCommit()             // 提交批量读写事务
-	Close() error
+    ReadTx() ReadTx           // 只读事务，已经被 ConcurrentReadTx() 取代，
+    BatchTx() BatchTx         // 读写事务（批量事务）
+    ConcurrentReadTx() ReadTx // 非阻塞的只读事务，代替了 ReadTx()，详情见 PR#10523
+    Snapshot() Snapshot       // 创建快照
+    Hash(ignores map[IgnoreKey]struct{}) (uint32, error)
+    Size() int64
+    SizeInUse() int64
+    OpenReadTxN() int64       // 返回当前正在进行的只读事务数量
+    Defrag() error            // 碎片整理
+    ForceCommit()             // 提交批量读写事务
+    Close() error
 }
 ```
 
 Backend 两个重要的概念是 `ReadTx` 和 `BatchTx`，分别实现了只读事务和读写事务的接口，其中`BatchTx`内嵌了`ReadTx`，『继承』了只读事务实现的方法：
 
-> Go 语言中内嵌结构体的概念可以理解为『继承』。
+> Go 语言中内嵌结构体可以实现『继承』的表达语义。
 
 ```go
 // etcd/mvcc/backend/read_tx.go
 type ReadTx interface {
-	Lock()
-	Unlock()
-	RLock()
-	RUnlock()
-	UnsafeRange(bucketName []byte, key, endKey []byte, limit int64) (keys [][]byte, vals [][]byte)
-	UnsafeForEach(bucketName []byte, visitor func(k, v []byte) error) error
+    Lock()
+    Unlock()
+    RLock()
+    RUnlock()
+    UnsafeRange(bucketName []byte, key, endKey []byte, limit int64) (keys [][]byte, vals [][]byte)
+    UnsafeForEach(bucketName []byte, visitor func(k, v []byte) error) error
 }
 
 // etcd/mvcc/backend/batch_tx.go
 type BatchTx interface {
-	ReadTx
-	UnsafeCreateBucket(name []byte)
-	UnsafePut(bucketName []byte, key []byte, value []byte)
-	UnsafeSeqPut(bucketName []byte, key []byte, value []byte)
-	UnsafeDelete(bucketName []byte, key []byte)
-	Commit()        // 提交当前的读写事务，并立即打开一个新的读写事务
-	CommitAndStop() // 提交当前的读写事务，但是不会打开新的读写事务
+    ReadTx
+    UnsafeCreateBucket(name []byte)
+    UnsafePut(bucketName []byte, key []byte, value []byte)
+    UnsafeSeqPut(bucketName []byte, key []byte, value []byte)
+    UnsafeDelete(bucketName []byte, key []byte)
+    Commit()        // 提交当前的读写事务，并立即打开一个新的读写事务
+    CommitAndStop() // 提交当前的读写事务，但是不会打开新的读写事务
 }
 ```
 
@@ -752,20 +752,20 @@ type BatchTx interface {
 var defaultBatchInterval = 100 * time.Millisecond
 
 func (b *backend) run() {
-	defer close(b.donec)
-	t := time.NewTimer(b.batchInterval)
-	defer t.Stop()
-	for {
-    	select {
-    	case <-t.C:
-    	case <-b.stopc:
-        	b.batchTx.CommitAndStop()
-        	return
+    defer close(b.donec)
+    t := time.NewTimer(b.batchInterval)
+    defer t.Stop()
+    for {
+        select {
+        case <-t.C:
+        case <-b.stopc:
+            b.batchTx.CommitAndStop()
+            return
         }
-    	if b.batchTx.safePending() != 0 {
-        	b.batchTx.Commit()
+        if b.batchTx.safePending() != 0 {
+            b.batchTx.Commit()
         }
-    	t.Reset(b.batchInterval)
+        t.Reset(b.batchInterval)
     }
 }
 ```
@@ -777,12 +777,12 @@ func (b *backend) run() {
 ```go
 // etcd/mvcc/backend/read_tx.go
 type readTx struct {
-	mu  sync.RWMutex
-	buf txReadBuffer // 缓存键值对集合
-	txMu    sync.RWMutex
-	tx      *bolt.Tx
-	buckets map[string]*bolt.Bucket
-	txWg *sync.WaitGroup
+    mu  sync.RWMutex
+    buf txReadBuffer // 缓存键值对集合
+    txMu    sync.RWMutex
+    tx      *bolt.Tx
+    buckets map[string]*bolt.Bucket
+    txWg *sync.WaitGroup
 }
 ```
 
@@ -797,16 +797,16 @@ type readTx struct {
 ```go
 // etcd/mvcc/backend/batch_tx.go
 type batchTx struct {
-	sync.Mutex
-	tx      *bolt.Tx
-	backend *backend
+    sync.Mutex
+    tx      *bolt.Tx
+    backend *backend
 
-	pending int // 当前事务中执行的修改操作个数，读写事务提交时该值会被重置为 0
+    pending int // 当前事务中执行的修改操作个数，读写事务提交时该值会被重置为 0
 }
 
 type batchTxBuffered struct {
-	batchTx
-	buf txWriteBuffer
+    batchTx
+    buf txWriteBuffer
 }
 ```
 
@@ -819,10 +819,10 @@ type batchTxBuffered struct {
 var defaultBatchLimit = 10000
 
 func (t *batchTx) Unlock() {
-	if t.pending >= t.backend.batchLimit {
-    	t.commit(false)
+    if t.pending >= t.backend.batchLimit {
+        t.commit(false)
     }
-	t.Mutex.Unlock()
+    t.Mutex.Unlock()
 }
 ```
 

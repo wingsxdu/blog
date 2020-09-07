@@ -1,7 +1,7 @@
 ---
 title: "可嵌入式数据库 BoltDB 实现原理 · Analyze"
 author: "beihai"
-summary: "<blockquote><p>BoltDB 是使用 Go 语言实现的嵌入式 K/V 数据库，其目标是为不需要完整数据库服务（如 Postgres 或 MySQL）的项目提供一个简单、快速、可靠的嵌入数据库。BoltDB 已在 Etcd、Bitcoin 等项目中作为底层数据库实现。这篇文章对 BoltDB 的设计原理进行简要分析。</p></blockquote>"
+summary: "<blockquote><p>BoltDB 是使用 Go 语言实现的嵌入式 K/V 数据库，其目标是为不需要完整数据库服务（如 Postgres 或 MySQL）的项目提供一个简单、快速、可靠的嵌入数据库。BoltDB 已在 etcd、Bitcoin 等项目中作为底层数据库实现。这篇文章对 BoltDB 的设计原理进行简要分析。</p></blockquote>"
 tags: [
     "BoltDB",
     "etcd",
@@ -15,7 +15,7 @@ date: 2020-04-17T13:04:35+08:00
 draft: false
 ---
 
-> BoltDB 是使用 Go 语言实现的嵌入式 K/V 数据库，其目标是为不需要完整数据库服务（如 Postgres 或 MySQL）的项目提供一个简单、快速、可靠的嵌入数据库。BoltDB 已在 e tcd、Bitcoin 等项目中作为底层数据库实现。这篇文章对 BoltDB 的设计原理进行简要分析。
+> BoltDB 是使用 Go 语言实现的嵌入式 K/V 数据库，其目标是为不需要完整数据库服务（如 Postgres 或 MySQL）的项目提供一个简单、快速、可靠的嵌入数据库。BoltDB 已在 etcd、Bitcoin 等项目中作为底层数据库实现。这篇文章对 BoltDB 的设计原理进行简要分析。
 
 [BoltDB](https://github.com/boltdb/bolt#getting-started) 目前已经被原作者归档，因此文中分析的是由 etcd 进行维护的版本：*[etcd-io/bbolt](https://github.com/etcd-io/bbolt)*。
 
