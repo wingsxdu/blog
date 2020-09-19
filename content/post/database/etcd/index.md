@@ -183,15 +183,13 @@ type raftLog struct {
 
 unstable 和 MemoryStorage 的结构都不复杂，`MemoryStorage.snapshot`字段维护了最近一次快照包含的最后一条日志的索引值和任期值，所以 ents[i] 代表了索引值为`i+snapshot.Metadata.Index`的 Entry 日志（ents[0] 是一条假数据，i 从 1 计算）。`unstable.offset`字段存储的是 entries 中第一条日志的索引值，通过该值可以获得指定索引的日志。
 
-etcd 已应用日志写入状态机这一过程是异步的，所以 RaftLog 不但维护了已提交 Entry 日志的最大索引值，还维护了已应用（写入状态机）Entry 日志的最大索引值，并且 applied <= committed，这两个参数在 etcd 实现线性一致性中起到了重要的作用，笔者会在另一篇文章中中分析这个问题。
+etcd 已应用日志写入状态机这一过程是异步的，所以 RaftLog 不但维护了已提交 Entry 日志的最大索引值，还维护了已应用（写入状态机）Entry 日志的最大索引值，并且 applied <= committed，这两个参数在 etcd 实现线性一致性中起到了重要的作用，笔者会在下文中分析这个问题。
 
 从这几方面的内容可以得知 RaftLog 的逻辑结构视图如下所示：
 
 ![Raft-Log@2x](Raft-Log@2x.png)
 
 unstable 和 MemoryStorage 为 RaftLog 提供了很多相同的 API，例如获取 Entry 数组的第一条或最后一条日志的索引、获取指定索引对应日志的任期等等，当 RaftLog 需要这些元数据时，会先从 unstable 中查找，如果没有找到，再从 MemoryStorage 中查找。
-
-在向 unstable 和 MemoryStorage 中追加数据时如果产生冲突，那么原有的冲突部分的数据会被覆盖掉，以节点收到的最新的数据为主。如果向 unstable 追加数据时冲突的数据非常多，甚至需要超过了 unstable 与 MemoryStorage 的界限，那么 RaftLog 并不会修改 MemoryStorage 中的日志，而是截断数据，只保留后半部分。
 
 ```go
 func (u *unstable) truncateAndAppend(ents []pb.Entry) {
@@ -213,6 +211,10 @@ func (u *unstable) truncateAndAppend(ents []pb.Entry) {
     }
 }
 ```
+
+在向 unstable 和 MemoryStorage 中追加数据时如果产生冲突，那么原有的冲突部分的数据会被覆盖掉，以节点收到的最新的数据为主。如果向 unstable 追加数据时冲突的数据非常多，甚至超过了 unstable 与 MemoryStorage 的界限，此时 RaftLog 并不会修改 MemoryStorage 中的日志，而是截断数据，只保留后半部分。
+
+
 
 ![Raft-Log-Data-Conflict@2x](Raft-Log-Data-Conflict@2x.png)
 
@@ -653,7 +655,7 @@ keyIndex 用代`generation`表示同一个 Key 在某一个生命周期内的数
 
 因为 etcd 保存键空间的历史版本，随着客户端不断修改键值对，keyIndex 中记录的 revision 信息会不断增加，我们可以调用`compact()`方法对 keyIndex 进行压缩，来避免性能下降和存储空间枯竭。
 
-在压缩 keyIndex 时，会将 main 部分小于指定值的 revision 实例全部删除，被压缩的修订版本将无法访问。如果压缩过程出现了空的 generation 实例，则会将其删除。并且每个 Key 至少对应一个 generation 实例，如果 keylndx 中全部的 generation 实例都被清除了，那么该 keyIndex 实例也会被删除。
+在压缩 keyIndex 时，会将 main 部分小于指定值的 revision 实例全部删除，被压缩的修订版本将无法访问。如果压缩过程出现了空的 generation 实例，则会将其删除。并且每个 Key 至少对应一个 generation 实例，如果 keyIndex 中全部的 generation 实例都被清除了，那么该 keyIndex 实例也会被删除。
 
 以上面图片中维护的数据为例展示压缩过程：
 
