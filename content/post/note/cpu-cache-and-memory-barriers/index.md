@@ -10,7 +10,7 @@ categories: [
     "CPU Cache",
     "Memory Barriers",
 ]
-date: 2020-10-3T21:40:03+08:00
+date: 2020-10-03T21:40:03+08:00
 draft: false
 ---
 
