@@ -62,7 +62,7 @@ Java 的 jvm 就使用的分代回收的思路。在面向对象编程语言中�
 
 在Go 1.5 后采用的三色标记算法，是对标记-清除算法的改进，一共分为四个阶段：
 
-1. 栈扫描：当垃圾回收器第⼀次启动的时候，将对象都看成⽩⾊的。初始化GC任务，包括开启写屏障(write barrier)和辅助 GC(mutator assist)，统计 root 对象的任务数量等，将扫描任务作为多个并发的 Goroutine 立即入队给调度器，进而被 CPU 处理。**这个过程需要STW**；
+1. 栈扫描：当垃圾回收器第⼀次启动的时候，将对象都看成白色的。初始化GC任务，包括开启写屏障(write barrier)和辅助 GC(mutator assist)，统计 root 对象的任务数量等，将扫描任务作为多个并发的 Goroutine 立即入队给调度器，进而被 CPU 处理。**这个过程需要STW**；
 
    <div align="center">{{< figure src="/post/golang/gc/index.assets/mark_sweep_5.png" style="center">}}</div>
 

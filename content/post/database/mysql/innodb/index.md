@@ -174,12 +174,12 @@ SELECT * FROM test WHERE a=1 AND b=2 AND c=3;
 SELECT * FROM blog WHERE content LIKE '%MySQL%';
 ```
 
-根据 B+ Tree 索引的特性，上述 SQL 语句即便对`content`字段添加了 B+ Tree 索引也需要对索引进行扫描来得到结果，而且创建索引极大地浪费了空间，一般情况下B+ Tree 索引并不能很好地完成这类工作。
+根据 B+Tree 索引的特性，上述 SQL 语句即便对`content`字段添加了 B+Tree 索引也需要对索引进行扫描来得到结果，而且创建索引极大地浪费了空间，一般情况下 B+Tree 索引并不能很好地完成这类工作。
 
 全文检索通常使用倒排索引来实现。倒排索引在辅助表中存储了单词与单词自身在一个或多个文档中所在位置之间的映射，通俗地说，**倒排索引用来记录有哪些文档包含了某个单词**。这通常利用关联数组实现，其拥有两种表现形式：
 
-- **inverted file index**，其表现形式为{word，word 所在文档的 ID}；
-- **full inverted index**，其表现形式为{word，(word 所在文档的 ID，在具体文档中的位置)}。
+- **Inverted File Index**：其表现形式为{word，word 所在文档的 ID}；
+- **Full Inverted Index**：其表现形式为{word，(word 所在文档的 ID，在具体文档中的位置)}。
 
 例如，有下面这样的一张表：
 
