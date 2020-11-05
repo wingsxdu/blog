@@ -18,21 +18,21 @@ draft: false
 
 > LSM-Tree 被是一种面向写多读少应用场景的数据结构 ，被 Hbase、RocksDB 等强力 NoSQL 数据库采用作为底层文件组织方式。文中将会介绍 LSM-Tree 的设计思路，并分析使用 LSM-Tree 的 LevelDB 是如何实现与进行性能优化的。
 
-在了解 LSM-Tree 之前，笔者了解的 MySQL、etcd 等数据存储系统都是面向读多写少应用场景的，其底层大都采用 B-Tree 及其变种数据结构。而 LSM-Tree 则解决了另一个应用场景 *写多读少* 时存在的问题。在面对亿级的海量数据的存储和检索的场景下，我们通常选择的强力的 NoSQL 数据库，如 Hbase、RocksDB 等，它们的文件组织方式，都是仿照 LSM-Tree 实现的。
+在了解 LSM-Tree 之前，笔者学习过的 MySQL、etcd 等存储系统都是面向读多写少场景的，其底层大都采用 B-Tree 及其变种数据结构。而 LSM-Tree 则解决了另一个应用场景——**写多读少**时面临的问题。在面对亿级的海量数据的存储和检索的场景下，我们通常选择强力的 NoSQL 数据库，如 Hbase、RocksDB 等，它们的文件组织方式，都是仿照 LSM-Tree 实现的。
 
 ## LSM-Tree
 
-LSM-Tree 全称是 Log Structured Merge Tree，是一种分层、有序、面向磁盘的数据结构，**其核心思想是充分利用磁盘的顺序写性能要远高于随机写性能这一特性，将批量的随机写转化为一次性的顺序写。**
+LSM-Tree 全称是 Log Structured Merge Tree，是一种分层、有序、面向磁盘的数据结构，其核心思想是**充分利用磁盘的顺序写性能要远高于随机写性能这一特性，将批量的随机写转化为一次性的顺序写。**
 
-当我们购买了一块磁盘时，我们实际上为两样东西支付了售价：一个是磁盘容量，另一个是磁盘的 I/O 能力。对于任意类型的应用来说，通常其中的一个会成为限制因素，如果我们在添加数据时发现，磁盘悬臂已经被充分使用，但是磁盘还有剩余空间，这就意味着 I/O 能力是程序的性能瓶颈。
+当我们购买了一块磁盘时，我们实际上为两样东西支付了售价：一个是磁盘容量，另一个是磁盘的 I/O 能力。对于任意类型的应用来说，通常其中的一个会成为限制因素，如果我们在添加数据时发现，磁盘旋臂已经被充分使用，但是磁盘还有剩余空间，这就意味着 I/O 能力是程序的性能瓶颈。
 
 <div align="center">{{< figure src="ChartGo.png">}}</div>
 
-> 图片源自 [Log Structured Merge Trees](http://www.benstopford.com/2015/02/14/log-structured-merge-trees/)。
+> 图片源自 [*Log Structured Merge Trees*](http://www.benstopford.com/2015/02/14/log-structured-merge-trees/)。
 
-从上图可以直观地看出，磁盘（无论是 HDD 还是 SSD）的顺序访问速度至少比随机 I/O 快三个数量级，甚至顺序访问磁盘比随机访问主内存还要快。这意味着要尽可能避免随机 I/O 操作，顺序访问非常值得我们去探讨与设计。
+从上图可以直观地看出，磁盘的顺序访问速度至少比随机 I/O 快三个数量级，甚至顺序访问磁盘比随机访问主内存还要快。这意味着要尽可能避免随机 I/O 操作，顺序访问非常值得我们去探讨与设计。
 
-LSM-Tree 围绕这一原理进行设计和优化，通过消去随机的更新操作来达到这个目标，以此让写性能达到最优，同时为那些长期具有高更新频率的文件提供低成本的索引机制，减少查询时的开销。
+LSM-Tree 围绕这一原理进行设计和优化，通过消去随机的更新操作来达到这个目的，以此让写性能达到最优，同时为那些长期具有高更新频率的文件提供低成本的索引机制，减少查询时的开销。
 
 #### Two-Component LSM-Tree
 
@@ -40,9 +40,9 @@ LSM-Tree 可以由两个或多个类树的数据结构组件构成，本小节�
 
 ![Two-Component-LSM-Tree@2x](Two-Component-LSM-Tree@2x.png)
 
-> 上图修改自论文 [Figure 2.1. Schematic picture of an LSM-tree of two components](http://www.benstopford.com/2015/02/14/log-structured-merge-trees/)
+> 上图修改自 LSM-Tree 论文 [*Figure 2.1. Schematic picture of an LSM-tree of two components*](http://www.benstopford.com/2015/02/14/log-structured-merge-trees/)
 
-两组件 LSM-Tree（Two-Component LSM-Tree）在内存中有一个 C<sub>0</sub> 组件，它可以是 AVL 或 SkipList 等结构，所有写入首先写到 C<sub>0</sub> 中。而磁盘上有一个 C<sub>1</sub> 组件（在 LevelDB 的实现中是 SSTable）当 C<sub>0</sub> 组件的大小达到阈值时，就需要进行 Rolling Merge，将内存中的内容合并到 C<sub>1</sub> 中。两组件 LSM-Tree 的写操作流程如下：
+两组件 LSM-Tree（Two-Component LSM-Tree）在内存中有一个 C<sub>0</sub> 组件，它可以是 AVL 或 SkipList 等结构，所有写入首先写到 C<sub>0</sub> 中。而磁盘上有一个 C<sub>1</sub> 组件，当 C<sub>0</sub> 组件的大小达到阈值时，就需要进行 Rolling Merge，将内存中的内容合并到 C<sub>1</sub> 中。两组件 LSM-Tree 的写操作流程如下：
 
 1. 当有写操作时，会先将数据追加写到日志文件中，以备必要时恢复；
 2. 然后将数据写入位于内存的 C<sub>0</sub> 组件，通过某种数据结构保持 Key 有序；
@@ -51,29 +51,29 @@ LSM-Tree 可以由两个或多个类树的数据结构组件构成，本小节�
 
 > 类似于普通的日志写入方式，这种数据结构的写入，全部都是以`Append`的模式追加，不存在删除和修改。对于任何应用来说，那些会导致索引值发生变化的数据更新都是繁琐且耗时的，但是这样的更新却可以被 LSM-Tree 轻松地解决，将该更新操作看做是一个删除操作加上一个插入操作。
 
-C<sub>1</sub> 组件是为顺序性的磁盘访问优化过的，所有的节点都是 100% 填充，为了有效利用磁盘，在根节点之下的所有的单页面节点都会被打包放到连续的多页面磁盘块（Multi-Page Block）上。对于 Rolling Merge 和长区间检索的情况将会使用 Multi-Page Block I/O，这样就可以有效减少磁盘旋臂的移动；而在匹配性的查找中会使用 Single-Page I/O，以最小化缓存量。通常根节点只有一个单页面，而其它节点使用 256KB 的 Multi-Page Block。
+C<sub>1</sub> 组件是为顺序性的磁盘访问优化过的，可以是 B-Tree 一类的数据结构（LevelDB 中的实现是 SSTable），所有的节点都是 100% 填充，为了有效利用磁盘，在根节点之下的所有的单页面节点都会被打包放到连续的多页面磁盘块（Multi-Page Block）上。对于 Rolling Merge 和长区间检索的情况将会使用 Multi-Page Block I/O，这样就可以有效减少磁盘旋臂的移动；而在匹配性的查找中会使用 Single-Page I/O，以最小化缓存量。通常根节点只有一个单页面，而其它节点使用 256KB 的 Multi-Page Block。
 
-在一个两组件 LSM-Tree 中，只要 C<sub>0</sub> 组件足够大，那么就会有一个批量处理效果。例如，如果一条数据记录的大小是 16Bytes，在一个 4KB 的节点中将会有 250 条记录；如果 C<sub>0</sub> 组件的大小是 C<sub>1</sub> 的 1/25，那么在每个合并操作新产生的具有 250 条记录的 C<sub>1</sub> 节点中，将会有 10 条是从 C<sub>0</sub> 合并而来的新记录。也就是说用户新写入的数据暂时存储到内存的 C<sub>0</sub> 中，然后再批量延迟写入磁盘，相当于将用户之前的 10 次写入合并为一次写入。显然地，由于只需要一次随机写就可以写入多条数据，因此 LSM-Tree 的写效率比 B-Tree 等数据结构更高，而 Rolling Merge 过程则是其中的关键。 
+在一个两组件 LSM-Tree 中，只要 C<sub>0</sub> 组件足够大，那么就会有一个批量处理效果。例如，如果一条数据记录的大小是 16Bytes，在一个 4KB 的节点中将会有 250 条记录；如果 C<sub>0</sub> 组件的大小是 C<sub>1</sub> 的 1/25，那么在每个合并操作新产生的具有 250 条记录的 C<sub>1</sub> 节点中，将会有 10 条是从 C<sub>0</sub> 合并而来的新记录。也就是说用户新写入的数据暂时存储到内存的 C<sub>0</sub> 中，然后再批量延迟写入磁盘，相当于将用户之前的 10 次写入合并为一次写入。显然地，由于只需要一次随机写就可以写入多条数据，LSM-Tree 的写效率比 B-Tree 等数据结构更高，而 Rolling Merge 过程则是其中的关键。 
 
 #### Rolling Merge
 
 我们可以把两组件 LSM-Tree 的 Rolling Merge 过程类比为一个具有一定步长的游标循环往复地穿越在 C<sub>0</sub> 和 C<sub>1</sub> 的键值对上，不断地从C<sub>0</sub> 中取出数据放入到磁盘上的 C<sub>1</sub> 中。
 
-该游标在 C<sub>1</sub>树的叶子节点和索引节点上都有一个逻辑位置，在每个层级上，所有当前正在参与合并的 Multi-Page Blocks 将会被分成两种类型：`Emptying Block`类型的内部记录正在被移出，但是还有一些数据是游标所未到达的，`Filling Block`则存储着合并后的结果。类似地，该游标也会定义出`Emptying Node`和`Filling Node`，这两个节点都被缓存在内存中。为了可以进行并发访问，每个层级上的 Block 包含整数个节点，这样在对执行节点进行重组合并过程中，针对这些节点内部记录的访问将会被阻塞，但是同一 Block 中其它节点依然可以正常访问。
+该游标在 C<sub>1</sub>树的叶子节点和索引节点上都有一个逻辑位置，在每个层级上，所有正在参与合并的 Multi-Page Blocks 将会被分成两种类型：`Emptying Block`的内部记录正在被移出，但是还有一些数据是游标所未到达的，`Filling Block`则存储着合并后的结果。类似地，该游标也会定义出`Emptying Node`和`Filling Node`，这两个节点都被缓存在内存中。为了可以进行并发访问，每个层级上的 Block 包含整数个节点，这样在对执行节点进行重组合并过程中，针对这些节点内部记录的访问将会被阻塞，但是同一 Block 中其它节点依然可以正常访问。
 
 ![Rolling-Merge@2x](Rolling-Merge@2x.png)
 
-> 上图修改自论文 [Figure 2.2. Conceptual picture of rolling merge steps](http://www.benstopford.com/2015/02/14/log-structured-merge-trees/)
+> 上图修改自 LSM-Tree 论文 [*Figure 2.2. Conceptual picture of rolling merge steps*](http://www.benstopford.com/2015/02/14/log-structured-merge-trees/)
 
-当所有被缓存的节点需要被刷新到磁盘时，每个层级的所有被缓存的信息会被写入到磁盘上的新的位置上，同时需要在索引节点中建立新的索引信息，为了进行恢复还需要产生一条日志记录。那些可能在恢复过程中需要的旧的 Block 暂时还不会被覆盖，只有当后续的写入提供了足够信息时它们才可以宣告失效。
+合并后的新 Blocks 会被写入到新的磁盘位置上，这样旧的 Blocks 就不会被覆盖，在发生 crash 后依然可以进行数据恢复。同时需要在索引节点中建立新的索引信息，为了进行恢复还需要产生一条日志记录。那些可能在恢复过程中需要的旧的 Block 暂时还不会被删除，只有当后续的写入提供了足够信息时它们才可以宣告失效。
 
-合并后的新 Blocks 会被写入到新的磁盘位置上，这样旧的 Blocks 就不会被覆盖，在发生 crash 后依然可以进行数据恢复。C<sub>1</sub>中的父目录节点也会被缓存在内存中，实时更新以反映出叶子节点的变动，同时父节点还会在内存中停留一段时间以最小化 I/O。当合并步骤完成后，C<sub>1</sub> 中的旧叶子节点就会变为无效状态，随后会被从 C<sub>1</sub> 目录结构中删除。通常，每次都是 C<sub>1</sub> 中的最左边的叶节点记录参与合并过程，因为如果旧叶子节点都是空的那么合并步骤也就不会产生新的节点，这样也就没有必要进行。除了更新后的目录节点信息外，这些最左边的记录在被写入到磁盘之前也会在内存中缓存一段时间。为了减少崩溃后的数据恢复时间，合并过程需要进行周期性的 checkpoint，强制将缓存信息写入磁盘。
+C<sub>1</sub>中的父目录节点也会被缓存在内存中，实时更新以反映出叶子节点的变动，同时父节点还会在内存中停留一段时间以最小化 I/O。当合并步骤完成后，C<sub>1</sub> 中的旧叶子节点就会变为无效状态，随后会被从 C<sub>1</sub> 目录结构中删除。为了减少崩溃后的数据恢复时间，合并过程需要进行周期性的 checkpoint，强制将缓存信息写入磁盘。
 
 为了让 LSM 读取速度相对较快，管理文件数量非常重要，因此我们要对文件进行合并压缩。在 LevelDB 中，合并后的大文件会进入下一个 Level 中。
 
 ![LSM-Tree](LSM-Tree.png)
 
-> 上图源自 [wikipedia: Log-structured merge-tree](https://en.wikipedia.org/wiki/Log-structured_merge-tree)
+> 上图源自 [*wikipedia: Log-structured merge-tree*](https://en.wikipedia.org/wiki/Log-structured_merge-tree)
 
 例如我们的 Level-0 中每个文件有 10 条数据，每 5 个 Level-0 文件合并到 1 个 Level1 文件中，每单个 Level1 文件中有 50 条数据（可能会略少一些）。而每 5 个 Level1 文件合并到 1 个 Level2 文件中，该过程会持续创建越来越大的文件，越旧的数据 Level 级数也会越来越高。
 
@@ -83,7 +83,7 @@ C<sub>1</sub> 组件是为顺序性的磁盘访问优化过的，所有的节点
 
 当在 LSM-Tree 上执行一个精确匹配查询或者范围查询时，首先会到 C<sub>0</sub> 中查找所需的值，如果在 C<sub>0</sub> 中没有找到，再去 C<sub>1</sub> 中查找。这意味着与 B-Tree 相比，会有一些额外的 CPU 开销，因为现在需要去两个目录中搜索。虽然每个文件都保持排序，可以通过比较该文件的最大/最小键值对来判断是否需要进行搜索。但是，随着文件数量的增加，每个文件都需要检查，读取还是会变得越来越慢。
 
-因此，LSM-Tree 的读取速度比其它数据结构更慢。但是我们可以使用一些索引技巧进行优化。LevelDB 会在每个文件末尾保留块索引来加快查询速度，这通常比直接二进制搜索更好，因为它允许使用变长字段，并且更适合压缩数据。详细的内容会在 SSTable 小节中介绍。
+因此，LSM-Tree 的读取速度比其它数据结构更慢。但是我们可以使用一些索引技巧进行优化。LevelDB 会在每个文件末尾保留块索引来加快查询速度，这比直接二进制搜索更好，因为它允许使用变长字段，并且更适合压缩数据。详细的内容会在 SSTable 小节中介绍。
 
 我们还可以针对删除操作进行一些优化，高效地更新索引。例如通过断言式删除（Predicate Deletion）过程，只要简单地声明一个断言，就可以执行批量删除的操作方式。例如删除那些时间戳在 20 天前的所有的索引值，当位于 C<sub>1</sub> 组件的记录通过正常过的数据合并过程被加载到内存中时，就可以它们直接丢弃来实现删除。
 
@@ -100,7 +100,7 @@ C<sub>1</sub> 组件是为顺序性的磁盘访问优化过的，所有的节点
 - **C<sub>0</sub> 非常小**：此时一条数据的插入都会使 C<sub>0</sub> 变满，从而触发 Rolling Merge，最坏的情况下，C<sub>0</sub> 的每一次插入都会导致 C<sub>1</sub> 的全部叶子节点被读进内存又写回磁盘，I/O 开销非常高；
 - **C<sub>0</sub> 非常大**：此时基本没有 I/O 开销，但需要很大的内存空间，也不易进行数据恢复。
 
-论文 [*The Log-Structured Merge-Tree (LSM-Tree)*](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.44.2782&rep=rep1&type=pdf) 中花费了相当多的篇幅来说明内存容量成本与磁盘 I/O 成本的关系，笔者这里并不会详细阐述这些内容，但我们需要在磁盘的 I/O 成本与内存容量成本之间找到平衡点。根据 [*The Five-Minute Rule*](https://wingsxdu.com/post/note/the-five-minutes-rule/) 原则，这一数值取决于当前硬件的性能与价格。
+论文 **[[1] The Log-Structured Merge-Tree (LSM-Tree) ](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.44.2782&rep=rep1&type=pdf)** 中花费了相当多的篇幅来说明内存容量成本与磁盘 I/O 成本的关系，笔者这里并不会详细阐述这些内容，但我们需要在磁盘的 I/O 成本与内存容量成本之间找到平衡点。根据 [*The Five-Minute Rule*](https://wingsxdu.com/post/note/the-five-minutes-rule/) 原则，这一数值取决于当前硬件的性能与价格。
 
 为了进一步缩小两组件 LSM-Tree 的开销平衡点，多组件 LSM-Tree 在 C<sub>0</sub> 和 C<sub>1</sub> 之间引入一组新的 Component，大小介于两者之间，逐级增长，这样 C<sub>0</sub> 就不用每次和 C<sub>1</sub> 进行 Rolling Merge，而是先和中间的组件进行合并，当中间的组件到达其大小限制后再和 C<sub>1</sub> 做 Rolling Merge，这样就可以在减少 C<sub>0</sub> 内存开销的同时减少磁盘 I/O 开销。有些类似于我们的多级缓存结构。
 
@@ -111,13 +111,13 @@ LSM-Tree 的实现思路与常规存储系统采取的措施不太相同，其�
 1. **Batch Write**：由于采用延迟写，LSM-Tree 可以在 Rolling Merge 过程中，通过一次 I/O 批量向 C<sub>1</sub> 写入多条数据，那么这多条数据就均摊了这一次 I/O，减少磁盘的 I/O 开销；
 2. **Multi-Page Block**：LSM-Tree 的批量写可以有效地利用 Multi-Page Block，在 Rolling Merge 的过程中，一次从 C<sub>1</sub> 中读出多个连续的数据页与 C<sub>0</sub> 合并，然后一次向 C<sub>1</sub> 写回这些连续页面，这样只需要单次 I/O 就可以完成多个 Pages 的读写。
 
-LSM-Tree 的原始论文比较晦涩难懂，借助一些代码实现后才能更好地探知作者的表达意图，因此笔者也阅读了一部分 LevelDB 的源码，希望能加深理解。
+LSM-Tree 的原始论文比较晦涩难懂，笔者也是借助 LevelDB 的源码实现后才更清晰地探知作者的表达意图。
 
 ## LevelDB
 
-LevelDB 是对 Bigtable 论文中描述的键值存储系统的单机版的实现，它提供了一个高速的键值存储系统，并且高度复刻了论文中的描述，如今许多 LSM-Tree 的实现思路都参考了 LevelDB 。
+LevelDB 是对 Bigtable 论文 **[[2] Bigtable: A Distributed Storage System for Structured Data](https://static.googleusercontent.com/media/research.google.com/en//archive/bigtable-osdi06.pdf)** 中描述的键值存储系统的单机版的实现，它提供了一个高速的键值存储系统，并且高度复刻了论文中的描述，如今许多 LSM-Tree 的实现思路都参考了 LevelDB 。
 
-在介绍 LevelDB 之前，我们需要了解内部实现的几个基础数据结构。为了压缩数据占用的空间，LevelDB 设计了变长整型编码，其中 varint32 格式最大占用 5 字节，varint64 格式最大占用 10 字节，文档  [Protocol Buffers Encoding : varints](https://developers.google.com/protocol-buffers/docs/encoding#varints) 中有更详细的格式说明。虽然最大字节数增加了，但是在大部分情况下是不到 4 字节的，总体来看减少了存储空间。除此之外还实现了字符串的封装，通过引用字符数组的方式减少数据赋值开销，并提供 C/C++ 类型字符转换。
+在介绍 LevelDB 之前，我们需要了解内部实现的几个基础数据结构。为了压缩数据占用的空间，LevelDB 设计了变长整型编码，其中 varint32 格式最大占用 5 字节，varint64 格式最大占用 10 字节，文档  [*Protocol Buffers Encoding : varints*](https://developers.google.com/protocol-buffers/docs/encoding#varints) 中有更详细的格式说明。虽然最大字节数增加了，但是在大部分情况下是不到 4 字节的，总体来看减少了存储空间。除此之外还实现了字符串的封装类型 Slice，通过引用字符数组的方式减少数据赋值开销，并提供 C/C++ 类型字符转换。
 
 ```c++
 class LEVELDB_EXPORT Slice {
@@ -127,7 +127,7 @@ class LEVELDB_EXPORT Slice {
 };
 ```
 
-类似于笔者之前分析过的 [BlotDB](https://wingsxdu.com/post/database/boltdb)，LevelDB 并不是一个功能完备的数据库，而是一个由 C++ 编程语言实现的存储引擎，为外部调用程序提供了一系列接口：
+类似于笔者之前分析过的 [*BlotDB*](https://wingsxdu.com/post/database/boltdb)，LevelDB 并不是一个功能完备的数据库，而是一个由 C++ 编程语言实现的存储引擎，为外部调用程序提供了一系列接口：
 
 ```c++
 // Implementations of the DB interface
@@ -137,7 +137,7 @@ Status Write(const WriteOptions& options, WriteBatch* updates) override;
 Status Get(const ReadOptions& options, const Slice& key, std::string* value) override;
 ```
 
-API 的调用方式大同小异，我们将主要精力放在具体的实现思路上。
+API 的调用方式大同小异，我们将精力放在具体的实现思路上。
 
 #### WriteBatch
 
@@ -570,9 +570,9 @@ LevelDB 由 BigTable 的作者 [Jeff Dean](https://en.wikipedia.org/wiki/Jeff_De
 
 ## References
 
-- [The Log-Structured Merge-Tree (LSM-Tree)](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.44.2782&rep=rep1&type=pdf)
+- [ *[1] The Log-Structured Merge-Tree (LSM-Tree)*](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.44.2782&rep=rep1&type=pdf)
+- [ *[2] Bigtable: A Distributed Storage System for Structured Data*](https://static.googleusercontent.com/media/research.google.com/en//archive/bigtable-osdi06.pdf)
 - [Log Structured Merge Trees](http://www.benstopford.com/2015/02/14/log-structured-merge-trees/)
-- [Bigtable: A Distributed Storage System for Structured Data](https://static.googleusercontent.com/media/research.google.com/en//archive/bigtable-osdi06.pdf)
 - [LevelDB 源码分析](https://sf-zhou.github.io/#/LevelDB)
 - [LevelDB中的SSTable](http://bean-li.github.io/leveldb-sstable/)
 - [leveldb源代码阅读（四）- table cache的实现](https://www.myway5.com/index.php/2017/08/20/leveldb%e6%ba%90%e4%bb%a3%e7%a0%81%e9%98%85%e8%af%bb%ef%bc%88%e5%9b%9b%ef%bc%89-table-cache%e7%9a%84%e5%ae%9e%e7%8e%b0/)
