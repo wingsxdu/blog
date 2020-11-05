@@ -151,7 +151,6 @@ defaultContentLanguage = "zh-cn"           # Default language to use
   [params.social]                                         # 社交链接
     a-email = "mailto:beihai@wingsxdu.com"
     g-github = "https://github.com/wingsxdu"
-    h-weibo = "https://weibo.com/u/6120467917"
 
 
 
