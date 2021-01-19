@@ -2,10 +2,10 @@ language: generic
 
 before_install:
 - openssl aes-256-cbc -K $encrypted_52e4f0279700_key -iv $encrypted_52e4f0279700_iv -in blog.pem.enc -out ~\/.ssh/blog.pem -d
-- chmod 600 ./login.pem
+- chmod 600 ./blog.pem
 
 script:
-- ssh -i ./login.pem root@wingsxdu.com "cd blog && make pull"
+- ssh -i ./blog.pem root@wingsxdu.com "cd blog && make pull"
 
 addons:
   ssh_known_hosts: 
